@@ -121,7 +121,7 @@ export default function Home() {
       </section>
 
       {/* 3. Detailed 3-Step Methodology */}
-      <section style={{ padding: '80px 0', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+      <section style={{ padding: '80px 0', borderTop: '1px solid var(--border-glass)' }}>
         <div style={{ textAlign: 'center', marginBottom: '50px' }} className="reveal">
           <span style={{ color: 'var(--color-gold)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>METHODOLOGY</span>
           <h2 style={{ fontSize: '2.5rem', marginTop: '10px' }} className="gold-gradient-text">Our Three-Step Scientific Flow</h2>
@@ -130,7 +130,7 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
           {steps.map((st, index) => (
             <div key={index} className={`glass-panel reveal delay-${(index + 1) * 100}`} style={{ padding: '40px 30px', display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: '-10px', right: '10px', fontSize: '5rem', fontWeight: '900', color: 'rgba(255,255,255,0.02)', fontFamily: 'var(--font-serif)' }}>
+              <div style={{ position: 'absolute', top: '-10px', right: '10px', fontSize: '5rem', fontWeight: '900', fontFamily: 'var(--font-serif)' }} className="step-card-num">
                 {st.num}
               </div>
               <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', zIndex: 1 }}>{st.title}</h3>

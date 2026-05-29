@@ -77,7 +77,7 @@ export default function Contact() {
                     borderRadius: '20px',
                     border: '1px solid',
                     borderColor: selectedTime === time ? 'var(--color-gold)' : 'var(--border-glass)',
-                    background: selectedTime === time ? 'rgba(223, 169, 90, 0.15)' : 'rgba(255,255,255,0.02)',
+                    background: selectedTime === time ? 'rgba(223, 169, 90, 0.15)' : 'var(--bg-dark)',
                     color: selectedTime === time ? 'var(--color-gold)' : 'var(--text-primary)',
                     cursor: 'pointer',
                     fontSize: '0.85rem',
@@ -120,7 +120,7 @@ export default function Contact() {
                   required 
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: 'white', fontSize: '0.95rem' }} 
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }} 
                   placeholder="e.g. Rahul Sharma"
                 />
               </div>
@@ -132,7 +132,7 @@ export default function Contact() {
                   required 
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: 'white', fontSize: '0.95rem' }} 
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }} 
                   placeholder="+91 99000 00000"
                 />
               </div>
@@ -144,7 +144,7 @@ export default function Contact() {
                   required 
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: 'white', fontSize: '0.95rem' }} 
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }} 
                   placeholder="name@email.com"
                 />
               </div>
@@ -154,7 +154,7 @@ export default function Contact() {
                 <select 
                   value={form.service}
                   onChange={(e) => setForm({ ...form, service: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: '#0d1121', border: '1px solid var(--border-glass)', color: 'white', fontSize: '0.95rem' }}
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }}
                 >
                   <option value="vastu">Maha Vastu Consulting</option>
                   <option value="numerology">Numerology & Name Correction</option>
@@ -169,7 +169,7 @@ export default function Contact() {
                   rows="4" 
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: 'white', fontSize: '0.95rem', resize: 'vertical' }} 
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem', resize: 'vertical' }} 
                   placeholder="Mention your birth details or Vastu site type..."
                 />
               </div>

@@ -63,6 +63,7 @@ export default function Navbar() {
               <Link 
                 key={item.name} 
                 to={item.path} 
+                className={`nav-item ${isActive ? 'active' : ''}`}
                 style={{ 
                   color: isActive ? 'var(--color-gold)' : 'var(--text-primary)', 
                   fontWeight: isActive ? '600' : '400',
@@ -70,7 +71,6 @@ export default function Navbar() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
-                  borderBottom: isActive ? '2px solid var(--color-gold)' : '2px solid transparent',
                   paddingBottom: '4px'
                 }}
               >

@@ -62,7 +62,7 @@ export default function Footer() {
 
       </div>
 
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: '50px', paddingTop: '24px', textAlign: 'center' }}>
+      <div style={{ borderTop: '1px solid var(--border-glass)', marginTop: '50px', paddingTop: '24px', textAlign: 'center' }}>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
           © {new Date().getFullYear()} Achyutam Maestro. All Rights Reserved. Designed for Cosmic Alignment.
         </p>

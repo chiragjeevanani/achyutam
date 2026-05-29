@@ -65,11 +65,11 @@ export default function Testimonials() {
               ))}
             </div>
 
-            <p style={{ color: '#e2e8f0', fontSize: '0.95rem', lineHeight: '1.7', fontStyle: 'italic' }}>
+            <p style={{ color: 'var(--text-primary)', fontSize: '0.95rem', lineHeight: '1.7', fontStyle: 'italic' }}>
               "{rev.text}"
             </p>
 
-            <div style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ marginTop: 'auto', borderTop: '1px solid var(--border-glass)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <h4 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-serif)' }}>{rev.name}</h4>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{rev.role}</span>

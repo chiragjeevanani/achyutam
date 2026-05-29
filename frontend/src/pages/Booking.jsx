@@ -325,7 +325,7 @@ export default function Booking() {
                     <button 
                       onClick={handlePrevMonth}
                       style={{
-                        background: 'rgba(255, 255, 255, 0.02)',
+                        background: 'var(--bg-dark)',
                         border: '1px solid rgba(223, 169, 90, 0.25)',
                         color: 'var(--color-gold)',
                         width: '32px',
@@ -348,7 +348,7 @@ export default function Booking() {
                     <button 
                       onClick={handleNextMonth}
                       style={{
-                        background: 'rgba(255, 255, 255, 0.02)',
+                        background: 'var(--bg-dark)',
                         border: '1px solid rgba(223, 169, 90, 0.25)',
                         color: 'var(--color-gold)',
                         width: '32px',
@@ -559,7 +559,7 @@ export default function Booking() {
                         value={formData.birthPlace}
                         onChange={handleInputChange}
                         placeholder="City, State, Country"
-                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'rgba(255,255,255,0.01)', color: 'white', fontSize: '0.8rem' }}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)', fontSize: '0.8rem' }}
                       />
                     </div>
                   </>
@@ -587,7 +587,7 @@ export default function Booking() {
                     onChange={handleInputChange}
                     placeholder="Tell us what you would like to focus on during the reading..."
                     rows={formData.vastuAddress ? 2 : 4}
-                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'rgba(255,255,255,0.01)', color: 'white' }}
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
                   />
                 </div>
               </div>
@@ -699,7 +699,7 @@ export default function Booking() {
 
               {/* Specific metadata details */}
               {(formData.birthDate || formData.vastuAddress) && (
-                <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '15px', borderRadius: '10px', border: '1px solid var(--border-glass)', fontSize: '0.85rem' }}>
+                <div style={{ background: 'var(--bg-dark)', padding: '15px', borderRadius: '10px', border: '1px solid var(--border-glass)', fontSize: '0.85rem' }}>
                   <span style={{ color: 'var(--color-gold)', display: 'block', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '6px' }}>SUBMITTED PARTICULARS</span>
                   {formData.birthDate && (
                     <div style={{ marginBottom: '5px' }}>
@@ -724,7 +724,7 @@ export default function Booking() {
                   <span>Razorpay Gateway Charges & GST</span>
                   <span style={{ color: '#22c55e' }}>FREE / INCLUDED</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '10px', marginTop: '10px', fontSize: '1.1rem', fontWeight: 'bold' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-glass)', paddingTop: '10px', marginTop: '10px', fontSize: '1.1rem', fontWeight: 'bold' }}>
                   <span style={{ color: 'var(--color-gold)' }}>TOTAL ENERGY EXCHANGE PAID</span>
                   <span style={{ color: 'var(--color-gold)' }}>₹{selectedService?.price.toLocaleString('en-IN')}.00</span>
                 </div>
