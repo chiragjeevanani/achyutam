@@ -45,7 +45,7 @@ export default function Home() {
       {/* 1. Hero Section */}
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'center', minHeight: '80vh', padding: '0 0 40px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="reveal-left">
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '20px', background: 'rgba(223, 169, 90, 0.1)', border: '1px solid rgba(223, 169, 90, 0.2)', width: 'fit-content' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '20px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', width: 'fit-content' }}>
             <Sparkles size={14} style={{ color: 'var(--color-gold)' }} />
             <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.1em', color: 'var(--color-gold)' }}>CELESTIAL HARMONY</span>
           </div>
@@ -106,7 +106,7 @@ export default function Home() {
             Our universe works through direct currents. Click the compass on the left to rotate and align the spatial flow. In ancient sciences, even a deviation of 5° can trigger negative blockages.
           </p>
 
-          <div style={{ padding: '20px', borderRadius: '12px', background: 'rgba(223, 169, 90, 0.05)', border: '1px dashed var(--color-gold)' }}>
+          <div style={{ padding: '20px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.05)', border: '1px dashed var(--color-gold)' }}>
             {calibrated ? (
               <p style={{ color: 'var(--color-gold)', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: '600' }}>
                 <Check size={20} /> Vastu Energy Flow Fully Calibrated!
@@ -153,7 +153,7 @@ export default function Home() {
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {benefits.map((ben, idx) => (
               <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-primary)' }}>
-                <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(223, 169, 90, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--color-gold)' }}>
+                <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--color-gold)' }}>
                   <Check size={10} style={{ color: 'var(--color-gold)' }} />
                 </div>
                 <span>{ben}</span>
@@ -172,7 +172,7 @@ export default function Home() {
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '8px' }}>Construction Demolitions</p>
           </div>
           <div className="glass-panel" style={{ padding: '30px', textAlign: 'center' }}>
-            <h3 style={{ fontSize: '2.5rem', color: 'var(--color-gold)', fontFamily: 'var(--font-serif)' }}>12+</h3>
+            <h3 style={{ fontSize: '2.5rem', color: 'var(--color-gold)', fontFamily: 'var(--font-serif)' }}>16</h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '8px' }}>Directions Balanced</p>
           </div>
           <div className="glass-panel" style={{ padding: '30px', textAlign: 'center' }}>
@@ -185,7 +185,7 @@ export default function Home() {
       {/* 5. Highlight Testimonial Spotlight */}
       <section style={{ padding: '80px 0' }} className="reveal-scale">
         <div className="glass-panel" style={{ padding: '50px 40px', position: 'relative', display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'center', textAlign: 'center' }}>
-          <Quote size={40} style={{ color: 'rgba(223, 169, 90, 0.2)' }} />
+          <Quote size={40} style={{ color: 'rgba(16, 185, 129, 0.2)' }} />
           <p style={{ fontSize: '1.25rem', lineHeight: '1.7', fontStyle: 'italic', maxWidth: '800px', color: 'var(--text-primary)' }}>
             "Through your guidance in Vastu, Astrology, and Numerology, I not only received the right direction but also gained confidence and mental peace. Your suggestions led to absolute clarity, balance, and positive changes in my life."
           </p>

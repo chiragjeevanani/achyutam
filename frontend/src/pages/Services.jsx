@@ -10,7 +10,7 @@ export default function Services() {
       title: 'Vastu Consultation',
       sub: 'Directions, Placements & Energy Corrections',
       desc: 'Vastu consultation balances the energy of your home or workplace environment. It provides guidance on directions, placements, and necessary corrections. These suggestions help create prosperity, peace, and overall well-being completely without demolition.',
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/02/ChatGPT-Image-Feb-26-2026-01_12_48-PM.png',
+      img: '/vastu_emerald.png',
       icon: <Sun size={22} />,
       list: [
         'Residential Vastu: Peaceful living & family well-being',
@@ -24,7 +24,7 @@ export default function Services() {
       title: 'Numerology Consultation',
       sub: 'Vibrational Frequency & Lo Shu Grid',
       desc: 'Numerology helps you understand how numbers influence your life path and personality. It provides guidance for career, relationships, and financial decisions with deeper clarity, utilizing classic birth grid alignments.',
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/02/ChatGPT-Image-Feb-26-2026-01_15_17-PM.png',
+      img: '/numerology_emerald.png',
       icon: <Sparkles size={22} />,
       list: [
         'Name vibration tuning & correction',
@@ -37,7 +37,7 @@ export default function Services() {
       title: 'Astrology Consultation',
       sub: 'Kundli Readings & Planetary Cures',
       desc: 'Astrology consultation analyzes your birth chart to understand life challenges and opportunities. It gives clear answers related to career, marriage, health, and personal growth. Effective remedies are suggested to reduce obstacles and bring positivity.',
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/01/ChatGPT-Image-Jan-29-2026-11_34_17-AM-e1769666762997.png',
+      img: '/astrology_emerald.png',
       icon: <Compass size={22} />,
       list: [
         'Birth chart (Kundli) assessment',
@@ -50,7 +50,7 @@ export default function Services() {
       title: 'Tarot Reading',
       sub: 'Intuitive Insight & Future Paths',
       desc: 'Tarot reading offers intuitive insights into your present situation and future possibilities. It helps you find answers about love, career, emotions, and important life choices. The session brings clarity, confidence, and peaceful direction to your mind.',
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/01/ChatGPT-Image-Jan-29-2026-11_42_03-AM.png',
+      img: '/tarot_emerald.png',
       icon: <Eye size={22} />,
       list: [
         'Love & relationship emotional insights',
@@ -63,7 +63,7 @@ export default function Services() {
       title: 'Relationship Counselling',
       sub: 'Mutual Understanding & Connection',
       desc: 'Relationship counselling helps you improve understanding and emotional connection with your partner or family. It focuses on resolving conflicts, misunderstandings, and communication issues effectively.',
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.29.57-AM-1-1-908x1024.jpeg',
+      img: '/relationship_emerald.png',
       icon: <Heart size={22} />,
       list: [
         'Couples communication mapping',
@@ -104,10 +104,10 @@ export default function Services() {
                 key={index}
                 onClick={() => setActiveIdx(index)}
                 style={{
-                  background: isActive ? 'linear-gradient(90deg, rgba(223, 169, 90, 0.08) 0%, var(--bg-dark) 100%)' : 'var(--bg-dark)',
+                  background: isActive ? 'linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, var(--bg-dark) 100%)' : 'var(--bg-dark)',
                   border: isActive ? '1px solid var(--color-gold)' : '1px solid var(--border-glass)',
                   padding: '12px 16px',
-                  boxShadow: isActive ? '0 4px 15px rgba(223, 169, 90, 0.08)' : 'none',
+                  boxShadow: isActive ? '0 4px 15px rgba(16, 185, 129, 0.08)' : 'none',
                 }}
                 className="selector-tab"
               >
@@ -131,7 +131,7 @@ export default function Services() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: isActive ? 'rgba(223, 169, 90, 0.15)' : 'rgba(255, 255, 255, 0.02)',
+                  background: isActive ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255, 255, 255, 0.02)',
                   border: isActive ? '1px solid var(--color-gold)' : '1px solid var(--border-glass)',
                   color: isActive ? 'var(--color-gold)' : 'var(--text-muted)',
                   transition: 'all 0.3s'
@@ -223,9 +223,9 @@ export default function Services() {
             <div style={{ 
               borderRadius: '16px', 
               overflow: 'hidden', 
-              border: '2px solid rgba(223, 169, 90, 0.3)',
-              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(223, 169, 90, 0.1)',
-              background: '#070913',
+              border: '2px solid rgba(16, 185, 129, 0.3)',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.1)',
+              background: 'var(--bg-dark)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

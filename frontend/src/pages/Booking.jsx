@@ -185,7 +185,7 @@ export default function Booking() {
                 color: isActive || isCompleted ? '#ffffff' : 'var(--text-primary)',
                 fontWeight: 'bold',
                 fontSize: '0.85rem',
-                boxShadow: isActive ? '0 0 10px rgba(223, 169, 90, 0.4)' : 'none'
+                boxShadow: isActive ? '0 0 10px rgba(16, 185, 129, 0.4)' : 'none'
               }}>
                 {isCompleted ? <CheckCircle2 size={16} style={{ color: '#ffffff' }} /> : s.number}
               </div>
@@ -242,7 +242,7 @@ export default function Booking() {
                       justifyContent: 'space-between',
                       padding: '20px',
                       borderRadius: '16px',
-                      background: isSelected ? 'rgba(223,169,90,0.05)' : 'var(--bg-dark)',
+                      background: isSelected ? 'rgba(16, 185, 129,0.05)' : 'var(--bg-dark)',
                       border: isSelected ? '2px solid var(--color-gold)' : '1px solid var(--border-glass)',
                       cursor: 'pointer',
                       transition: 'all 0.3s'
@@ -254,7 +254,7 @@ export default function Booking() {
                         height: '40px',
                         borderRadius: '10px',
                         background: 'rgba(255,255,255,0.02)',
-                        border: '1px solid rgba(223,169,90,0.2)',
+                        border: '1px solid rgba(16, 185, 129,0.2)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
@@ -326,7 +326,7 @@ export default function Booking() {
                       onClick={handlePrevMonth}
                       style={{
                         background: 'var(--bg-dark)',
-                        border: '1px solid rgba(223, 169, 90, 0.25)',
+                        border: '1px solid rgba(16, 185, 129, 0.25)',
                         color: 'var(--color-gold)',
                         width: '32px',
                         height: '32px',
@@ -349,7 +349,7 @@ export default function Booking() {
                       onClick={handleNextMonth}
                       style={{
                         background: 'var(--bg-dark)',
-                        border: '1px solid rgba(223, 169, 90, 0.25)',
+                        border: '1px solid rgba(16, 185, 129, 0.25)',
                         color: 'var(--color-gold)',
                         width: '32px',
                         height: '32px',
@@ -434,7 +434,7 @@ export default function Booking() {
                               key={slot}
                               onClick={() => setSelectedTimeSlot(slot)}
                               style={{
-                                background: isSelected ? 'rgba(223, 169, 90, 0.2)' : 'var(--bg-dark)',
+                                background: isSelected ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-dark)',
                                 border: isSelected ? '1px solid var(--color-gold)' : '1px solid var(--border-glass)',
                                 color: isSelected ? 'var(--color-gold)' : 'var(--text-primary)',
                                 borderRadius: '8px',
@@ -656,7 +656,7 @@ export default function Booking() {
             }}>
               
               {/* Receipt Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(223,169,90,0.15)', paddingBottom: '15px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(16, 185, 129,0.15)', paddingBottom: '15px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <img 
                     src="https://achyutammaestro.com/wp-content/uploads/2026/01/achyutham-logo.jpeg" 
@@ -715,7 +715,7 @@ export default function Booking() {
               )}
 
               {/* Pricing item list */}
-              <div style={{ borderTop: '1px solid rgba(223,169,90,0.15)', paddingTop: '15px', marginTop: '10px' }}>
+              <div style={{ borderTop: '1px solid rgba(16, 185, 129,0.15)', paddingTop: '15px', marginTop: '10px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '8px' }}>
                   <span>{selectedService?.title} Consultation (1)</span>
                   <span>₹{selectedService?.price.toLocaleString('en-IN')}.00</span>
@@ -731,7 +731,7 @@ export default function Booking() {
               </div>
 
               {/* Receipt Footer stamp */}
-              <div style={{ textAlign: 'center', borderTop: '1px solid rgba(223,169,90,0.15)', paddingTop: '15px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              <div style={{ textAlign: 'center', borderTop: '1px solid rgba(16, 185, 129,0.15)', paddingTop: '15px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 <span>Securely Processed via Razorpay standard SDK. This is a system-generated receipt. No signature required.</span>
               </div>
             </div>

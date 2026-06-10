@@ -77,7 +77,7 @@ export default function Contact() {
                     borderRadius: '20px',
                     border: '1px solid',
                     borderColor: selectedTime === time ? 'var(--color-gold)' : 'var(--border-glass)',
-                    background: selectedTime === time ? 'rgba(223, 169, 90, 0.15)' : 'var(--bg-dark)',
+                    background: selectedTime === time ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-dark)',
                     color: selectedTime === time ? 'var(--color-gold)' : 'var(--text-primary)',
                     cursor: 'pointer',
                     fontSize: '0.85rem',
@@ -101,7 +101,7 @@ export default function Contact() {
         <div className="glass-panel" style={{ padding: '40px 30px' }}>
           {submitted ? (
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '16px', padding: '40px 0' }}>
-              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(223, 169, 90, 0.1)', border: '1px solid var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
                 <Check size={28} style={{ color: 'var(--color-gold)' }} />
               </div>
               <h3 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)' }}>Booking Requested</h3>

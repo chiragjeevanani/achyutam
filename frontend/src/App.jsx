@@ -193,13 +193,13 @@ export default function App() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
               <div style={{ width: '200px', height: '200px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {/* Solar Eclipse glowing background starfield */}
-                <div style={{ width: '130px', height: '130px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(223, 169, 90, 0.4) 0%, transparent 70%)', position: 'absolute' }} />
+                <div style={{ width: '130px', height: '130px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%)', position: 'absolute' }} />
                 
                 {/* Glowing Sun */}
                 <div className="eclipse-sun" style={{ width: '110px', height: '110px', borderRadius: '50%', background: 'radial-gradient(circle, #f59e0b 0%, #b45309 80%)', position: 'absolute' }} />
                 
                 {/* Sliding Dark Moon */}
-                <div className="eclipse-moon" style={{ width: '112px', height: '112px', borderRadius: '50%', background: 'var(--bg-dark)', position: 'absolute', border: '1px solid rgba(223, 169, 90, 0.05)' }} />
+                <div className="eclipse-moon" style={{ width: '112px', height: '112px', borderRadius: '50%', background: 'var(--bg-dark)', position: 'absolute', border: '1px solid rgba(16, 185, 129, 0.05)' }} />
                 
                 {/* Sparkling eclipse diamond ring flare */}
                 <div className="eclipse-diamond-flare" style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#fff', boxShadow: '0 0 25px 10px #fff, 0 0 15px 5px var(--color-gold)', position: 'absolute', top: '48px', right: '48px' }} />

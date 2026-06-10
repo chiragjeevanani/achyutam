@@ -13,7 +13,7 @@ export default function Blog() {
       author: 'Uppasna Keshwani',
       readTime: '4 Min Read',
       icon: <Sun size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/02/ChatGPT-Image-Feb-26-2026-01_12_48-PM.png',
+      img: '/vastu_emerald.png',
       summary: 'Vastu Shastra is an ancient Indian science that focuses on balancing the five elements—earth, water, fire, air, and space—within your living environment. Every home and workplace carries energy, and when this energy flows in the right direction, it brings peace, health, and prosperity.',
       content: [
         'Vastu Shastra is an ancient Indian science that focuses on balancing the five elements—earth, water, fire, air, and space—within your living environment. Every home and workplace carries energy, and when this energy flows in the right direction, it brings peace, health, and prosperity. Many people experience stress, financial blocks, or relationship problems simply because the energy structure of their space is disturbed. Vastu helps to identify these imbalances and correct them through simple yet powerful changes.',
@@ -30,7 +30,7 @@ export default function Blog() {
       author: 'Uppasna Keshwani',
       readTime: '3 Min Read',
       icon: <Compass size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/01/ChatGPT-Image-Jan-29-2026-11_34_17-AM-e1769666762997.png',
+      img: '/astrology_emerald.png',
       summary: 'Astrology is often misunderstood as predicting the future, but its true purpose is to serve as a spiritual GPS. By analyzing the planetary positions at the time of your birth, astrology reveals your strengths, life purpose, and potential hurdles.',
       content: [
         'Astrology is often misunderstood as predicting the future, but its true purpose is to serve as a spiritual GPS. By analyzing the planetary positions at the time of your birth, astrology reveals your strengths, life purpose, and potential hurdles. It helps you navigate career shifts, relationship dynamics, and spiritual growth with clarity.',
@@ -46,7 +46,7 @@ export default function Blog() {
       author: 'Uppasna Keshwani',
       readTime: '3 Min Read',
       icon: <Eye size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/01/ChatGPT-Image-Jan-29-2026-11_42_03-AM.png',
+      img: '/tarot_emerald.png',
       summary: 'Tarot cards are powerful mirrors reflecting your subconscious mind. A tarot session doesn\'t just reveal what lies ahead; it unlocks your deep inner wisdom to help you solve present dilemmas, heal relationships, and restore mental peace.',
       content: [
         'Tarot cards are powerful mirrors reflecting your subconscious mind. A tarot session doesn\'t just reveal what lies ahead; it unlocks your deep inner wisdom to help you solve present dilemmas, heal relationships, and restore mental peace.',
@@ -62,7 +62,7 @@ export default function Blog() {
       author: 'Uppasna Keshwani',
       readTime: '4 Min Read',
       icon: <Heart size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.29.57-AM-1-1-908x1024.jpeg',
+      img: '/relationship_emerald.png',
       summary: 'Relationships are built on delicate energetic and emotional connections. Relationship counselling focuses on looking beneath arguments to heal deep communication filters, resolve core planetary/emotional blocks, and restore mutual trust.',
       content: [
         'Relationships are built on delicate energetic and emotional connections. Relationship counselling focuses on looking beneath arguments to heal deep communication filters, resolve core planetary/emotional blocks, and restore mutual trust.',
@@ -78,7 +78,7 @@ export default function Blog() {
       author: 'Uppasna Keshwani',
       readTime: '3 Min Read',
       icon: <Sparkles size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: 'https://achyutammaestro.com/wp-content/uploads/2026/02/ChatGPT-Image-Feb-26-2026-01_15_17-PM.png',
+      img: '/numerology_emerald.png',
       summary: 'Numbers are not just symbols for counting; they are active energetic vibrations. Numerology analyzes your name and birth date coordinates to map your personality traits, potential successes, and ideal cosmic frequencies.',
       content: [
         'Numbers are not just symbols for counting; they are active energetic vibrations. Numerology analyzes your name and birth date coordinates to map your personality traits, potential successes, and ideal cosmic frequencies.',
@@ -123,7 +123,7 @@ export default function Blog() {
             
             {/* Meta */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px', color: 'var(--text-muted)', fontSize: '0.8rem', flexWrap: 'wrap', marginBottom: '15px' }}>
-              <span style={{ background: 'rgba(223, 169, 90, 0.1)', color: 'var(--color-gold)', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
+              <span style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--color-gold)', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
                 {selectedPost.category}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -145,7 +145,7 @@ export default function Blog() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', alignItems: 'start' }}>
               
               {/* Image Column */}
-              <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(223, 169, 90, 0.25)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)', background: '#070913' }}>
+              <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(16, 185, 129, 0.25)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)', background: 'var(--bg-dark)' }}>
                 <img 
                   src={selectedPost.img} 
                   alt={selectedPost.title} 
