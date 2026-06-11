@@ -4,6 +4,18 @@ import { Star, MessageSquare } from 'lucide-react';
 export default function Testimonials() {
   const reviews = [
     {
+      name: 'Abizer',
+      text: 'It has been a year since I first consulted Upasana on matters related to health, relationships, financial planning, and career development.\n\nThe experience has been truly transformative. Prior to seeking her guidance, certain decisions made in the past had adversely affected my financial stability, health, and personal relationships. Upasana conducted a thorough review of these aspects and provided thoughtful remedies that have significantly improved my financial situation and career trajectory, while also helping to restore and strengthen my relationships.\n\nHer advice has been instrumental in rebuilding my confidence, which in turn has had a positive impact on my overall health and well‑being.\n\nI extend my best wishes to her and am confident that she will continue to make a meaningful difference in the lives of many. I am certain that both I, as well as my friends and family, will continue to seek her valuable guidance in the future.',
+      rating: 5,
+      role: 'Consultation Client'
+    },
+    {
+      name: 'Rahuul K Butti',
+      text: 'I would like to express my heartfelt gratitude to Ms. Upasna Keswani for her incredibly accurate astrological guidance. My experience with her has been truly transformative. Her insights into my personal horoscope were precise, practical, and deeply relatable to my life situations. What truly sets her apart is that her remedies are simple, easy to follow, and not commercially driven—they can be comfortably practiced at home without unnecessary expense.\n\nIn addition, she is an excellent numerologist. She suggested a minor name correction with just a simple alphabet addition, and I have genuinely experienced a noticeable positive shift in my daily life since then.\n\nI have personally benefited tremendously from her guidance and have referred several friends to her, who have also shared positive experiences. I highly recommend Upasna Ji to anyone seeking genuine and practical astrological guidance.',
+      rating: 5,
+      role: 'Astrology & Numerology Client'
+    },
+    {
       name: 'Pooja Kashyap',
       text: 'Namaste Uppasna Ji 🙏 It was very nice to receive your message. Before taking the consultation, I had a lot of confusion and uncertainty regarding my life, career, and family matters. Through your guidance in Vastu, Astrology, and Numerology, I gained confidence and mental peace. Your guidance is very simple, practical, and positive. I experienced absolute balance and clarity.',
       rating: 5,

@@ -30,6 +30,7 @@ export default function Navbar() {
     { name: 'About Us', path: '/about' },
     { name: 'Services', path: '/services' },
     { name: 'Yogadhan', path: '/yogadhan' },
+    { name: 'Vastu Tips', path: '/vastu-tips' },
     { name: 'Blog', path: '/blog' },
     { name: 'Testimonials', path: '/testimonials' },
     { name: 'Contact Us', path: '/contact' }

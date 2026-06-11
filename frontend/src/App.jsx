@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 import Yogadhan from './pages/Yogadhan';
 import Booking from './pages/Booking';
 import Blog from './pages/Blog';
+import VastuTips from './pages/VastuTips';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 
@@ -23,7 +24,7 @@ export default function App() {
 
   // Dynamic transition theme picker based on destination path
   const getTransitionTheme = (pathname) => {
-    if (pathname === '/' || pathname === '/services') {
+    if (pathname === '/' || pathname === '/services' || pathname === '/vastu-tips') {
       return 'vastu';
     }
     if (pathname === '/yogadhan' || pathname === '/booking' || pathname === '/testimonials') {
@@ -224,6 +225,7 @@ export default function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/yogadhan" element={<Yogadhan />} />
+          <Route path="/vastu-tips" element={<VastuTips />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/blog" element={<Blog />} />
