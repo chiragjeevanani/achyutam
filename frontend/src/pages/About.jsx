@@ -115,8 +115,8 @@ export default function About() {
           <div style={{ 
             borderRadius: '16px', 
             overflow: 'hidden', 
-            border: '2px solid rgba(16, 185, 129, 0.3)',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(16, 185, 129, 0.05)',
+            border: '2px solid rgba(217, 125, 100, 0.3)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(217, 125, 100, 0.05)',
             background: 'var(--bg-dark)',
             width: '100%',
             aspectRatio: '4/3'

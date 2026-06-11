@@ -70,7 +70,7 @@ export default function Yogadhan() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
           {pillars.map((p, idx) => (
             <div key={idx} className="glass-panel reveal" style={{ padding: '45px 30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border-glass)' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(217, 125, 100, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border-glass)' }}>
                 {p.icon}
               </div>
               <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)' }}>{p.title}</h3>

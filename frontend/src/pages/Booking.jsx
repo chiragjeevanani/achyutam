@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Sun, Star, Compass, Heart, Eye, Calendar, Clock, User, CheckCircle2, ChevronRight, ChevronLeft, CreditCard, Receipt, Printer, ArrowRight } from 'lucide-react';
+import { Sparkles, Sun, Star, Compass, Heart, Eye, Calendar, Clock, User, CheckCircle2, ChevronRight, ChevronLeft, CreditCard, Receipt, Printer, ArrowRight, Radio } from 'lucide-react';
 
 export default function Booking() {
   const [step, setStep] = useState(1);
@@ -30,20 +30,20 @@ export default function Booking() {
   const servicesList = [
     {
       id: 'vastu',
-      title: 'Vastu Consultation',
+      title: 'Vastu Discussion',
       category: 'Vastu',
       sub: 'Directions, Placements & Energy Corrections',
       price: 5100,
-      duration: '90 Mins',
+      duration: '60 Mins',
       icon: <Sun size={20} style={{ color: 'var(--color-gold)' }} />
     },
     {
       id: 'numerology',
       title: 'Numerology Consultation',
       category: 'Numerology',
-      sub: 'Vibrational Frequency & Lo Shu Grid',
+      sub: 'Vibrational Frequency & Lo Shu Grid (Lifetime Report + Remedies)',
       price: 3100,
-      duration: '60 Mins',
+      duration: '30 Mins',
       icon: <Sparkles size={20} style={{ color: 'var(--color-gold)' }} />
     },
     {
@@ -52,7 +52,7 @@ export default function Booking() {
       category: 'Astrology',
       sub: 'Kundli Readings & Planetary Cures',
       price: 4100,
-      duration: '75 Mins',
+      duration: '45 Mins',
       icon: <Compass size={20} style={{ color: 'var(--color-gold)' }} />
     },
     {
@@ -69,13 +69,22 @@ export default function Booking() {
       title: 'Relationship Counselling',
       category: 'Counselling',
       sub: 'Mutual Understanding & Connection',
-      price: 3500,
+      price: 2400,
       duration: '60 Mins',
       icon: <Heart size={20} style={{ color: 'var(--color-gold)' }} />
+    },
+    {
+      id: 'aura_scanner',
+      title: 'Aura Scanner',
+      category: 'Aura Scanner',
+      sub: 'To check energy of land, homes, factories',
+      price: 500,
+      duration: 'Energy Check',
+      icon: <Radio size={20} style={{ color: 'var(--color-gold)' }} />
     }
   ];
 
-  const categories = ['ALL', 'Vastu', 'Numerology', 'Astrology', 'Tarot', 'Counselling'];
+  const categories = ['ALL', 'Vastu', 'Numerology', 'Astrology', 'Tarot', 'Counselling', 'Aura Scanner'];
 
   const filteredServices = selectedCategory === 'ALL' 
     ? servicesList 
@@ -185,7 +194,7 @@ export default function Booking() {
                 color: isActive || isCompleted ? '#ffffff' : 'var(--text-primary)',
                 fontWeight: 'bold',
                 fontSize: '0.85rem',
-                boxShadow: isActive ? '0 0 10px rgba(16, 185, 129, 0.4)' : 'none'
+                boxShadow: isActive ? '0 0 10px rgba(217, 125, 100, 0.4)' : 'none'
               }}>
                 {isCompleted ? <CheckCircle2 size={16} style={{ color: '#ffffff' }} /> : s.number}
               </div>
@@ -242,7 +251,7 @@ export default function Booking() {
                       justifyContent: 'space-between',
                       padding: '20px',
                       borderRadius: '16px',
-                      background: isSelected ? 'rgba(16, 185, 129,0.05)' : 'var(--bg-dark)',
+                      background: isSelected ? 'rgba(217, 125, 100,0.05)' : 'var(--bg-dark)',
                       border: isSelected ? '2px solid var(--color-gold)' : '1px solid var(--border-glass)',
                       cursor: 'pointer',
                       transition: 'all 0.3s'
@@ -254,7 +263,7 @@ export default function Booking() {
                         height: '40px',
                         borderRadius: '10px',
                         background: 'rgba(255,255,255,0.02)',
-                        border: '1px solid rgba(16, 185, 129,0.2)',
+                        border: '1px solid rgba(217, 125, 100,0.2)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
@@ -326,7 +335,7 @@ export default function Booking() {
                       onClick={handlePrevMonth}
                       style={{
                         background: 'var(--bg-dark)',
-                        border: '1px solid rgba(16, 185, 129, 0.25)',
+                        border: '1px solid rgba(217, 125, 100, 0.25)',
                         color: 'var(--color-gold)',
                         width: '32px',
                         height: '32px',
@@ -349,7 +358,7 @@ export default function Booking() {
                       onClick={handleNextMonth}
                       style={{
                         background: 'var(--bg-dark)',
-                        border: '1px solid rgba(16, 185, 129, 0.25)',
+                        border: '1px solid rgba(217, 125, 100, 0.25)',
                         color: 'var(--color-gold)',
                         width: '32px',
                         height: '32px',
@@ -434,7 +443,7 @@ export default function Booking() {
                               key={slot}
                               onClick={() => setSelectedTimeSlot(slot)}
                               style={{
-                                background: isSelected ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-dark)',
+                                background: isSelected ? 'rgba(217, 125, 100, 0.2)' : 'var(--bg-dark)',
                                 border: isSelected ? '1px solid var(--color-gold)' : '1px solid var(--border-glass)',
                                 color: isSelected ? 'var(--color-gold)' : 'var(--text-primary)',
                                 borderRadius: '8px',
@@ -565,14 +574,14 @@ export default function Booking() {
                   </>
                 )}
 
-                {selectedService?.category === 'Vastu' && (
+                {(selectedService?.category === 'Vastu' || selectedService?.category === 'Aura Scanner') && (
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: 'var(--color-gold)', display: 'block', marginBottom: '6px' }}>Site Address for Vastu</label>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--color-gold)', display: 'block', marginBottom: '6px' }}>Site Address for Scan / Vastu</label>
                     <textarea
                       name="vastuAddress"
                       value={formData.vastuAddress}
                       onChange={handleInputChange}
-                      placeholder="Enter the full address of residential or office plot"
+                      placeholder="Enter the full address of residential, office or factory plot"
                       rows={3}
                       style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
                     />
@@ -656,7 +665,7 @@ export default function Booking() {
             }}>
               
               {/* Receipt Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(16, 185, 129,0.15)', paddingBottom: '15px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(217, 125, 100, 0.15)', paddingBottom: '15px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <img 
                     src="https://achyutammaestro.com/wp-content/uploads/2026/01/achyutham-logo.jpeg" 
@@ -715,14 +724,14 @@ export default function Booking() {
               )}
 
               {/* Pricing item list */}
-              <div style={{ borderTop: '1px solid rgba(16, 185, 129,0.15)', paddingTop: '15px', marginTop: '10px' }}>
+              <div style={{ borderTop: '1px solid rgba(217, 125, 100, 0.15)', paddingTop: '15px', marginTop: '10px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '8px' }}>
                   <span>{selectedService?.title} Consultation (1)</span>
                   <span>₹{selectedService?.price.toLocaleString('en-IN')}.00</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '8px' }}>
                   <span>Razorpay Gateway Charges & GST</span>
-                  <span style={{ color: '#22c55e' }}>FREE / INCLUDED</span>
+                  <span style={{ color: 'var(--color-gold)' }}>FREE / INCLUDED</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-glass)', paddingTop: '10px', marginTop: '10px', fontSize: '1.1rem', fontWeight: 'bold' }}>
                   <span style={{ color: 'var(--color-gold)' }}>TOTAL ENERGY EXCHANGE PAID</span>
@@ -731,7 +740,7 @@ export default function Booking() {
               </div>
 
               {/* Receipt Footer stamp */}
-              <div style={{ textAlign: 'center', borderTop: '1px solid rgba(16, 185, 129,0.15)', paddingTop: '15px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              <div style={{ textAlign: 'center', borderTop: '1px solid rgba(217, 125, 100, 0.15)', paddingTop: '15px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 <span>Securely Processed via Razorpay standard SDK. This is a system-generated receipt. No signature required.</span>
               </div>
             </div>

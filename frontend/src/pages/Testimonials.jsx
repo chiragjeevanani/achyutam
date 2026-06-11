@@ -74,7 +74,7 @@ export default function Testimonials() {
                 <h4 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-serif)' }}>{rev.name}</h4>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{rev.role}</span>
               </div>
-              <MessageSquare size={20} style={{ color: 'rgba(16, 185, 129, 0.2)' }} />
+              <MessageSquare size={20} style={{ color: 'rgba(217, 125, 100, 0.2)' }} />
             </div>
 
           </div>

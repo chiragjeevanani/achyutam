@@ -37,11 +37,11 @@ export default function Contact() {
               <li style={{ display: 'flex', gap: '16px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
                 <MapPin size={24} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
                 <div>
-                  <strong>Cosmic Siddhas LLP</strong>
+                  <strong>Office Location</strong>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '4px' }}>
-                    5032, 3rd Floor, Rustomjee Eazone Mall,<br />
-                    Sunder Nagar, Goregaon (West),<br />
-                    Mumbai, MH - 400104
+                    TS Police Academy, INDIS PBEL CITY,<br />
+                    Nehru Outer Ring Rd, Exit - 18,<br />
+                    Hyderabad, Telangana 500091
                   </p>
                 </div>
               </li>
@@ -49,7 +49,7 @@ export default function Contact() {
                 <Phone size={20} style={{ color: 'var(--color-gold)' }} />
                 <div>
                   <strong>Direct Hotline</strong>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '2px' }}>+91 9930 60 9996</p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '2px' }}>+91 95590 96656</p>
                 </div>
               </li>
               <li style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--text-primary)' }}>
@@ -77,7 +77,7 @@ export default function Contact() {
                     borderRadius: '20px',
                     border: '1px solid',
                     borderColor: selectedTime === time ? 'var(--color-gold)' : 'var(--border-glass)',
-                    background: selectedTime === time ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-dark)',
+                    background: selectedTime === time ? 'rgba(217, 125, 100, 0.15)' : 'var(--bg-dark)',
                     color: selectedTime === time ? 'var(--color-gold)' : 'var(--text-primary)',
                     cursor: 'pointer',
                     fontSize: '0.85rem',
@@ -101,7 +101,7 @@ export default function Contact() {
         <div className="glass-panel" style={{ padding: '40px 30px' }}>
           {submitted ? (
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '16px', padding: '40px 0' }}>
-              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(217, 125, 100, 0.1)', border: '1px solid var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
                 <Check size={28} style={{ color: 'var(--color-gold)' }} />
               </div>
               <h3 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)' }}>Booking Requested</h3>

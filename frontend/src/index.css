@@ -1,32 +1,32 @@
 :root {
-  --bg-dark: #12251e; /* Serene mellow eucalyptus/sage green (less dark, very positive) */
-  --bg-card: rgba(22, 45, 36, 0.75); /* Translucent sage green glass card background */
-  --color-gold: #10b981; /* Vibrant healing emerald green */
-  --color-gold-hover: #34d399; /* Mint green */
-  --color-purple: #34d399; /* Mint green */
-  --color-indigo: #059669; /* Medium emerald green */
-  --text-primary: #ecfdf5; /* Soft minty white for high readability */
-  --text-muted: #a7f3d0; /* Mellow pastel mint/sage */
+  --bg-dark: #151210; /* Deep espresso charcoal */
+  --bg-card: rgba(28, 24, 21, 0.75); /* Warm clay-tinted glass card background */
+  --color-gold: #d97d64; /* Earthy terracotta-orange */
+  --color-gold-hover: #e8a593; /* Soft sand clay hover */
+  --color-purple: #dfa06c; /* Warm sand/ochre */
+  --color-indigo: #829399; /* Muted slate-grey */
+  --text-primary: #f7f4f0; /* Soft off-white for high readability */
+  --text-muted: #cbbdaf; /* Soft clay-grey sand */
   --text-heading: #ffffff; /* Crisp white headings */
-  --border-glass: rgba(16, 185, 129, 0.15);
-  --border-active: rgba(16, 185, 129, 0.4);
+  --border-glass: rgba(217, 125, 100, 0.15);
+  --border-active: rgba(217, 125, 100, 0.4);
   --font-serif: 'Cinzel', serif;
   --font-sans: 'Plus Jakarta Sans', sans-serif;
   transition: all 0.3s ease;
 }
 
 :root.light-theme {
-  --bg-dark: #f4faf7; /* Serene mellow mint background */
+  --bg-dark: #f9f6f0; /* Serene warm sand/parchment background */
   --bg-card: rgba(255, 255, 255, 0.85); /* Translucent light card background */
-  --color-gold: #059669; /* Deep emerald/mint green */
-  --color-gold-hover: #047857; /* Deep forest hover */
-  --color-purple: #a7f3d0; /* Pastel mint */
-  --color-indigo: #10b981; /* Emerald green */
-  --text-primary: #062c1e; /* Deep forest text */
-  --text-muted: #406052; /* Sage gray */
-  --text-heading: #031a12; /* Deep rich forest jade headings */
-  --border-glass: rgba(5, 150, 105, 0.12);
-  --border-active: rgba(5, 150, 105, 0.35);
+  --color-gold: #ab563f; /* Deep rich rust/terracotta */
+  --color-gold-hover: #89412e; /* Deep dark rust hover */
+  --color-purple: #c68953; /* Warm dry clay */
+  --color-indigo: #627b82; /* Deep slate-grey */
+  --text-primary: #2b221a; /* Deep espresso text */
+  --text-muted: #6e5e52; /* Warm clay-grey */
+  --text-heading: #1c150f; /* Deep rich earthy headings */
+  --border-glass: rgba(171, 86, 63, 0.12);
+  --border-active: rgba(171, 86, 63, 0.35);
 }
 
 * {
@@ -45,17 +45,17 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(52, 211, 153, 0.04) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.03) 0%, transparent 50%);
+    radial-gradient(circle at 10% 20%, rgba(217, 125, 100, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(223, 160, 108, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(130, 147, 153, 0.03) 0%, transparent 50%);
   background-attachment: fixed;
 }
 
 body.light-theme {
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 45%),
-    radial-gradient(circle at 90% 80%, rgba(5, 150, 105, 0.04) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(167, 243, 208, 0.02) 0%, transparent 50%);
+    radial-gradient(circle at 10% 20%, rgba(171, 86, 63, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(198, 137, 83, 0.03) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(98, 123, 130, 0.02) 0%, transparent 50%);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -84,21 +84,21 @@ a {
 
 .glass-panel:hover {
   border-color: var(--border-active);
-  box-shadow: 0 8px 32px 0 rgba(16, 185, 129, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(217, 125, 100, 0.08);
 }
 
 .light-theme .glass-panel:hover {
-  box-shadow: 0 8px 32px 0 rgba(5, 150, 105, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(171, 86, 63, 0.08);
 }
 
 .gold-gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 30%, #10b981 70%, #047857 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f7f4f0 30%, #d97d64 70%, #ab563f 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .light-theme .gold-gradient-text {
-  background: linear-gradient(135deg, #022c1e 0%, #059669 50%, #047857 100%);
+  background: linear-gradient(135deg, #2b221a 0%, #ab563f 50%, #89412e 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -113,7 +113,7 @@ a {
 }
 
 .cosmic-button {
-  background: linear-gradient(135deg, #022c1e 0%, #10b981 100%);
+  background: linear-gradient(135deg, #2b221a 0%, #d97d64 100%);
   border: 1px solid var(--border-glass);
   color: white;
   padding: 12px 28px;
@@ -125,14 +125,14 @@ a {
   align-items: center;
   gap: 8px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 4px 20px rgba(217, 125, 100, 0.2);
   position: relative;
   overflow: hidden;
 }
 
 .light-theme .cosmic-button {
-  background: linear-gradient(135deg, #059669 0%, #034f37 100%);
-  box-shadow: 0 4px 20px rgba(5, 150, 105, 0.3);
+  background: linear-gradient(135deg, #ab563f 0%, #89412e 100%);
+  box-shadow: 0 4px 20px rgba(171, 86, 63, 0.3);
   color: #ffffff;
 }
 
@@ -159,18 +159,18 @@ a {
 
 .cosmic-button:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
-  background: linear-gradient(135deg, #023625 0%, #34d399 100%);
+  box-shadow: 0 8px 25px rgba(217, 125, 100, 0.45);
+  background: linear-gradient(135deg, #2b221a 0%, #e8a593 100%);
 }
 
 .light-theme .cosmic-button:hover {
-  background: linear-gradient(135deg, #10b981 0%, #046a4a 100%);
-  box-shadow: 0 8px 25px rgba(5, 150, 105, 0.45);
+  background: linear-gradient(135deg, #d97d64 0%, #ab563f 100%);
+  box-shadow: 0 8px 25px rgba(171, 86, 63, 0.45);
 }
 
 .gold-button {
-  background: linear-gradient(135deg, #022c1e 0%, #10b981 100%);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, #2b221a 0%, #d97d64 100%);
+  border: 1px solid rgba(217, 125, 100, 0.3);
   color: white;
   padding: 12px 28px;
   border-radius: 30px;
@@ -181,16 +181,16 @@ a {
   align-items: center;
   gap: 8px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 4px 20px rgba(217, 125, 100, 0.2);
   position: relative;
   overflow: hidden;
 }
 
 .light-theme .gold-button {
   background: #ffffff;
-  color: #059669;
-  border: 2px solid #059669;
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.1);
+  color: #ab563f;
+  border: 2px solid #ab563f;
+  box-shadow: 0 4px 12px rgba(171, 86, 63, 0.1);
 }
 
 .gold-button::before {
@@ -216,15 +216,15 @@ a {
 
 .gold-button:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
-  border-color: rgba(16, 185, 129, 0.6);
+  box-shadow: 0 8px 25px rgba(217, 125, 100, 0.35);
+  border-color: rgba(217, 125, 100, 0.6);
 }
 
 .light-theme .gold-button:hover {
-  background: #059669;
+  background: #ab563f;
   color: #ffffff;
-  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.25);
-  border-color: #059669;
+  box-shadow: 0 8px 20px rgba(171, 86, 63, 0.25);
+  border-color: #ab563f;
 }
 
 /* Premium Navigation Link Hover Underline */
@@ -311,7 +311,7 @@ a {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(135deg, #0d1e18 0%, #152d24 50%, #10231c 100%);
+  background: linear-gradient(135deg, #181512 0%, #201b17 50%, #161311 100%);
   z-index: 9999;
   display: flex;
   justify-content: center;
@@ -323,7 +323,7 @@ a {
 }
 
 .light-theme .cosmic-curtain {
-  background: linear-gradient(135deg, #f4faf7 0%, #e6f4ed 50%, #d8eee2 100%);
+  background: linear-gradient(135deg, #f9f6f0 0%, #f1ebe1 50%, #e8decb 100%);
 }
 
 .cosmic-curtain.active {
@@ -341,7 +341,7 @@ a {
   border: 2px solid var(--color-gold);
   position: relative;
   animation: portalSpin 3s linear infinite;
-  box-shadow: 0 0 40px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 40px rgba(217, 125, 100, 0.4);
 }
 
 .portal-ring::before {
@@ -371,13 +371,13 @@ a {
   width: 280px;
   height: 280px;
   border-radius: 50%;
-  background: radial-gradient(circle, #1a352a 0%, #0d1e18 100%);
+  background: radial-gradient(circle, #25201b 0%, #151210 100%);
   border: 3px double var(--color-gold);
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(217, 125, 100, 0.1);
   cursor: pointer;
 }
 
@@ -385,7 +385,7 @@ a {
   width: 90%;
   height: 90%;
   border-radius: 50%;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(217, 125, 100, 0.2);
   position: relative;
   display: flex;
   justify-content: center;
@@ -493,11 +493,11 @@ a {
 .sleek-card:hover {
   transform: translateY(-8px);
   border-color: var(--border-active);
-  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.12);
+  box-shadow: 0 12px 40px rgba(217, 125, 100, 0.12);
 }
 
 .light-theme .sleek-card:hover {
-  box-shadow: 0 12px 40px rgba(5, 150, 105, 0.12);
+  box-shadow: 0 12px 40px rgba(171, 86, 63, 0.12);
 }
 
 .sleek-card-img-wrap {
@@ -565,16 +565,16 @@ a {
   gap: 30px;
   align-items: start;
   border-radius: 20px;
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(16, 185, 129, 0.05);
+  border: 1px solid rgba(217, 125, 100, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(217, 125, 100, 0.05);
   background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
 
 .light-theme .celestial-board {
-  border: 1px solid rgba(5, 150, 105, 0.25);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), 0 0 20px rgba(5, 150, 105, 0.05);
+  border: 1px solid rgba(171, 86, 63, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), 0 0 20px rgba(171, 86, 63, 0.05);
 }
 
 .selector-tab {
@@ -592,7 +592,7 @@ a {
 
 .selector-tab:hover {
   border-color: var(--color-gold) !important;
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.02) 0%, var(--border-glass) 100%) !important;
+  background: linear-gradient(90deg, rgba(217, 125, 100, 0.02) 0%, var(--border-glass) 100%) !important;
 }
 
 /* Responsive design for split panel */
@@ -634,7 +634,7 @@ a {
 .theme-toggle-btn:hover {
   transform: rotate(45deg) scale(1.1);
   border-color: var(--border-active) !important;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 15px rgba(217, 125, 100, 0.2);
 }
 
 .theme-toggle-btn svg {
@@ -654,7 +654,7 @@ a {
 }
 
 @keyframes starPulse {
-  0% { opacity: 0.3; transform: scale(0.9); filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.4)); }
+  0% { opacity: 0.3; transform: scale(0.9); filter: drop-shadow(0 0 2px rgba(217, 125, 100, 0.4)); }
   100% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 10px var(--color-gold)); }
 }
 
@@ -671,8 +671,8 @@ a {
 
 /* 2. Vastu: Mandala Compass */
 @keyframes compassPulse {
-  0% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.1), inset 0 0 20px rgba(16, 185, 129, 0.05); }
-  100% { box-shadow: 0 0 45px rgba(16, 185, 129, 0.35), inset 0 0 35px rgba(16, 185, 129, 0.2); }
+  0% { box-shadow: 0 0 20px rgba(217, 125, 100, 0.1), inset 0 0 20px rgba(217, 125, 100, 0.05); }
+  100% { box-shadow: 0 0 45px rgba(217, 125, 100, 0.35), inset 0 0 35px rgba(217, 125, 100, 0.2); }
 }
 
 @keyframes compassSpin {
@@ -694,7 +694,7 @@ a {
 
 /* 3. Solar Eclipse */
 @keyframes sunCorona {
-  0% { filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.6)); }
+  0% { filter: drop-shadow(0 0 20px rgba(217, 125, 100, 0.6)); }
   100% { filter: drop-shadow(0 0 45px var(--color-gold)); }
 }
 

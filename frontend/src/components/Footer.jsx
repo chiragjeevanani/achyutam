@@ -45,13 +45,13 @@ export default function Footer() {
             <li style={{ display: 'flex', gap: '12px', color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
               <MapPin size={24} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
               <div>
-                <strong>Cosmic Siddhas LLP</strong>
-                <p>5032, 3rd Floor, Rustomjee Eazone Mall, Sunder Nagar, Goregaon (West), Mumbai, MH - 400104</p>
+                <strong>Office Location</strong>
+                <p>TS Police Academy, INDIS PBEL CITY, Nehru Outer Ring Rd, Exit - 18, Hyderabad, Telangana 500091</p>
               </div>
             </li>
             <li style={{ display: 'flex', gap: '12px', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
               <Phone size={18} style={{ color: 'var(--color-gold)' }} />
-              <span>+91 9930 60 9996</span>
+              <span>+91 95590 96656</span>
             </li>
             <li style={{ display: 'flex', gap: '12px', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
               <Mail size={18} style={{ color: 'var(--color-gold)' }} />
