@@ -138,7 +138,7 @@ export default function Experience() {
       {/* ── VIDEO (hidden during stars phase) ─────────────────────────────── */}
       <video
         ref={videoRef}
-        src="/upscaled-video.mp4"
+        src="https://res.cloudinary.com/dqxa7qquk/video/upload/v1781433532/achyutam_experience_video.mp4"
         playsInline
         onCanPlayThrough={() => setVideoReady(true)}
         onEnded={handleVideoEnd}
