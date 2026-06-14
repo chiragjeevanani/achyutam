@@ -405,7 +405,7 @@ export default function Home() {
           </div>
           
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.2rem)', lineHeight: '1.1', fontWeight: '800' }}>
-            <span className="gold-gradient-text">{renderTextReveal("Achyutam Maestro", 0)}</span><br />
+            <span className="gold-gradient-text reveal-blur inline-block in-view" style={{ animationDelay: '0ms' }}>Achyutam Maestro</span><br />
             {renderTextReveal("Transforming Spaces & Destiny", 12)}
           </h1>
           
