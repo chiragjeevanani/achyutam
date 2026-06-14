@@ -318,10 +318,18 @@ export default function Home() {
           <circle cx="0" cy="0" r="3.5" fill="#1E1B24" />
         </g>
 
-        <path id="brahmaTextPath" d={`M ${cx - 32} ${cy + 20} A 32 32 0 0 0 ${cx + 32} ${cy + 20}`} fill="none" />
-        <text fontSize="6.5" fontWeight="900" fill="#FBBF24" letterSpacing="0.05em">
-          <textPath href="#brahmaTextPath" startOffset="50%" textAnchor="middle">
+        {/* Concentric paths for Brahmasthan & Sudarshan Chakra text */}
+        <path id="brahmaTopPath" d="M 202 240 A 38 38 0 0 1 278 240" fill="none" />
+        <path id="brahmaBottomPath" d="M 278 240 A 38 38 0 0 1 202 240" fill="none" />
+        
+        <text fontSize="5.5" fontWeight="900" fill="#FBBF24" letterSpacing="0.06em">
+          <textPath href="#brahmaTopPath" startOffset="50%" textAnchor="middle">
             BRAHMASTHAN
+          </textPath>
+        </text>
+        <text fontSize="4.8" fontWeight="800" fill="rgba(251, 191, 36, 0.75)" letterSpacing="0.05em">
+          <textPath href="#brahmaBottomPath" startOffset="50%" textAnchor="middle">
+            SUDARSHAN CHAKRA
           </textPath>
         </text>
       </svg>
