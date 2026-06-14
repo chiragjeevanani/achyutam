@@ -11,6 +11,7 @@ import Yogadhan from './pages/Yogadhan';
 import Booking from './pages/Booking';
 import Blog from './pages/Blog';
 import VastuTips from './pages/VastuTips';
+import Experience from './pages/Experience';
 import Lenis from 'lenis';
 import { useScrollAnimation } from './hooks/useScrollAnimation';
 import ScrollProgress from './components/ScrollProgress';
@@ -255,13 +256,18 @@ export default function App() {
       </div>
 
       {/* Scroll Progress Bar */}
-      <ScrollProgress />
+      {displayLocation.pathname !== '/experience' && <ScrollProgress />}
 
       {/* Navbar */}
-      <Navbar />
+      {displayLocation.pathname !== '/experience' && <Navbar />}
 
       {/* Main Content Area */}
-      <div style={{ flex: 1 }} className="page-transition-wrapper" key={displayLocation.pathname}>
+      {/* Experience page — full screen, no navbar/footer */}
+      {displayLocation.pathname === '/experience' && (
+        <Experience key="experience" />
+      )}
+
+      <div style={{ flex: 1, display: displayLocation.pathname === '/experience' ? 'none' : 'block' }} className="page-transition-wrapper" key={displayLocation.pathname}>
         <Routes location={displayLocation}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -272,11 +278,12 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/experience" element={<></>} />
         </Routes>
       </div>
 
       {/* Footer */}
-      <Footer />
+      {displayLocation.pathname !== '/experience' && <Footer />}
 
       <style>{`
         @keyframes pulse {
