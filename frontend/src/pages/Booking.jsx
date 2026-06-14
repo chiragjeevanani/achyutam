@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, Sun, Star, Compass, Heart, Eye, Calendar, Clock, User, CheckCircle2, ChevronRight, ChevronLeft, CreditCard, Receipt, Printer, ArrowRight, Radio } from 'lucide-react';
 
 export default function Booking() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    const handleThemeChange = (e) => {
+      setTheme(e.detail || localStorage.getItem('theme') || 'dark');
+    };
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
+
   const [step, setStep] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   
@@ -81,10 +91,19 @@ export default function Booking() {
       price: 500,
       duration: 'Energy Check',
       icon: <Radio size={20} style={{ color: 'var(--color-gold)' }} />
+    },
+    {
+      id: 'yogadhan',
+      title: 'Yogadhan Consultation',
+      category: 'Yogadhan',
+      sub: 'Specialized Astro-Vastu Kundli & Directional Alignment',
+      price: 7500,
+      duration: '30 Mins',
+      icon: <Compass size={20} style={{ color: 'var(--color-gold)' }} />
     }
   ];
 
-  const categories = ['ALL', 'Vastu', 'Numerology', 'Astrology', 'Tarot', 'Counselling', 'Aura Scanner'];
+  const categories = ['ALL', 'Vastu', 'Numerology', 'Astrology', 'Tarot', 'Counselling', 'Aura Scanner', 'Yogadhan'];
 
   const filteredServices = selectedCategory === 'ALL' 
     ? servicesList 
@@ -112,11 +131,35 @@ export default function Booking() {
     setCurrentMonth(new Date(viewYear, viewMonth + 1, 1));
   };
 
-  const timeSlots = [
-    { label: 'Morning slots', slots: ['10:00 AM', '11:15 AM', '11:30 AM'] },
-    { label: 'Afternoon slots', slots: ['02:00 PM', '03:15 PM', '04:30 PM'] },
-    { label: 'Evening slots', slots: ['05:45 PM', '06:00 PM', '07:15 PM'] }
-  ];
+  const getSlotsData = () => {
+    if (selectedService?.id === 'yogadhan') {
+      return [
+        { 
+          label: 'Morning slots', 
+          slots: [
+            { time: '10:30 am to 11:00 am', disabled: true },
+            { time: '11:00 am to 11:30 am', disabled: false },
+            { time: '11:30 am to 12:00 pm', disabled: false }
+          ] 
+        },
+        { 
+          label: 'Afternoon slots', 
+          slots: [
+            { time: '12:00 pm to 12:30 pm', disabled: false },
+            { time: '12:30 pm to 01:00 pm', disabled: false },
+            { time: '01:00 pm to 01:30 pm', disabled: true },
+            { time: '01:30 pm to 02:00 pm', disabled: true }
+          ] 
+        }
+      ];
+    }
+    
+    return [
+      { label: 'Morning slots', slots: [{ time: '10:00 AM', disabled: false }, { time: '11:15 AM', disabled: false }, { time: '11:30 AM', disabled: false }] },
+      { label: 'Afternoon slots', slots: [{ time: '02:00 PM', disabled: false }, { time: '03:15 PM', disabled: false }, { time: '04:30 PM', disabled: false }] },
+      { label: 'Evening slots', slots: [{ time: '05:45 PM', disabled: false }, { time: '06:00 PM', disabled: false }, { time: '07:15 PM', disabled: false }] }
+    ];
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -187,7 +230,7 @@ export default function Booking() {
                 width: '28px',
                 height: '28px',
                 borderRadius: '50%',
-                background: isActive ? 'var(--color-gold)' : isCompleted ? '#22c55e' : 'var(--border-glass)',
+                background: isActive ? (s.number === 1 ? 'var(--color-gold)' : s.number === 2 ? 'var(--color-purple)' : s.number === 3 ? 'var(--color-indigo)' : 'var(--color-yellow)') : isCompleted ? '#22c55e' : 'var(--border-glass)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -198,7 +241,7 @@ export default function Booking() {
               }}>
                 {isCompleted ? <CheckCircle2 size={16} style={{ color: '#ffffff' }} /> : s.number}
               </div>
-              <span style={{ fontSize: '0.8rem', fontWeight: isActive ? '600' : '400', color: isActive ? 'var(--color-gold)' : 'var(--text-primary)' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: isActive ? '600' : '400', color: isActive ? (s.number === 1 ? 'var(--color-gold)' : s.number === 2 ? 'var(--color-purple)' : s.number === 3 ? 'var(--color-indigo)' : 'var(--color-yellow)') : 'var(--text-primary)' }}>
                 {s.label}
               </span>
             </div>
@@ -328,7 +371,7 @@ export default function Booking() {
               <div>
                 {/* Monthly switcher header */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                  <h4 style={{ color: 'var(--color-gold)', letterSpacing: '0.05em', margin: 0 }}>Choose Date</h4>
+                  <h4 style={{ color: 'var(--color-purple)', letterSpacing: '0.05em', margin: 0 }}>Choose Date</h4>
                   
                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                     <button 
@@ -376,7 +419,7 @@ export default function Booking() {
                 </div>
 
                 {/* Day Labels */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', textAlign: 'center', marginBottom: '10px', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', opacity: 0.8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', textAlign: 'center', marginBottom: '10px', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-purple)', opacity: 0.8 }}>
                   {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
                     <div key={d}>{d}</div>
                   ))}
@@ -389,13 +432,15 @@ export default function Booking() {
                       return <div key={`empty-${idx}`} />
                     }
 
+                    const isThursday = date.getDay() === 4; // 4 is Thursday
                     const isPast = date < today;
+                    const isDisabled = isPast || (selectedService?.id === 'yogadhan' && !isThursday);
                     const isSelected = selectedDate?.toDateString() === date.toDateString();
                     
                     return (
                       <button
                         key={idx}
-                        disabled={isPast}
+                        disabled={isDisabled}
                         onClick={() => setSelectedDate(date)}
                         style={{
                           background: isSelected 
@@ -406,15 +451,15 @@ export default function Booking() {
                             : '1px solid var(--border-glass)',
                           color: isSelected 
                             ? '#000000' 
-                            : isPast ? 'var(--text-muted)' : 'var(--text-primary)',
+                            : isDisabled ? 'var(--text-muted)' : 'var(--text-primary)',
                           borderRadius: '8px',
                           aspectRatio: '1/1',
-                          cursor: isPast ? 'not-allowed' : 'pointer',
+                          cursor: isDisabled ? 'not-allowed' : 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           fontSize: '0.85rem',
-                          fontWeight: isSelected || !isPast ? 'bold' : 'normal',
+                          fontWeight: isSelected || !isDisabled ? 'bold' : 'normal',
                           transition: 'all 0.3s'
                         }}
                       >
@@ -427,34 +472,66 @@ export default function Booking() {
 
               {/* Time slots */}
               <div>
-                <h4 style={{ color: 'var(--color-gold)', marginBottom: '15px', letterSpacing: '0.05em' }}>Available Energy Slots</h4>
+                <h4 style={{ color: 'var(--color-purple)', marginBottom: '15px', letterSpacing: '0.05em' }}>Available Energy Slots</h4>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  {timeSlots.map((group, gIdx) => (
+                  {getSlotsData().map((group, gIdx) => (
                     <div key={gIdx}>
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '8px' }}>
                         {group.label}
                       </span>
                       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                         {group.slots.map((slot) => {
-                          const isSelected = selectedTimeSlot === slot;
+                          const isSelected = selectedTimeSlot === slot.time;
+                          const isYogadhan = selectedService?.id === 'yogadhan';
+                          
+                          // Style based on selection and disable state
+                          let buttonBg = 'var(--bg-dark)';
+                          let buttonBorder = '1px solid var(--border-glass)';
+                          let buttonColor = 'var(--text-primary)';
+                          let buttonCursor = 'pointer';
+                          let pointerEvents = 'auto';
+                          let opacity = 1;
+
+                          if (slot.disabled) {
+                            buttonBg = 'transparent';
+                            buttonBorder = '1px solid rgba(226, 232, 240, 0.15)';
+                            buttonColor = 'rgba(226, 232, 240, 0.3)';
+                            buttonCursor = 'not-allowed';
+                            pointerEvents = 'none';
+                            opacity = 0.5;
+                          } else if (isSelected) {
+                            if (isYogadhan) {
+                              buttonBg = 'rgba(16, 185, 129, 0.1)';
+                              buttonBorder = '1px solid #10B981';
+                              buttonColor = '#10B981';
+                            } else {
+                              buttonBg = 'rgba(217, 125, 100, 0.2)';
+                              buttonBorder = '1px solid var(--color-gold)';
+                              buttonColor = 'var(--color-gold)';
+                            }
+                          }
+
                           return (
                             <button
-                              key={slot}
-                              onClick={() => setSelectedTimeSlot(slot)}
+                              key={slot.time}
+                              disabled={slot.disabled}
+                              onClick={() => setSelectedTimeSlot(slot.time)}
                               style={{
-                                background: isSelected ? 'rgba(217, 125, 100, 0.2)' : 'var(--bg-dark)',
-                                border: isSelected ? '1px solid var(--color-gold)' : '1px solid var(--border-glass)',
-                                color: isSelected ? 'var(--color-gold)' : 'var(--text-primary)',
+                                background: buttonBg,
+                                border: buttonBorder,
+                                color: buttonColor,
                                 borderRadius: '8px',
                                 padding: '8px 12px',
-                                cursor: 'pointer',
+                                cursor: buttonCursor,
                                 fontSize: '0.8rem',
-                                transition: 'all 0.3s'
+                                transition: 'all 0.3s',
+                                pointerEvents: pointerEvents,
+                                opacity: opacity
                               }}
                             >
                               <Clock size={12} style={{ marginRight: '5px', verticalAlign: 'middle', display: 'inline' }} />
-                              {slot}
+                              {slot.time}
                             </button>
                           );
                         })}
@@ -496,7 +573,7 @@ export default function Booking() {
               {/* Form columns */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: 'var(--color-gold)', display: 'block', marginBottom: '6px' }}>Full Name *</label>
+                  <label style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', display: 'block', marginBottom: '6px' }}>Full Name *</label>
                   <input
                     type="text"
                     name="name"
@@ -508,7 +585,7 @@ export default function Booking() {
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: 'var(--color-gold)', display: 'block', marginBottom: '6px' }}>Email Address *</label>
+                  <label style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', display: 'block', marginBottom: '6px' }}>Email Address *</label>
                   <input
                     type="email"
                     name="email"
@@ -520,7 +597,7 @@ export default function Booking() {
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: 'var(--color-gold)', display: 'block', marginBottom: '6px' }}>Phone Number *</label>
+                  <label style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', display: 'block', marginBottom: '6px' }}>Phone Number *</label>
                   <input
                     type="tel"
                     name="phone"
@@ -537,7 +614,7 @@ export default function Booking() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 {(selectedService?.category === 'Astrology' || selectedService?.category === 'Numerology' || selectedService?.category === 'Tarot') && (
                   <>
-                    <h5 style={{ color: 'var(--color-gold)', margin: '0 0 5px' }}>Birth Alignment Data (Highly Recommended)</h5>
+                    <h5 style={{ color: 'var(--color-indigo)', margin: '0 0 5px' }}>Birth Alignment Data (Highly Recommended)</h5>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                       <div>
                         <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Birth Date</label>
@@ -576,7 +653,7 @@ export default function Booking() {
 
                 {(selectedService?.category === 'Vastu' || selectedService?.category === 'Aura Scanner') && (
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: 'var(--color-gold)', display: 'block', marginBottom: '6px' }}>Site Address for Scan / Vastu</label>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', display: 'block', marginBottom: '6px' }}>Site Address for Scan / Vastu</label>
                     <textarea
                       name="vastuAddress"
                       value={formData.vastuAddress}
@@ -589,7 +666,7 @@ export default function Booking() {
                 )}
 
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: 'var(--color-gold)', display: 'block', marginBottom: '6px' }}>Energy Focus or Notes</label>
+                  <label style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', display: 'block', marginBottom: '6px' }}>Energy Focus or Notes</label>
                   <textarea
                     name="notes"
                     value={formData.notes}
@@ -668,9 +745,9 @@ export default function Booking() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(217, 125, 100, 0.15)', paddingBottom: '15px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <img 
-                    src="https://achyutammaestro.com/wp-content/uploads/2026/01/achyutham-logo.jpeg" 
+                    src={theme === 'dark' ? '/achyutamlogodark.png' : '/achyutamlogo.png'} 
                     alt="Logo" 
-                    style={{ width: '45px', height: '45px', borderRadius: '50%', border: '1px solid var(--color-gold)' }} 
+                    style={{ width: '80px', height: '80px', objectFit: 'contain' }} 
                   />
                   <div>
                     <h3 style={{ fontSize: '1rem', fontFamily: 'var(--font-serif)', margin: 0 }}>ACHYUTAM MAESTRO</h3>

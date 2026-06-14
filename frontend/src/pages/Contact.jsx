@@ -17,8 +17,8 @@ export default function Contact() {
     <div style={{ padding: '45px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>
       
       {/* Title */}
-      <section style={{ textAlign: 'center', padding: '0 0 20px' }}>
-        <span style={{ color: 'var(--color-gold)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>CONNECT</span>
+      <section style={{ textAlign: 'center', padding: '0 0 20px' }} className="reveal-zoom-out">
+        <span style={{ color: 'var(--color-purple)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>CONNECT</span>
         <h1 style={{ fontSize: '2.3rem', marginTop: '10px', marginBottom: '15px' }} className="gold-gradient-text">Book Consultation</h1>
         <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto', lineHeight: '1.7' }}>
           Schedule a custom directional or numerological assessment session with Upasana Ji. Feel free to reach out to our Mumbai headquarters.
@@ -29,9 +29,9 @@ export default function Contact() {
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '40px', marginTop: '40px' }} className="contact-grid">
         
         {/* Contact details */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+        <div className="reveal-stagger" data-stagger-step="100" style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
           
-          <div className="glass-panel" style={{ padding: '30px' }}>
+          <div className="glass-panel reveal-left magnetic-hover" style={{ padding: '30px' }}>
             <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', marginBottom: '20px', color: 'var(--color-gold)' }}>Our Headquarters</h3>
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '20px', listStyle: 'none' }}>
               <li style={{ display: 'flex', gap: '16px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
@@ -46,14 +46,14 @@ export default function Contact() {
                 </div>
               </li>
               <li style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--text-primary)' }}>
-                <Phone size={20} style={{ color: 'var(--color-gold)' }} />
+                <Phone size={20} style={{ color: 'var(--color-indigo)' }} />
                 <div>
                   <strong>Direct Hotline</strong>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '2px' }}>+91 95590 96656</p>
                 </div>
               </li>
               <li style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--text-primary)' }}>
-                <Mail size={20} style={{ color: 'var(--color-gold)' }} />
+                <Mail size={20} style={{ color: 'var(--color-purple)' }} />
                 <div>
                   <strong>Email</strong>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '2px' }}>connect@achyutammaestro.com</p>
@@ -63,9 +63,9 @@ export default function Contact() {
           </div>
 
           {/* Time mock */}
-          <div className="glass-panel" style={{ padding: '30px' }}>
+          <div className="glass-panel reveal-left magnetic-hover" style={{ padding: '30px' }}>
             <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Clock size={20} style={{ color: 'var(--color-gold)' }} /> Today's Time Slots
+              <Clock size={20} style={{ color: 'var(--color-purple)' }} /> Today's Time Slots
             </h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
               {times.map((time) => (
@@ -76,9 +76,9 @@ export default function Contact() {
                     padding: '8px 16px',
                     borderRadius: '20px',
                     border: '1px solid',
-                    borderColor: selectedTime === time ? 'var(--color-gold)' : 'var(--border-glass)',
-                    background: selectedTime === time ? 'rgba(217, 125, 100, 0.15)' : 'var(--bg-dark)',
-                    color: selectedTime === time ? 'var(--color-gold)' : 'var(--text-primary)',
+                    borderColor: selectedTime === time ? 'var(--color-purple)' : 'var(--border-glass)',
+                    background: selectedTime === time ? 'rgba(59, 130, 246, 0.15)' : 'var(--bg-dark)',
+                    color: selectedTime === time ? 'var(--color-purple)' : 'var(--text-primary)',
                     cursor: 'pointer',
                     fontSize: '0.85rem',
                     transition: 'all 0.2s'
@@ -89,7 +89,7 @@ export default function Contact() {
               ))}
             </div>
             {selectedTime && (
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-gold)', marginTop: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-purple)', marginTop: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Check size={14} /> Selected {selectedTime} Slot
               </p>
             )}
@@ -98,10 +98,10 @@ export default function Contact() {
         </div>
 
         {/* Contact Form */}
-        <div className="glass-panel" style={{ padding: '40px 30px' }}>
+        <div className="glass-panel reveal-right" style={{ padding: '40px 30px' }}>
           {submitted ? (
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '16px', padding: '40px 0' }}>
-              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(217, 125, 100, 0.1)', border: '1px solid var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(229, 62, 62, 0.1)', border: '1px solid var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
                 <Check size={28} style={{ color: 'var(--color-gold)' }} />
               </div>
               <h3 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)' }}>Booking Requested</h3>
@@ -110,11 +110,11 @@ export default function Contact() {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', marginBottom: '10px' }}>Send Consultation Request</h3>
+            <form onSubmit={handleSubmit} className="reveal-stagger" data-stagger-step="60" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', marginBottom: '10px' }} className="reveal">Send Consultation Request</h3>
               
-              <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-gold)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Full Name</label>
+              <div className="reveal">
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Full Name</label>
                 <input 
                   type="text" 
                   required 
@@ -125,8 +125,8 @@ export default function Contact() {
                 />
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-gold)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Phone Number</label>
+              <div className="reveal">
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Phone Number</label>
                 <input 
                   type="tel" 
                   required 
@@ -137,8 +137,8 @@ export default function Contact() {
                 />
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-gold)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email Address</label>
+              <div className="reveal">
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email Address</label>
                 <input 
                   type="email" 
                   required 
@@ -149,8 +149,8 @@ export default function Contact() {
                 />
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-gold)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Consultation Type</label>
+              <div className="reveal">
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Consultation Type</label>
                 <select 
                   value={form.service}
                   onChange={(e) => setForm({ ...form, service: e.target.value })}
@@ -163,8 +163,8 @@ export default function Contact() {
                 </select>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-gold)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Message / Details</label>
+              <div className="reveal">
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Message / Details</label>
                 <textarea 
                   rows="4" 
                   value={form.message}
@@ -174,7 +174,7 @@ export default function Contact() {
                 />
               </div>
 
-              <button type="submit" className="cosmic-button" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}>
+              <button type="submit" className="cosmic-button reveal" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}>
                 <Calendar size={18} /> Request Appointment
               </button>
 

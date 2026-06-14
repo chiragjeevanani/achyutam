@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Sun, Star, Compass, Heart, Eye, ArrowRight, Radio } from 'lucide-react';
+import { Sparkles, Sun, Star, Compass, Heart, Eye, ArrowRight, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Services() {
   const [activeIdx, setActiveIdx] = useState(0);
+  const [flipState, setFlipState] = useState({ active: false, direction: 'forward', key: 0 });
 
   const fullServices = [
     {
       title: 'Vastu Discussion',
+      colorVar: 'var(--color-indigo)',
+      badgeClass: 'badge-earth',
+      borderVal: 'rgba(16, 185, 129, 0.3)',
+      bgVal: 'rgba(16, 185, 129, 0.08)',
+      activeGlow: 'rgba(16, 185, 129, 0.12)',
       sub: 'Directions, Placements & Energy Corrections',
       desc: 'Vastu consultation balances the energy of your home or workplace environment. It provides guidance on directions, placements, and necessary corrections. These suggestions help create prosperity, peace, and overall well-being completely without demolition.',
       price: 5100,
@@ -25,6 +31,11 @@ export default function Services() {
     },
     {
       title: 'Numerology Consultation',
+      colorVar: 'var(--color-yellow)',
+      badgeClass: 'badge-gold',
+      borderVal: 'rgba(251, 191, 36, 0.3)',
+      bgVal: 'rgba(251, 191, 36, 0.08)',
+      activeGlow: 'rgba(251, 191, 36, 0.12)',
       sub: 'Vibrational Frequency & Lo Shu Grid',
       desc: 'Numerology helps you understand how numbers influence your life path and personality. It provides guidance for career, relationships, and financial decisions with deeper clarity, utilizing classic birth grid alignments.',
       price: 3100,
@@ -41,6 +52,11 @@ export default function Services() {
     },
     {
       title: 'Astrology Consultation',
+      colorVar: 'var(--color-purple)',
+      badgeClass: 'badge-water',
+      borderVal: 'rgba(59, 130, 246, 0.3)',
+      bgVal: 'rgba(59, 130, 246, 0.08)',
+      activeGlow: 'rgba(59, 130, 246, 0.12)',
       sub: 'Kundli Readings & Planetary Cures',
       desc: 'Astrology consultation analyzes your birth chart to understand life challenges and opportunities. It gives clear answers related to career, marriage, health, and personal growth. Effective remedies are suggested to reduce obstacles and bring positivity.',
       price: 4100,
@@ -56,6 +72,11 @@ export default function Services() {
     },
     {
       title: 'Tarot Reading',
+      colorVar: 'var(--color-gold)',
+      badgeClass: 'badge-fire',
+      borderVal: 'rgba(255, 51, 51, 0.3)',
+      bgVal: 'rgba(255, 51, 51, 0.08)',
+      activeGlow: 'rgba(255, 51, 51, 0.12)',
       sub: 'Intuitive Insight & Future Paths',
       desc: 'Tarot reading offers intuitive insights into your present situation and future possibilities. It helps you find answers about love, career, emotions, and important life choices. The session brings clarity, confidence, and peaceful direction to your mind.',
       price: 2100,
@@ -71,6 +92,11 @@ export default function Services() {
     },
     {
       title: 'Relationship Counselling',
+      colorVar: 'var(--color-purple)',
+      badgeClass: 'badge-water',
+      borderVal: 'rgba(59, 130, 246, 0.3)',
+      bgVal: 'rgba(59, 130, 246, 0.08)',
+      activeGlow: 'rgba(59, 130, 246, 0.12)',
       sub: 'Mutual Understanding & Connection',
       desc: 'Relationship counselling helps you improve understanding and emotional connection with your partner or family. It focuses on resolving conflicts, misunderstandings, and communication issues effectively.',
       price: 2400,
@@ -86,6 +112,11 @@ export default function Services() {
     },
     {
       title: 'Aura Scanner',
+      colorVar: 'var(--color-indigo)',
+      badgeClass: 'badge-earth',
+      borderVal: 'rgba(16, 185, 129, 0.3)',
+      bgVal: 'rgba(16, 185, 129, 0.08)',
+      activeGlow: 'rgba(16, 185, 129, 0.12)',
       sub: 'Energy Vibrations & Environmental Scanning',
       desc: 'Aura scanning evaluates the energy fields around you or your physical properties. By checking the energy of land, homes, and factories, it helps identify blockages, geopathic stress, and positive vibrational hot spots.',
       price: 500,
@@ -103,11 +134,213 @@ export default function Services() {
 
   const activeService = fullServices[activeIdx];
 
+  const renderCardContent = (service, showArrows = false) => {
+    if (!service) return null;
+    return (
+      <>
+        {/* Active Detail Column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', height: '100%', justifyContent: 'space-between', zIndex: 1 }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ color: service.colorVar, fontSize: '0.75rem', letterSpacing: '0.15em', fontWeight: 'bold' }}>
+                {service.sub.toUpperCase()}
+              </span>
+            </div>
+            <h2 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-serif)', marginTop: '6px', color: 'var(--text-primary)' }}>
+              {service.title}
+            </h2>
+            <div style={{ width: '50px', height: '2px', backgroundColor: service.colorVar, margin: '10px 0' }}></div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.7', marginBottom: '15px' }}>
+              {service.desc}
+            </p>
+            
+            <div style={{ 
+              display: 'flex', 
+              gap: '24px', 
+              margin: '15px 0', 
+              padding: '12px 16px', 
+              background: 'rgba(255, 255, 255, 0.02)', 
+              borderRadius: '8px', 
+              border: '1px solid ' + service.borderVal,
+              flexWrap: 'wrap'
+            }}>
+              <div>
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Energy Exchange</span>
+                <span style={{ color: service.colorVar, fontSize: '1.25rem', fontWeight: 'bold' }}>
+                  ₹{service.price}/-
+                </span>
+              </div>
+              {service.duration && (
+                <div style={{ borderLeft: '1px solid ' + service.borderVal, paddingLeft: '24px' }}>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Duration</span>
+                  <span style={{ color: service.colorVar, fontSize: '1.2rem', fontWeight: 'bold' }}>
+                    {service.duration}
+                  </span>
+                </div>
+              )}
+            </div>
+            
+            {service.note && (
+              <div style={{ 
+                fontSize: '0.8rem', 
+                color: service.colorVar,
+                fontStyle: 'italic', 
+                background: 'rgba(212, 175, 55, 0.05)', 
+                padding: '8px 12px', 
+                borderRadius: '6px', 
+                borderLeft: '2px solid ' + service.colorVar,
+                marginTop: '10px',
+                lineHeight: '1.4'
+              }}>
+                * {service.note}
+              </div>
+            )}
+          </div>
+
+          {/* Scope / Deliverables list */}
+          <div>
+            <h4 style={{ color: service.colorVar, fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '0.05em' }}>
+              Scope & Specialized Offerings
+            </h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {service.list.map((item, idx) => (
+                <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.85rem', color: 'var(--text-primary)' }}>
+                  <Star size={8} style={{ color: service.colorVar, marginTop: '4px', flexShrink: 0 }} />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* CTA action */}
+          <div style={{ marginTop: '10px' }}>
+            <Link to="/booking" className="cosmic-button" style={{ width: '100%', justifyContent: 'center', padding: '10px 20px', fontSize: '0.85rem' }}>
+              Book Your {service.title}
+            </Link>
+          </div>
+        </div>
+
+        {/* Active Artwork Column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', height: '100%', justifyContent: 'center', zIndex: 1 }}>
+          <div className="magnetic-hover" style={{ 
+            borderRadius: '16px', 
+            overflow: 'visible', 
+            border: '2px solid rgba(217, 125, 100, 0.3)',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(217, 125, 100, 0.1)',
+            background: 'var(--bg-dark)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            aspectRatio: '1/1',
+            width: '100%'
+          }}>
+            {showArrows && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const prevIdx = (activeIdx - 1 + fullServices.length) % fullServices.length;
+                    handleTabClick(prevIdx, e);
+                  }}
+                  className="celestial-nav-arrow arrow-left"
+                  aria-label="Previous Service"
+                  style={{ pointerEvents: 'auto' }}
+                >
+                  <ChevronLeft size={22} style={{ color: 'var(--color-gold)' }} />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const nextIdx = (activeIdx + 1) % fullServices.length;
+                    handleTabClick(nextIdx, e);
+                  }}
+                  className="celestial-nav-arrow arrow-right"
+                  aria-label="Next Service"
+                  style={{ pointerEvents: 'auto' }}
+                >
+                  <ChevronRight size={22} style={{ color: 'var(--color-gold)' }} />
+                </button>
+              </>
+            )}
+            <img 
+              src={service.img} 
+              alt={service.title} 
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'contain',
+                transition: 'all 0.5s ease',
+                padding: '8px'
+              }} 
+            />
+          </div>
+          <span style={{ 
+            textAlign: 'center', 
+            color: 'var(--text-muted)', 
+            fontSize: '0.75rem', 
+            fontStyle: 'italic',
+            letterSpacing: '0.05em'
+          }}>
+            Official Celestial Artwork for {service.title}
+          </span>
+        </div>
+      </>
+    );
+  };
+
+  const handleTabClick = (newIdx, e) => {
+    if (e && e.currentTarget) {
+      e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+    if (newIdx === activeIdx || flipState.active) return;
+    const diff = newIdx - activeIdx;
+    const direction = diff > 0 ? 'forward' : 'backward';
+    const count = Math.min(Math.abs(diff), 3);
+    
+    // Calculate the exact service indices to render on each double-sided sheet
+    const sheetPages = [];
+    if (direction === 'forward') {
+      for (let i = 0; i < count; i++) {
+        sheetPages.push({
+          front: activeIdx + i,
+          back: activeIdx + i + 1
+        });
+      }
+    } else {
+      for (let i = 0; i < count; i++) {
+        sheetPages.push({
+          front: activeIdx - 1 - i,
+          back: activeIdx - i
+        });
+      }
+    }
+
+    setFlipState({
+      active: true,
+      direction,
+      sheetPages,
+      key: Date.now()
+    });
+
+    const swapDelay = (count - 1) * 70 + 225;
+    const totalDelay = (count - 1) * 70 + 450;
+
+    // Swap content at exactly the vertical midpoint of the last turning page sheet
+    setTimeout(() => {
+      setActiveIdx(newIdx);
+    }, swapDelay);
+
+    setTimeout(() => {
+      setFlipState((prev) => ({ ...prev, active: false }));
+    }, totalDelay);
+  };
+
   return (
     <div style={{ padding: '45px 20px 60px', maxWidth: '1280px', margin: '0 auto' }}>
       
       {/* Mystical Cosmic Header */}
-      <section style={{ textAlign: 'center', marginBottom: '35px' }} className="reveal">
+      <section style={{ textAlign: 'center', marginBottom: '35px' }} className="reveal-zoom-out">
         <span style={{ color: 'var(--color-gold)', letterSpacing: '0.3em', fontSize: '0.8rem', fontWeight: 'bold' }}>THE DIVINE PATH</span>
         <h1 style={{ fontSize: '2.3rem', marginTop: '8px', marginBottom: '10px' }} className="gold-gradient-text">Our Divine Offerings</h1>
         <p style={{ color: 'var(--text-muted)', maxWidth: '650px', margin: '0 auto', lineHeight: '1.7', fontSize: '0.95rem' }}>
@@ -116,37 +349,28 @@ export default function Services() {
       </section>
 
       {/* Main Interactive Showcase Board */}
-      <div className="celestial-services-grid reveal">
+      <div className="celestial-services-grid">
         
         {/* Left Side: Elegant Selector Menu */}
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: '12px' 
-        }}>
+        <div className="reveal-left reveal-stagger services-selector-container" data-stagger-step="50">
           {fullServices.map((service, index) => {
             const isActive = activeIdx === index;
             return (
               <button
                 key={index}
-                onClick={() => setActiveIdx(index)}
+                onClick={(e) => handleTabClick(index, e)}
                 style={{
                   background: isActive ? 'linear-gradient(90deg, rgba(217, 125, 100, 0.08) 0%, var(--bg-dark) 100%)' : 'var(--bg-dark)',
                   border: isActive ? '1px solid var(--color-gold)' : '1px solid var(--border-glass)',
                   padding: '12px 16px',
                   boxShadow: isActive ? '0 4px 15px rgba(217, 125, 100, 0.08)' : 'none',
                 }}
-                className="selector-tab"
+                className="selector-tab reveal"
               >
-                {/* Active side indicator */}
+                {/* Active indicator */}
                 {isActive && (
-                  <div style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    width: '3px',
-                    backgroundColor: 'var(--color-gold)'
+                  <div className="active-tab-indicator" style={{
+                    backgroundColor: service.colorVar
                   }} />
                 )}
 
@@ -179,7 +403,7 @@ export default function Services() {
                   </h3>
                   <span style={{ 
                     fontSize: '0.7rem', 
-                    color: isActive ? 'var(--color-gold)' : 'rgba(148, 163, 184, 0.6)',
+                    color: isActive ? service.colorVar : 'rgba(148, 163, 184, 0.6)',
                     marginTop: '3px',
                     display: 'block'
                   }}>
@@ -190,7 +414,7 @@ export default function Services() {
                 <ArrowRight 
                   size={14} 
                   style={{ 
-                    color: isActive ? 'var(--color-gold)' : 'rgba(255, 255, 255, 0.1)',
+                    color: isActive ? service.colorVar : 'rgba(255, 255, 255, 0.1)',
                     transform: isActive ? 'translateX(0)' : 'translateX(-5px)',
                     transition: 'all 0.3s'
                   }} 
@@ -200,131 +424,39 @@ export default function Services() {
           })}
         </div>
 
-        {/* Right Side: The Sanctuary Active Feature Board */}
-        <div 
-          key={activeIdx} /* Re-render dynamically to trigger intro CSS animations */
-          className="celestial-board"
-        >
-          {/* Active Detail Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', height: '100%', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ color: 'var(--color-gold)', fontSize: '0.75rem', letterSpacing: '0.15em', fontWeight: 'bold' }}>
-                  {activeService.sub.toUpperCase()}
-                </span>
-              </div>
-              <h2 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-serif)', marginTop: '6px', color: 'var(--text-primary)' }}>
-                {activeService.title}
-              </h2>
-              <div style={{ width: '50px', height: '2px', backgroundColor: 'var(--color-gold)', margin: '10px 0' }}></div>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.7', marginBottom: '15px' }}>
-                {activeService.desc}
-              </p>
-              
-              <div style={{ 
-                display: 'flex', 
-                gap: '24px', 
-                margin: '15px 0', 
-                padding: '12px 16px', 
-                background: 'rgba(255, 255, 255, 0.02)', 
-                borderRadius: '8px', 
-                border: '1px solid var(--border-glass)',
-                flexWrap: 'wrap'
-              }}>
-                <div>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Energy Exchange</span>
-                  <span style={{ color: 'var(--color-gold)', fontSize: '1.25rem', fontWeight: 'bold' }}>
-                    ₹{activeService.price}/-
-                  </span>
-                </div>
-                {activeService.duration && (
-                  <div style={{ borderLeft: '1px solid var(--border-glass)', paddingLeft: '24px' }}>
-                    <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Duration</span>
-                    <span style={{ color: 'var(--text-primary)', fontSize: '1.2rem', fontWeight: 'bold' }}>
-                      {activeService.duration}
-                    </span>
+        {/* Right Side: Butter-Smooth 3D Page Flip Board */}
+        <div className="celestial-board-wrapper">
+          {flipState.active && (
+            <div className="book-page-container" key={flipState.key}>
+              {flipState.sheetPages.map((sheet, idx) => {
+                const frontService = fullServices[sheet.front];
+                const backService = fullServices[sheet.back];
+                return (
+                  <div 
+                    key={idx}
+                    className={`paper-sheet-overlay flip-page-${flipState.direction}`}
+                    style={{
+                      animationDelay: `${idx * 70}ms`,
+                      zIndex: flipState.direction === 'forward' 
+                        ? 200 + (flipState.sheetPages.length - idx) 
+                        : 200 + idx
+                    }}
+                  >
+                    <div className="page-face page-face-front celestial-board glow-pulse">
+                      {renderCardContent(frontService, false)}
+                    </div>
+                    <div className="page-face page-face-back celestial-board glow-pulse">
+                      {renderCardContent(backService, false)}
+                    </div>
                   </div>
-                )}
-              </div>
-              
-              {activeService.note && (
-                <div style={{ 
-                  fontSize: '0.8rem', 
-                  color: 'var(--color-gold)', 
-                  fontStyle: 'italic', 
-                  background: 'rgba(212, 175, 55, 0.05)', 
-                  padding: '8px 12px', 
-                  borderRadius: '6px', 
-                  borderLeft: '2px solid var(--color-gold)',
-                  marginTop: '10px',
-                  lineHeight: '1.4'
-                }}>
-                  * {activeService.note}
-                </div>
-              )}
+                );
+              })}
             </div>
+          )}
 
-            {/* Scope / Deliverables list */}
-            <div>
-              <h4 style={{ color: 'var(--color-gold)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '0.05em' }}>
-                Scope & Specialized Offerings
-              </h4>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {activeService.list.map((item, idx) => (
-                  <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.85rem', color: 'var(--text-primary)' }}>
-                    <Star size={8} style={{ color: 'var(--color-gold)', marginTop: '4px', flexShrink: 0 }} />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* CTA action */}
-            <div style={{ marginTop: '10px' }}>
-              <Link to="/booking" className="cosmic-button" style={{ width: '100%', justifyContent: 'center', padding: '10px 20px', fontSize: '0.85rem' }}>
-                Book Your {activeService.title}
-              </Link>
-            </div>
+          <div className="celestial-board glow-pulse">
+            {renderCardContent(activeService, true)}
           </div>
-
-          {/* Active Artwork Column (Sized properly to display the artwork in full glory) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', height: '100%', justifyContent: 'center' }}>
-            <div style={{ 
-              borderRadius: '16px', 
-              overflow: 'hidden', 
-              border: '2px solid rgba(217, 125, 100, 0.3)',
-              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(217, 125, 100, 0.1)',
-              background: 'var(--bg-dark)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-              aspectRatio: '1/1',
-              width: '100%'
-            }}>
-              <img 
-                src={activeService.img} 
-                alt={activeService.title} 
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'contain', /* Preserves full image without any crop */
-                  transition: 'all 0.5s ease',
-                  padding: '8px'
-                }} 
-              />
-            </div>
-            <span style={{ 
-              textAlign: 'center', 
-              color: 'var(--text-muted)', 
-              fontSize: '0.75rem', 
-              fontStyle: 'italic',
-              letterSpacing: '0.05em'
-            }}>
-              Official Celestial Artwork for {activeService.title}
-            </span>
-          </div>
-
         </div>
 
       </div>

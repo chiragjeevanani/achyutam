@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Compass, Phone, Mail, MapPin } from 'lucide-react';
 
 export default function Footer() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    const handleThemeChange = (e) => {
+      setTheme(e.detail || localStorage.getItem('theme') || 'dark');
+    };
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
+
   return (
     <footer className="glass-panel" style={{ marginTop: '80px', borderBottom: 'none', borderLeft: 'none', borderRight: 'none', borderRadius: '40px 40px 0 0', padding: '60px 40px 30px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '40px' }}>
@@ -11,9 +21,9 @@ export default function Footer() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <img 
-              src="https://achyutammaestro.com/wp-content/uploads/2026/01/achyutham-logo.jpeg" 
+              src={theme === 'dark' ? '/achyutamlogodark.png' : '/achyutamlogo.png'} 
               alt="Logo" 
-              style={{ width: '48px', height: '48px', borderRadius: '50%', border: '1px solid var(--color-gold)' }} 
+              style={{ width: '120px', height: '120px', objectFit: 'contain' }} 
             />
             <div>
               <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)' }}>ACHYUTAM MAESTRO</h3>

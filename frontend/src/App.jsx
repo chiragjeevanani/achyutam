@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -12,7 +12,8 @@ import Booking from './pages/Booking';
 import Blog from './pages/Blog';
 import VastuTips from './pages/VastuTips';
 import Lenis from 'lenis';
-import 'lenis/dist/lenis.css';
+import { useScrollAnimation } from './hooks/useScrollAnimation';
+import ScrollProgress from './components/ScrollProgress';
 
 export default function App() {
   const location = useLocation();
@@ -21,6 +22,23 @@ export default function App() {
   const [activeTransition, setActiveTransition] = useState("vastu");
 
   const lenisRef = useRef(null);
+
+  // Memoize ambient background particles
+  const particles = useMemo(() => {
+    const colors = ['#FF3333', '#3B82F6', '#10B981', '#FBBF24'];
+    return Array.from({ length: 15 }).map((_, idx) => {
+      const size = Math.floor(Math.random() * 6) + 4; // 4px to 10px
+      const left = Math.floor(Math.random() * 100); // 0% to 100%
+      const top = Math.floor(Math.random() * 100); // 0% to 100%
+      const color = colors[idx % colors.length];
+      const duration = Math.floor(Math.random() * 15) + 15; // 15s to 30s
+      const delay = Math.floor(Math.random() * 15) * -1; // Negative delay so they are already moving
+      return { size, left, top, color, duration, delay };
+    });
+  }, []);
+
+  // Initialize scroll animation engine (handles staggers, count-ups, and parallax coordinates)
+  useScrollAnimation(displayLocation.pathname);
 
   // Dynamic transition theme picker based on destination path
   const getTransitionTheme = (pathname) => {
@@ -104,19 +122,41 @@ export default function App() {
 
     // Timeout to ensure DOM is fully painted after route transitions
     const timer = setTimeout(() => {
-      const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+      const revealElements = document.querySelectorAll(
+        '.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur, .reveal-flip, .reveal-zoom-out'
+      );
       revealElements.forEach((el) => observer.observe(el));
     }, 100);
 
     return () => {
       clearTimeout(timer);
-      const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+      const revealElements = document.querySelectorAll(
+        '.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur, .reveal-flip, .reveal-zoom-out'
+      );
       revealElements.forEach((el) => observer.unobserve(el));
     };
   }, [displayLocation]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      {/* Ambient background particles */}
+      {particles.map((p, idx) => (
+        <div
+          key={idx}
+          className="particle-el"
+          style={{
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+            left: `${p.left}%`,
+            top: `${p.top}%`,
+            backgroundColor: p.color,
+            boxShadow: `0 0 10px ${p.color}`,
+            animation: `particleDrift ${p.duration}s linear infinite`,
+            animationDelay: `${p.delay}s`,
+          }}
+        />
+      ))}
+
       {/* Dynamic Celestial Curtain Loader */}
       <div 
         className={`cosmic-curtain ${transitionStage === "entering" ? "active" : ""} ${transitionStage === "exiting" ? "exit" : ""}`}
@@ -194,13 +234,13 @@ export default function App() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
               <div style={{ width: '200px', height: '200px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {/* Solar Eclipse glowing background starfield */}
-                <div style={{ width: '130px', height: '130px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(217, 125, 100, 0.4) 0%, transparent 70%)', position: 'absolute' }} />
+                <div style={{ width: '130px', height: '130px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(229, 62, 62, 0.4) 0%, transparent 70%)', position: 'absolute' }} />
                 
                 {/* Glowing Sun */}
-                <div className="eclipse-sun" style={{ width: '110px', height: '110px', borderRadius: '50%', background: 'radial-gradient(circle, #d97d64 0%, #ab563f 80%)', position: 'absolute' }} />
+                <div className="eclipse-sun" style={{ width: '110px', height: '110px', borderRadius: '50%', background: 'radial-gradient(circle, #E53E3E 0%, #B91C1C 80%)', position: 'absolute' }} />
                 
                 {/* Sliding Dark Moon */}
-                <div className="eclipse-moon" style={{ width: '112px', height: '112px', borderRadius: '50%', background: 'var(--bg-dark)', position: 'absolute', border: '1px solid rgba(217, 125, 100, 0.05)' }} />
+                <div className="eclipse-moon" style={{ width: '112px', height: '112px', borderRadius: '50%', background: 'var(--bg-dark)', position: 'absolute', border: '1px solid rgba(229, 62, 62, 0.05)' }} />
                 
                 {/* Sparkling eclipse diamond ring flare */}
                 <div className="eclipse-diamond-flare" style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#fff', boxShadow: '0 0 25px 10px #fff, 0 0 15px 5px var(--color-gold)', position: 'absolute', top: '48px', right: '48px' }} />
@@ -213,6 +253,9 @@ export default function App() {
 
         </div>
       </div>
+
+      {/* Scroll Progress Bar */}
+      <ScrollProgress />
 
       {/* Navbar */}
       <Navbar />

@@ -7,8 +7,8 @@ export default function About() {
     <div style={{ padding: '45px 20px 60px', maxWidth: '1200px', margin: '0 auto' }}>
       
       {/* 1. Header Section */}
-      <section style={{ textAlign: 'center', padding: '0 0 20px' }} className="reveal">
-        <span style={{ color: 'var(--color-gold)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>COSMIC JOURNEY</span>
+      <section style={{ textAlign: 'center', padding: '0 0 20px' }} className="reveal-zoom-out">
+        <span style={{ color: 'var(--color-purple)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>COSMIC JOURNEY</span>
         <h1 style={{ fontSize: '2.3rem', marginTop: '10px', marginBottom: '15px' }} className="gold-gradient-text">About Uppasna Keshwani</h1>
         <p style={{ color: 'var(--text-muted)', maxWidth: '650px', margin: '0 auto', lineHeight: '1.7', fontSize: '0.95rem' }}>
           Meet the founder of Achyutam Maestro—a professional Vastu, Numerology, and Astrology consultant transforming lives across residences, commercial offices, and industrial hubs.
@@ -18,8 +18,8 @@ export default function About() {
       {/* 2. Main Profile Spotlight */}
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'center', padding: '30px 0' }}>
         
-        <div className="reveal-left">
-          <div className="glass-panel" style={{ padding: '10px', border: '1px solid var(--border-active)' }}>
+        <div className="reveal-blur">
+          <div className="glass-panel magnetic-hover" style={{ padding: '10px', border: '1px solid var(--border-active)' }}>
             <img 
               src="https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.10.03-AM-1.jpeg" 
               alt="Uppasna Keshwani Profile" 
@@ -31,7 +31,7 @@ export default function About() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }} className="reveal-right">
           <span style={{ color: 'var(--color-gold)', letterSpacing: '0.1em', fontSize: '0.8rem', fontWeight: 'bold' }}>FOUNDER PROFILE</span>
           <h2 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-serif)' }}>Uppasna Keshwani</h2>
-          <span style={{ fontSize: '0.8rem', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '-10px' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '-10px' }}>
             Professional Vastu, Numerology & Astrology Consultant
           </span>
           
@@ -47,10 +47,10 @@ export default function About() {
       </section>
 
       {/* 3. Deep Dive: What I Do vs. What I Don't Do */}
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', marginTop: '40px' }}>
+      <section className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', marginTop: '40px' }}>
         
         {/* What I Do */}
-        <div className="glass-panel reveal-left" style={{ padding: '24px 30px' }}>
+        <div className="glass-panel reveal-left magnetic-hover" style={{ padding: '24px 30px' }}>
           <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', color: 'var(--color-gold)', marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Sparkles size={18} /> What I Do
           </h3>
@@ -77,7 +77,7 @@ export default function About() {
         </div>
 
         {/* What I Don't Do */}
-        <div className="glass-panel reveal-right" style={{ padding: '24px 30px' }}>
+        <div className="glass-panel reveal-right magnetic-hover" style={{ padding: '24px 30px' }}>
           <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', color: '#ef4444', marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <ShieldAlert size={18} style={{ color: '#ef4444' }} /> What I Don't Do
           </h3>
@@ -107,12 +107,12 @@ export default function About() {
 
       {/* 4. My Journey Section */}
       <section className="glass-panel reveal-scale" style={{ padding: '30px', marginTop: '40px' }}>
-        <span style={{ color: 'var(--color-gold)', letterSpacing: '0.15em', fontSize: '0.75rem', fontWeight: 'bold', display: 'block', textAlign: 'center', marginBottom: '8px' }}>THE PATH OF ALIGNMENT</span>
+        <span style={{ color: 'var(--color-indigo)', letterSpacing: '0.15em', fontSize: '0.75rem', fontWeight: 'bold', display: 'block', textAlign: 'center', marginBottom: '8px' }}>THE PATH OF ALIGNMENT</span>
         <h2 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-serif)', textAlign: 'center', marginBottom: '30px' }}>My Journey</h2>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', alignItems: 'center' }}>
           {/* Journey Image Column */}
-          <div style={{ 
+          <div className="reveal-blur delay-100" style={{ 
             borderRadius: '16px', 
             overflow: 'hidden', 
             border: '2px solid rgba(217, 125, 100, 0.3)',
@@ -129,7 +129,7 @@ export default function About() {
           </div>
 
           {/* Journey Text Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', textAlign: 'left' }}>
+          <div className="reveal-right delay-200" style={{ display: 'flex', flexDirection: 'column', gap: '15px', textAlign: 'left' }}>
             <h4 style={{ color: 'var(--color-gold)', fontSize: '0.95rem', margin: 0, fontFamily: 'var(--font-sans)', fontWeight: '600' }}>
               Professional Vastu, Numerology & Astrology Consultant
             </h4>

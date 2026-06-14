@@ -11,14 +11,22 @@ export default function Navbar() {
   });
 
   useEffect(() => {
+    const favicon = document.getElementById('favicon');
     if (theme === 'light') {
       document.documentElement.classList.add('light-theme');
       document.body.classList.add('light-theme');
+      if (favicon) {
+        favicon.href = '/achyutamlogo.png';
+      }
     } else {
       document.documentElement.classList.remove('light-theme');
       document.body.classList.remove('light-theme');
+      if (favicon) {
+        favicon.href = '/achyutamlogodark.png';
+      }
     }
     localStorage.setItem('theme', theme);
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: theme }));
   }, [theme]);
 
   const toggleTheme = () => {
@@ -37,14 +45,22 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-4 left-4 right-4 z-50 glass-panel" style={{ borderRadius: '24px', padding: '10px 24px' }}>
+    <nav className="fixed top-4 left-4 right-4 z-50 glass-panel" style={{ borderRadius: '24px', padding: '16px 24px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         {/* Brand */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <img 
-            src="https://achyutammaestro.com/wp-content/uploads/2026/01/achyutham-logo.jpeg" 
+            src={theme === 'dark' ? '/achyutamlogodark.png' : '/achyutamlogo.png'} 
             alt="Logo" 
-            style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--color-gold)' }} 
+            style={{ 
+              width: '105px', 
+              height: '105px', 
+              objectFit: 'contain', 
+              marginTop: '-30px', 
+              marginBottom: '-30px', 
+              position: 'relative', 
+              top: '6px' 
+            }} 
           />
           <div>
             <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 'bold', letterSpacing: '0.05em' }}>

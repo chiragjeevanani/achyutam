@@ -123,7 +123,7 @@ export default function Blog() {
             
             {/* Meta */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px', color: 'var(--text-muted)', fontSize: '0.8rem', flexWrap: 'wrap', marginBottom: '15px' }}>
-              <span style={{ background: 'rgba(217, 125, 100, 0.1)', color: 'var(--color-gold)', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
+              <span style={{ background: 'rgba(229, 62, 62, 0.1)', color: 'var(--color-gold)', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
                 {selectedPost.category}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -145,7 +145,7 @@ export default function Blog() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', alignItems: 'start' }}>
               
               {/* Image Column */}
-              <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(217, 125, 100, 0.25)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)', background: 'var(--bg-dark)' }}>
+              <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(229, 62, 62, 0.25)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)', background: 'var(--bg-dark)' }}>
                 <img 
                   src={selectedPost.img} 
                   alt={selectedPost.title} 
