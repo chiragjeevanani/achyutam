@@ -15,10 +15,24 @@ import Experience from './pages/Experience';
 import Lenis from 'lenis';
 import { useScrollAnimation } from './hooks/useScrollAnimation';
 import ScrollProgress from './components/ScrollProgress';
+import AdminApp from './admin/AdminApp';
 
 export default function App() {
   const location = useLocation();
+  
+  // Clean bypass for Admin portal routes
+  if (location.pathname.startsWith('/admin')) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+        <Routes>
+          <Route path="/admin/*" element={<AdminApp />} />
+        </Routes>
+      </div>
+    );
+  }
+
   const [displayLocation, setDisplayLocation] = useState(location);
+
   const [transitionStage, setTransitionStage] = useState("idle"); // idle, entering, exiting
   const [activeTransition, setActiveTransition] = useState("vastu");
 

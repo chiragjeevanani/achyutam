@@ -1,5 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Sun, Star, Compass, Heart, Eye, Calendar, Clock, User, CheckCircle2, ChevronRight, ChevronLeft, CreditCard, Receipt, Printer, ArrowRight, Radio } from 'lucide-react';
+import api from '../admin/api/axios';
+
+const getServiceIcon = (category) => {
+  switch (category?.toLowerCase()) {
+    case 'vastu':
+      return <Sun size={20} style={{ color: 'var(--color-gold)' }} />;
+    case 'numerology':
+      return <Sparkles size={20} style={{ color: 'var(--color-gold)' }} />;
+    case 'astrology':
+      return <Compass size={20} style={{ color: 'var(--color-gold)' }} />;
+    case 'tarot':
+      return <Eye size={20} style={{ color: 'var(--color-gold)' }} />;
+    case 'counselling':
+    case 'relationship counselling':
+      return <Heart size={20} style={{ color: 'var(--color-gold)' }} />;
+    case 'aura scanner':
+      return <Radio size={20} style={{ color: 'var(--color-gold)' }} />;
+    case 'yogadhan':
+      return <Compass size={20} style={{ color: 'var(--color-gold)' }} />;
+    default:
+      return <Compass size={20} style={{ color: 'var(--color-gold)' }} />;
+  }
+};
 
 export default function Booking() {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
@@ -37,73 +60,30 @@ export default function Booking() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [transactionId, setTransactionId] = useState('');
 
-  const servicesList = [
-    {
-      id: 'vastu',
-      title: 'Vastu Discussion',
-      category: 'Vastu',
-      sub: 'Directions, Placements & Energy Corrections',
-      price: 5100,
-      duration: '60 Mins',
-      icon: <Sun size={20} style={{ color: 'var(--color-gold)' }} />
-    },
-    {
-      id: 'numerology',
-      title: 'Numerology Consultation',
-      category: 'Numerology',
-      sub: 'Vibrational Frequency & Lo Shu Grid (Lifetime Report + Remedies)',
-      price: 3100,
-      duration: '30 Mins',
-      icon: <Sparkles size={20} style={{ color: 'var(--color-gold)' }} />
-    },
-    {
-      id: 'astrology',
-      title: 'Astrology Consultation',
-      category: 'Astrology',
-      sub: 'Kundli Readings & Planetary Cures',
-      price: 4100,
-      duration: '45 Mins',
-      icon: <Compass size={20} style={{ color: 'var(--color-gold)' }} />
-    },
-    {
-      id: 'tarot',
-      title: 'Tarot Reading',
-      category: 'Tarot',
-      sub: 'Intuitive Insight & Future Paths',
-      price: 2100,
-      duration: '45 Mins',
-      icon: <Eye size={20} style={{ color: 'var(--color-gold)' }} />
-    },
-    {
-      id: 'counselling',
-      title: 'Relationship Counselling',
-      category: 'Counselling',
-      sub: 'Mutual Understanding & Connection',
-      price: 2400,
-      duration: '60 Mins',
-      icon: <Heart size={20} style={{ color: 'var(--color-gold)' }} />
-    },
-    {
-      id: 'aura_scanner',
-      title: 'Aura Scanner',
-      category: 'Aura Scanner',
-      sub: 'To check energy of land, homes, factories',
-      price: 500,
-      duration: 'Energy Check',
-      icon: <Radio size={20} style={{ color: 'var(--color-gold)' }} />
-    },
-    {
-      id: 'yogadhan',
-      title: 'Yogadhan Consultation',
-      category: 'Yogadhan',
-      sub: 'Specialized Astro-Vastu Kundli & Directional Alignment',
-      price: 7500,
-      duration: '30 Mins',
-      icon: <Compass size={20} style={{ color: 'var(--color-gold)' }} />
-    }
-  ];
+  const [servicesList, setServicesList] = useState([]);
 
-  const categories = ['ALL', 'Vastu', 'Numerology', 'Astrology', 'Tarot', 'Counselling', 'Aura Scanner', 'Yogadhan'];
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await api.get('/services');
+        const activeServices = (response.data || [])
+          .filter(s => s.isActive)
+          .sort((a, b) => (a.order || 0) - (b.order || 0))
+          .map(s => ({
+            ...s,
+            id: s._id,
+            icon: getServiceIcon(s.category),
+            duration: typeof s.duration === 'number' ? `${s.duration} Mins` : s.duration
+          }));
+        setServicesList(activeServices);
+      } catch (err) {
+        console.error('Error fetching services:', err);
+      }
+    };
+    fetchServices();
+  }, []);
+
+  const categories = ['ALL', ...new Set(servicesList.map(s => s.category))];
 
   const filteredServices = selectedCategory === 'ALL' 
     ? servicesList 
@@ -132,26 +112,14 @@ export default function Booking() {
   };
 
   const getSlotsData = () => {
-    if (selectedService?.id === 'yogadhan') {
-      return [
-        { 
-          label: 'Morning slots', 
-          slots: [
-            { time: '10:30 am to 11:00 am', disabled: true },
-            { time: '11:00 am to 11:30 am', disabled: false },
-            { time: '11:30 am to 12:00 pm', disabled: false }
-          ] 
-        },
-        { 
-          label: 'Afternoon slots', 
-          slots: [
-            { time: '12:00 pm to 12:30 pm', disabled: false },
-            { time: '12:30 pm to 01:00 pm', disabled: false },
-            { time: '01:00 pm to 01:30 pm', disabled: true },
-            { time: '01:30 pm to 02:00 pm', disabled: true }
-          ] 
-        }
-      ];
+    if (selectedService && selectedService.availability && selectedService.availability.slots && selectedService.availability.slots.length > 0) {
+      return selectedService.availability.slots.map(group => ({
+        label: group.label,
+        slots: group.times.map(t => ({
+          time: t,
+          disabled: false
+        }))
+      }));
     }
     
     return [
@@ -176,13 +144,48 @@ export default function Booking() {
     setIsProcessingPayment(true);
     
     // Simulate Razorpay Gateway Opening & Loading
-    setTimeout(() => {
+    setTimeout(async () => {
       // Create random Txn ID
       const fakeTxnId = 'pay_' + Math.random().toString(36).substr(2, 9).toUpperCase();
-      setTransactionId(fakeTxnId);
-      setIsProcessingPayment(false);
-      setPaymentSuccess(true);
-      setStep(4);
+      
+      try {
+        const payload = {
+          service: {
+            id: selectedService._id || selectedService.id,
+            title: selectedService.title,
+            category: selectedService.category,
+            price: Number(selectedService.price),
+            duration: typeof selectedService.duration === 'string' ? parseInt(selectedService.duration) : selectedService.duration
+          },
+          appointmentDate: selectedDate,
+          timeSlot: selectedTimeSlot,
+          customer: {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone
+          },
+          additionalInfo: {
+            notes: formData.notes || '',
+            birthDate: formData.birthDate || '',
+            birthTime: formData.birthTime || '',
+            birthPlace: formData.birthPlace || '',
+            vastuAddress: formData.vastuAddress || ''
+          },
+          paymentStatus: 'paid',
+          transactionId: fakeTxnId
+        };
+        
+        await api.post('/bookings', payload);
+        
+        setTransactionId(fakeTxnId);
+        setIsProcessingPayment(false);
+        setPaymentSuccess(true);
+        setStep(4);
+      } catch (err) {
+        console.error('Error creating booking:', err);
+        alert(err.response?.data?.message || 'Payment simulated successfully, but failed to save booking to database.');
+        setIsProcessingPayment(false);
+      }
     }, 2500);
   };
 
@@ -432,9 +435,18 @@ export default function Booking() {
                       return <div key={`empty-${idx}`} />
                     }
 
-                    const isThursday = date.getDay() === 4; // 4 is Thursday
                     const isPast = date < today;
-                    const isDisabled = isPast || (selectedService?.id === 'yogadhan' && !isThursday);
+                    let isDisabled = isPast;
+                    if (selectedService && selectedService.availability && selectedService.availability.activeDays) {
+                      const activeDays = selectedService.availability.activeDays;
+                      const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+                      if (!activeDays.includes(dayName)) {
+                        isDisabled = true;
+                      }
+                    } else if (selectedService?.id === 'yogadhan') {
+                      const isThursday = date.getDay() === 4;
+                      if (!isThursday) isDisabled = true;
+                    }
                     const isSelected = selectedDate?.toDateString() === date.toDateString();
                     
                     return (
@@ -483,7 +495,7 @@ export default function Booking() {
                       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                         {group.slots.map((slot) => {
                           const isSelected = selectedTimeSlot === slot.time;
-                          const isYogadhan = selectedService?.id === 'yogadhan';
+                          const isYogadhan = selectedService?.id === 'yogadhan' || selectedService?.title?.toLowerCase().includes('yogadhan');
                           
                           // Style based on selection and disable state
                           let buttonBg = 'var(--bg-dark)';

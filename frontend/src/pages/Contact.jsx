@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Calendar, Clock, Check } from 'lucide-react';
+import { MessageCircle, Phone, MapPin, Calendar, Clock, Check } from 'lucide-react';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: 'vastu', message: '' });
@@ -46,17 +46,21 @@ export default function Contact() {
                 </div>
               </li>
               <li style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--text-primary)' }}>
-                <Phone size={20} style={{ color: 'var(--color-indigo)' }} />
+                <MessageCircle size={20} style={{ color: 'var(--color-indigo)' }} />
                 <div>
-                  <strong>Direct Hotline</strong>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '2px' }}>+91 95590 96656</p>
-                </div>
-              </li>
-              <li style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--text-primary)' }}>
-                <Mail size={20} style={{ color: 'var(--color-purple)' }} />
-                <div>
-                  <strong>Email</strong>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '2px' }}>connect@achyutammaestro.com</p>
+                  <strong>WhatsApp Number</strong>
+                  <p style={{ marginTop: '2px' }}>
+                    <a 
+                      href="https://wa.me/919559096656" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}
+                      onMouseEnter={(e) => e.target.style.color = 'var(--color-gold)'}
+                      onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
+                    >
+                      +91 95590 96656
+                    </a>
+                  </p>
                 </div>
               </li>
             </ul>

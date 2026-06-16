@@ -1,0 +1,935 @@
+import React, { useState, useEffect } from 'react';
+import api from '../../api/axios';
+import { 
+  Compass, Home, TriangleAlert, Shield, Calendar, Edit, Trash2, Plus, X, CheckCircle, Sparkles 
+} from 'lucide-react';
+
+export default function AdminVastuTips() {
+  const [activeTab, setActiveTab] = useState('directions');
+  const [data, setData] = useState({
+    directions: [],
+    rooms: [],
+    mistakes: [],
+    remedies: [],
+    seasons: [],
+    elements: []
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Modal State
+  const [modalType, setModalType] = useState(null); // 'direction', 'room', 'mistake', 'remedy', 'season'
+  const [editingItem, setEditingItem] = useState(null);
+
+  // Form states for Directions
+  const [dirName, setDirName] = useState('');
+  const [dirDeity, setDirDeity] = useState('');
+  const [dirElement, setDirElement] = useState('');
+  const [dirFocus, setDirFocus] = useState('');
+  const [dirDos, setDirDos] = useState(['']);
+  const [dirDonts, setDirDonts] = useState(['']);
+
+  // Form states for Rooms
+  const [roomTitle, setRoomTitle] = useState('');
+  const [roomElement, setRoomElement] = useState('');
+  const [roomColor, setRoomColor] = useState('');
+  const [roomBg, setRoomBg] = useState('');
+  const [roomBorder, setRoomBorder] = useState('');
+  const [roomTips, setRoomTips] = useState([{ label: '', value: '' }]);
+
+  // Form states for Mistakes
+  const [mistakeText, setMistakeText] = useState('');
+  const [mistakeImpact, setMistakeImpact] = useState('');
+  const [mistakeRemedy, setMistakeRemedy] = useState('');
+  const [mistakeSeverity, setMistakeSeverity] = useState('medium');
+  const [mistakeColor, setMistakeColor] = useState('');
+
+  // Form states for Remedies
+  const [remedyTitle, setRemedyTitle] = useState('');
+  const [remedyDesc, setRemedyDesc] = useState('');
+  const [remedyIcon, setRemedyIcon] = useState('Sparkles');
+
+  // Form states for Seasons
+  const [seasonName, setSeasonName] = useState('');
+  const [seasonMonths, setSeasonMonths] = useState('');
+  const [seasonTips, setSeasonTips] = useState(['']);
+
+  // Form states for Elements
+  const [eleName, setEleName] = useState('');
+  const [eleZone, setEleZone] = useState('');
+  const [eleColorHex, setEleColorHex] = useState('');
+  const [eleBgCode, setEleBgCode] = useState('');
+  const [eleIconName, setEleIconName] = useState('Sparkles');
+  const [eleBenefit, setEleBenefit] = useState('');
+  const [eleColors, setEleColors] = useState('');
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const { data: vastuData } = await api.get('/vastu-tips');
+      setData(vastuData);
+    } catch (error) {
+      console.error('Error fetching Vastu Tips:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  /* ---------------- SUBMIT HANDLERS ---------------- */
+  
+  const handleSaveDirection = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        name: dirName,
+        deity: dirDeity,
+        element: dirElement,
+        focus: dirFocus,
+        dos: dirDos.filter(d => d.trim() !== ''),
+        donts: dirDonts.filter(d => d.trim() !== ''),
+      };
+      await api.put(`/vastu-tips/directions/${editingItem.code}`, payload);
+      setModalType(null);
+      fetchData();
+    } catch (error) {
+      alert('Failed to save direction changes');
+    }
+  };
+
+  const handleSaveRoom = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        title: roomTitle,
+        element: roomElement,
+        color: roomColor || 'var(--color-indigo)',
+        bg: roomBg || 'rgba(16,185,129,0.08)',
+        border: roomBorder || 'rgba(16,185,129,0.25)',
+        tips: roomTips.filter(t => t.label.trim() !== '' && t.value.trim() !== ''),
+      };
+
+      if (editingItem) {
+        await api.put(`/vastu-tips/rooms/${editingItem._id}`, payload);
+      } else {
+        await api.post('/vastu-tips/rooms', payload);
+      }
+      setModalType(null);
+      fetchData();
+    } catch (error) {
+      alert('Failed to save room changes');
+    }
+  };
+
+  const handleSaveMistake = async (e) => {
+    e.preventDefault();
+    try {
+      const severityColors = {
+        low: 'var(--color-indigo)',
+        medium: 'var(--color-yellow)',
+        high: 'var(--color-gold)',
+        critical: 'var(--color-gold)'
+      };
+      const payload = {
+        mistake: mistakeText,
+        impact: mistakeImpact,
+        remedy: mistakeRemedy,
+        severity: mistakeSeverity,
+        color: severityColors[mistakeSeverity]
+      };
+
+      if (editingItem) {
+        await api.put(`/vastu-tips/mistakes/${editingItem._id}`, payload);
+      } else {
+        await api.post('/vastu-tips/mistakes', payload);
+      }
+      setModalType(null);
+      fetchData();
+    } catch (error) {
+      alert('Failed to save mistake changes');
+    }
+  };
+
+  const handleSaveRemedy = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        title: remedyTitle,
+        desc: remedyDesc,
+        icon: remedyIcon,
+        color: 'var(--color-purple)',
+        bg: 'rgba(59,130,246,0.08)',
+        border: 'rgba(59,130,246,0.22)'
+      };
+
+      if (editingItem) {
+        await api.put(`/vastu-tips/remedies/${editingItem._id}`, payload);
+      } else {
+        await api.post('/vastu-tips/remedies', payload);
+      }
+      setModalType(null);
+      fetchData();
+    } catch (error) {
+      alert('Failed to save remedy changes');
+    }
+  };
+
+  const handleSaveSeason = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        season: seasonName,
+        months: seasonMonths,
+        tips: seasonTips.filter(t => t.trim() !== '')
+      };
+      await api.put(`/vastu-tips/seasons/${editingItem._id}`, payload);
+      setModalType(null);
+      fetchData();
+    } catch (error) {
+      alert('Failed to save seasonal adjustments');
+    }
+  };
+
+  const handleSaveElement = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        name: eleName,
+        zone: eleZone,
+        colorHex: eleColorHex,
+        bgCode: eleBgCode,
+        iconName: eleIconName,
+        benefit: eleBenefit,
+        colors: eleColors
+      };
+      await api.put(`/vastu-tips/elements/${editingItem._id}`, payload);
+      setModalType(null);
+      fetchData();
+    } catch (error) {
+      alert('Failed to save element');
+    }
+  };
+
+  /* ---------------- DELETE HANDLERS ---------------- */
+
+  const handleDeleteRoom = async (id) => {
+    if (window.confirm('Delete this room details?')) {
+      try {
+        await api.delete(`/vastu-tips/rooms/${id}`);
+        fetchData();
+      } catch (error) {
+        alert('Failed to delete room');
+      }
+    }
+  };
+
+  const handleDeleteMistake = async (id) => {
+    if (window.confirm('Delete this Vastu Dosha mistake?')) {
+      try {
+        await api.delete(`/vastu-tips/mistakes/${id}`);
+        fetchData();
+      } catch (error) {
+        alert('Failed to delete mistake');
+      }
+    }
+  };
+
+  const handleDeleteRemedy = async (id) => {
+    if (window.confirm('Delete this remedy?')) {
+      try {
+        await api.delete(`/vastu-tips/remedies/${id}`);
+        fetchData();
+      } catch (error) {
+        alert('Failed to delete remedy');
+      }
+    }
+  };
+
+  /* ---------------- OPEN MODAL HELPERS ---------------- */
+
+  const openEditDirection = (dir) => {
+    setEditingItem(dir);
+    setDirName(dir.name);
+    setDirDeity(dir.deity);
+    setDirElement(dir.element);
+    setDirFocus(dir.focus);
+    setDirDos(dir.dos?.length ? dir.dos : ['']);
+    setDirDonts(dir.donts?.length ? dir.donts : ['']);
+    setModalType('direction');
+  };
+
+  const openAddRoom = () => {
+    setEditingItem(null);
+    setRoomTitle('');
+    setRoomElement('');
+    setRoomColor('');
+    setRoomBg('');
+    setRoomBorder('');
+    setRoomTips([{ label: '', value: '' }]);
+    setModalType('room');
+  };
+
+  const openEditRoom = (room) => {
+    setEditingItem(room);
+    setRoomTitle(room.title);
+    setRoomElement(room.element);
+    setRoomColor(room.color);
+    setRoomBg(room.bg);
+    setRoomBorder(room.border);
+    setRoomTips(room.tips?.length ? room.tips : [{ label: '', value: '' }]);
+    setModalType('room');
+  };
+
+  const openAddMistake = () => {
+    setEditingItem(null);
+    setMistakeText('');
+    setMistakeImpact('');
+    setMistakeRemedy('');
+    setMistakeSeverity('medium');
+    setModalType('mistake');
+  };
+
+  const openEditMistake = (item) => {
+    setEditingItem(item);
+    setMistakeText(item.mistake);
+    setMistakeImpact(item.impact);
+    setMistakeRemedy(item.remedy);
+    setMistakeSeverity(item.severity);
+    setModalType('mistake');
+  };
+
+  const openAddRemedy = () => {
+    setEditingItem(null);
+    setRemedyTitle('');
+    setRemedyDesc('');
+    setRemedyIcon('Sparkles');
+    setModalType('remedy');
+  };
+
+  const openEditRemedy = (item) => {
+    setEditingItem(item);
+    setRemedyTitle(item.title);
+    setRemedyDesc(item.desc);
+    setRemedyIcon(item.icon || 'Sparkles');
+    setModalType('remedy');
+  };
+
+  const openEditSeason = (s) => {
+    setEditingItem(s);
+    setSeasonName(s.season);
+    setSeasonMonths(s.months);
+    setSeasonTips(s.tips?.length ? s.tips : ['']);
+    setModalType('season');
+  };
+
+  const openEditElement = (el) => {
+    setEditingItem(el);
+    setEleName(el.name);
+    setEleZone(el.zone);
+    setEleColorHex(el.colorHex || el.color);
+    setEleBgCode(el.bgCode || el.bg);
+    setEleIconName(el.iconName || 'Sparkles');
+    setEleBenefit(el.benefit);
+    setEleColors(el.colors);
+    setModalType('element');
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      
+      {/* Header */}
+      <div>
+        <h1 style={{ fontSize: '2rem', fontFamily: 'var(--font-serif)', color: 'var(--text-heading)', margin: 0 }}>
+          CMS: Vastu Tips Portal
+        </h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '4px' }}>
+          Fully custom CMS for all 5 interactive modules under Vastu Tips page.
+        </p>
+      </div>
+
+      {/* Tabs list */}
+      <div style={{
+        display: 'flex',
+        borderBottom: '1px solid var(--border-glass)',
+        gap: '20px',
+      }}>
+        {[
+          { id: 'directions', label: 'Compass Directions', icon: <Compass size={16} /> },
+          { id: 'rooms', label: 'Rooms Guide', icon: <Home size={16} /> },
+          { id: 'mistakes', label: 'Common Mistakes', icon: <TriangleAlert size={16} /> },
+          { id: 'remedies', label: 'Quick Remedies', icon: <Shield size={16} /> },
+          { id: 'seasons', label: 'Seasonal Calendar', icon: <Calendar size={16} /> },
+          { id: 'elements', label: '5 Elements', icon: <Sparkles size={16} /> },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 16px',
+              background: 'none',
+              border: 'none',
+              borderBottom: activeTab === tab.id ? '2px solid var(--color-gold)' : '2px solid transparent',
+              color: activeTab === tab.id ? 'var(--color-gold)' : 'var(--text-muted)',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.25s',
+              paddingBottom: '14px',
+            }}
+          >
+            {tab.icon}
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Content panel */}
+      {loading ? (
+        <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px' }}>Syncing Vastu guidelines...</div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          {/* TAB 1: DIRECTIONS */}
+          {activeTab === 'directions' && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+              {data.directions.map((dir) => (
+                <div key={dir._id} className="glass-panel" style={{ padding: '20px', borderTop: `2px solid ${dir.elementColor || 'var(--color-gold)'}` }}>
+                  <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center' }}>
+                    <strong style={{ fontSize: '1.2rem', color: '#fff' }}>{dir.code} - {dir.name}</strong>
+                    <button
+                      onClick={() => openEditDirection(dir)}
+                      style={{ background: 'none', border: 'none', color: 'var(--color-gold)', cursor: 'pointer', padding: '4px' }}
+                    >
+                      <Edit size={14} />
+                    </button>
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div>Deity: <strong style={{ color: '#aaa' }}>{dir.deity}</strong></div>
+                    <div>Element: <strong style={{ color: '#aaa' }}>{dir.element}</strong></div>
+                    <div>Focus: <strong style={{ color: '#aaa' }}>{dir.focus}</strong></div>
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '10px', fontSize: '0.75rem', marginTop: '12px', color: 'var(--text-muted)', borderTop: '1px solid var(--border-glass)', paddingTop: '10px' }}>
+                    <span>Dos: {dir.dos?.length || 0}</span>
+                    <span>Donts: {dir.donts?.length || 0}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* TAB 2: ROOMS */}
+          {activeTab === 'rooms' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', justifySelf: 'flex-end' }}>
+                <button
+                  onClick={openAddRoom}
+                  style={{ background: 'var(--color-gold)', border: 'none', padding: '8px 16px', borderRadius: '6px', color: '#fff', fontSize: '0.82rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <Plus size={14} /> Add Room
+                </button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
+                {data.rooms.map((room) => (
+                  <div key={room._id} className="glass-panel" style={{ padding: '20px', borderLeft: `3px solid ${room.color || 'var(--color-indigo)'}` }}>
+                    <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <h4 style={{ margin: 0, fontSize: '1.05rem', color: '#fff' }}>{room.title}</h4>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Element: {room.element}</span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          onClick={() => openEditRoom(room)}
+                          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
+                        >
+                          <Edit size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteRoom(room._id)}
+                          style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '4px' }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <div style={{ marginTop: '10px', fontSize: '0.8rem', borderTop: '1px solid var(--border-glass)', paddingTop: '10px' }}>
+                      <strong style={{ color: '#aaa' }}>Tips list ({room.tips?.length || 0}):</strong>
+                      <ul style={{ margin: '4px 0 0', paddingLeft: '16px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {room.tips?.slice(0, 2).map((t, i) => (
+                          <li key={i}><strong>{t.label}:</strong> {t.value.slice(0, 40)}...</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: MISTAKES */}
+          {activeTab === 'mistakes' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', justifySelf: 'flex-end' }}>
+                <button
+                  onClick={openAddMistake}
+                  style={{ background: 'var(--color-gold)', border: 'none', padding: '8px 16px', borderRadius: '6px', color: '#fff', fontSize: '0.82rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <Plus size={14} /> Add Dosha
+                </button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '20px' }}>
+                {data.mistakes.map((item) => (
+                  <div key={item._id} className="glass-panel" style={{ padding: '20px', borderLeft: `3px solid ${item.color || 'var(--color-gold)'}` }}>
+                    <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
+                      <h4 style={{ margin: 0, fontSize: '1rem', color: '#fff', width: '70%' }}>{item.mistake}</h4>
+                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.65rem', padding: '2px 6px', background: `${item.color}15`, color: item.color, border: `1px solid ${item.color}30`, borderRadius: '4px' }}>{item.severity}</span>
+                        <button
+                          onClick={() => openEditMistake(item)}
+                          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '2px' }}
+                        >
+                          <Edit size={13} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteMistake(item._id)}
+                          style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '2px' }}
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </div>
+                    <p style={{ margin: '10px 0 0', fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                      <strong>Impact:</strong> {item.impact}
+                    </p>
+                    <p style={{ margin: '6px 0 0', fontSize: '0.8rem', color: 'var(--color-indigo)', lineHeight: '1.4' }}>
+                      <strong>Remedy:</strong> {item.remedy}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: REMEDIES */}
+          {activeTab === 'remedies' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', justifySelf: 'flex-end' }}>
+                <button
+                  onClick={openAddRemedy}
+                  style={{ background: 'var(--color-gold)', border: 'none', padding: '8px 16px', borderRadius: '6px', color: '#fff', fontSize: '0.82rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <Plus size={14} /> Add Remedy
+                </button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+                {data.remedies.map((item) => (
+                  <div key={item._id} className="glass-panel" style={{ padding: '20px' }}>
+                    <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
+                      <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--color-purple)' }}>{item.title}</h4>
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          onClick={() => openEditRemedy(item)}
+                          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
+                        >
+                          <Edit size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteRemedy(item._id)}
+                          style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '4px' }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    <p style={{ margin: '8px 0 0', fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+                      {item.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: SEASONS */}
+          {activeTab === 'seasons' && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+              {data.seasons.map((s) => (
+                <div key={s._id} className="glass-panel" style={{ padding: '20px', borderTop: '2px solid var(--color-indigo)' }}>
+                  <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: '1.05rem', color: '#fff' }}>{s.season}</h4>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{s.months}</span>
+                    </div>
+                    <button
+                      onClick={() => openEditSeason(s)}
+                      style={{ background: 'none', border: 'none', color: 'var(--color-gold)', cursor: 'pointer', padding: '4px' }}
+                    >
+                      <Edit size={14} />
+                    </button>
+                  </div>
+                  <div style={{ marginTop: '10px', fontSize: '0.8rem', borderTop: '1px solid var(--border-glass)', paddingTop: '10px' }}>
+                    <strong style={{ color: '#aaa' }}>Tips List ({s.tips?.length || 0}):</strong>
+                    <ul style={{ margin: '4px 0 0', paddingLeft: '16px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {s.tips?.slice(0, 2).map((tip, idx) => (
+                        <li key={idx}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* TAB 6: ELEMENTS */}
+          {activeTab === 'elements' && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+              {data.elements?.map((el) => (
+                <div key={el._id} className="glass-panel" style={{ padding: '20px', borderTop: `2px solid ${el.colorHex || 'var(--color-indigo)'}` }}>
+                  <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: '1.05rem', color: el.colorHex }}>{el.name}</h4>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{el.zone}</span>
+                    </div>
+                    <button
+                      onClick={() => openEditElement(el)}
+                      style={{ background: 'none', border: 'none', color: 'var(--color-gold)', cursor: 'pointer', padding: '4px' }}
+                    >
+                      <Edit size={14} />
+                    </button>
+                  </div>
+                  <div style={{ marginTop: '10px', fontSize: '0.8rem', borderTop: '1px solid var(--border-glass)', paddingTop: '10px' }}>
+                    <p style={{ margin: '0 0 6px', color: 'var(--text-muted)' }}><strong>Benefit:</strong> {el.benefit}</p>
+                    <p style={{ margin: 0, color: 'var(--text-muted)' }}><strong>Colors:</strong> {el.colors}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+        </div>
+      )}
+
+      {/* OVERLAY MODAL */}
+      {modalType && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.75)', display: 'flex', alignItems: 'center', justifyCenter: 'center', zIndex: 999, padding: '20px', display: 'flex', justifyContent: 'center' }}>
+          
+          {/* DIRECTION FORM */}
+          {modalType === 'direction' && (
+            <form onSubmit={handleSaveDirection} className="glass-panel" style={{ maxWidth: '560px', width: '100%', padding: '30px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '90vh', overflowY: 'auto', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Edit Direction: {editingItem.code}</h3>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Direction Name</label>
+                <input type="text" value={dirName} onChange={(e) => setDirName(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Governing Deity</label>
+                  <input type="text" value={dirDeity} onChange={(e) => setDirDeity(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Governing Element</label>
+                  <input type="text" value={dirElement} onChange={(e) => setDirElement(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Life Focus Area</label>
+                <input type="text" value={dirFocus} onChange={(e) => setDirFocus(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+              </div>
+
+              {/* Dos Bullet points */}
+              <div>
+                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '6px' }}>
+                  Recommended (Do's)
+                  <button type="button" onClick={() => setDirDos([...dirDos, ''])} style={{ background: 'rgba(197,168,128,0.1)', border: 'none', color: 'var(--color-gold)', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>+ Add</button>
+                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {dirDos.map((item, i) => (
+                    <div key={i} style={{ display: 'flex', gap: '8px' }}>
+                      <input type="text" value={item} onChange={(e) => { const nd = [...dirDos]; nd[i] = e.target.value; setDirDos(nd); }} style={{ flex: 1, padding: '8px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                      <button type="button" disabled={dirDos.length === 1} onClick={() => setDirDos(dirDos.filter((_, idx) => idx !== i))} style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer' }}><Trash2 size={14} /></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Donts Bullet points */}
+              <div>
+                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '6px' }}>
+                  Avoid (Don'ts)
+                  <button type="button" onClick={() => setDirDonts([...dirDonts, ''])} style={{ background: 'rgba(197,168,128,0.1)', border: 'none', color: 'var(--color-gold)', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>+ Add</button>
+                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {dirDonts.map((item, i) => (
+                    <div key={i} style={{ display: 'flex', gap: '8px' }}>
+                      <input type="text" value={item} onChange={(e) => { const nd = [...dirDonts]; nd[i] = e.target.value; setDirDonts(nd); }} style={{ flex: 1, padding: '8px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                      <button type="button" disabled={dirDonts.length === 1} onClick={() => setDirDonts(dirDonts.filter((_, idx) => idx !== i))} style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer' }}><Trash2 size={14} /></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifySelf: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', padding: '10px 20px', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" style={{ background: 'var(--color-gold)', border: 'none', padding: '10px 24px', borderRadius: '6px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Save Changes</button>
+              </div>
+            </form>
+          )}
+
+          {/* ROOM FORM */}
+          {modalType === 'room' && (
+            <form onSubmit={handleSaveRoom} className="glass-panel" style={{ maxWidth: '560px', width: '100%', padding: '30px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '90vh', overflowY: 'auto', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>{editingItem ? 'Edit Room Guide' : 'Add New Room Guide'}</h3>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Room Title</label>
+                  <input type="text" required value={roomTitle} onChange={(e) => setRoomTitle(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Governing Element</label>
+                  <input type="text" required value={roomElement} onChange={(e) => setRoomElement(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>CSS Theme Color</label>
+                  <input type="text" placeholder="var(--color-indigo)" value={roomColor} onChange={(e) => setRoomColor(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>BG Alpha Color</label>
+                  <input type="text" placeholder="rgba(16,185,129,0.08)" value={roomBg} onChange={(e) => setRoomBg(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>Border Color</label>
+                  <input type="text" placeholder="rgba(16,185,129,0.25)" value={roomBorder} onChange={(e) => setRoomBorder(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                </div>
+              </div>
+
+              {/* Room guide checklist items */}
+              <div>
+                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '8px' }}>
+                  Spatial Tips Guidelines
+                  <button type="button" onClick={() => setRoomTips([...roomTips, { label: '', value: '' }])} style={{ background: 'rgba(197,168,128,0.1)', border: 'none', color: 'var(--color-gold)', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>+ Add Bullet</button>
+                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {roomTips.map((tip, i) => (
+                    <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                      <input type="text" placeholder="Label, e.g. Location" value={tip.label} onChange={(e) => { const nt = [...roomTips]; nt[i].label = e.target.value; setRoomTips(nt); }} style={{ width: '140px', padding: '8px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                      <input type="text" placeholder="Guidance value text..." value={tip.value} onChange={(e) => { const nt = [...roomTips]; nt[i].value = e.target.value; setRoomTips(nt); }} style={{ flex: 1, padding: '8px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                      <button type="button" disabled={roomTips.length === 1} onClick={() => setRoomTips(roomTips.filter((_, idx) => idx !== i))} style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', marginTop: '6px' }}><Trash2 size={14} /></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifySelf: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', padding: '10px 20px', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" style={{ background: 'var(--color-gold)', border: 'none', padding: '10px 24px', borderRadius: '6px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Save Changes</button>
+              </div>
+            </form>
+          )}
+
+          {/* MISTAKE FORM */}
+          {modalType === 'mistake' && (
+            <form onSubmit={handleSaveMistake} className="glass-panel" style={{ maxWidth: '520px', width: '100%', padding: '30px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>{editingItem ? 'Edit Vastu Dosha' : 'Add Vastu Dosha'}</h3>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Mistake / Description</label>
+                  <input type="text" required value={mistakeText} onChange={(e) => setMistakeText(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Severity</label>
+                  <select value={mistakeSeverity} onChange={(e) => setMistakeSeverity(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }}>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Negative Impact</label>
+                <textarea rows="3" required value={mistakeImpact} onChange={(e) => setMistakeImpact(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', resize: 'vertical' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Elemental Remedy</label>
+                <textarea rows="3" required value={mistakeRemedy} onChange={(e) => setMistakeRemedy(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', resize: 'vertical' }} />
+              </div>
+
+              <div style={{ display: 'flex', justifySelf: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', padding: '10px 20px', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" style={{ background: 'var(--color-gold)', border: 'none', padding: '10px 24px', borderRadius: '6px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Save Changes</button>
+              </div>
+            </form>
+          )}
+
+          {/* REMEDY FORM */}
+          {modalType === 'remedy' && (
+            <form onSubmit={handleSaveRemedy} className="glass-panel" style={{ maxWidth: '500px', width: '100%', padding: '30px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>{editingItem ? 'Edit Quick Remedy' : 'Add Quick Remedy'}</h3>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Remedy Title</label>
+                <input type="text" required value={remedyTitle} onChange={(e) => setRemedyTitle(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Icon Class (Lucide-react name)</label>
+                <select value={remedyIcon} onChange={(e) => setRemedyIcon(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>
+                  <option value="Sparkles">Sparkles</option>
+                  <option value="Shield">Shield</option>
+                  <option value="Leaf">Leaf</option>
+                  <option value="Wind">Wind</option>
+                  <option value="Sun">Sun</option>
+                  <option value="Mountain">Mountain</option>
+                  <option value="TrendingUp">TrendingUp</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Remedy Description</label>
+                <textarea rows="4" required value={remedyDesc} onChange={(e) => setRemedyDesc(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', resize: 'vertical' }} />
+              </div>
+
+              <div style={{ display: 'flex', justifySelf: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', padding: '10px 20px', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" style={{ background: 'var(--color-gold)', border: 'none', padding: '10px 24px', borderRadius: '6px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Save Changes</button>
+              </div>
+            </form>
+          )}
+
+          {/* SEASON FORM */}
+          {modalType === 'season' && (
+            <form onSubmit={handleSaveSeason} className="glass-panel" style={{ maxWidth: '540px', width: '100%', padding: '30px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '90vh', overflowY: 'auto', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Edit Season: {editingItem.season}</h3>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Season Title</label>
+                  <input type="text" required value={seasonName} onChange={(e) => setSeasonName(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Month Range</label>
+                  <input type="text" required value={seasonMonths} onChange={(e) => setSeasonMonths(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+                </div>
+              </div>
+
+              {/* Season tips */}
+              <div>
+                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '8px' }}>
+                  Seasonal tips guidelines
+                  <button type="button" onClick={() => setSeasonTips([...seasonTips, ''])} style={{ background: 'rgba(197,168,128,0.1)', border: 'none', color: 'var(--color-gold)', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>+ Add Tip</button>
+                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {seasonTips.map((tip, idx) => (
+                    <div key={idx} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <input type="text" value={tip} onChange={(e) => { const nt = [...seasonTips]; nt[idx] = e.target.value; setSeasonTips(nt); }} style={{ flex: 1, padding: '8px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.82rem' }} />
+                      <button type="button" disabled={seasonTips.length === 1} onClick={() => setSeasonTips(seasonTips.filter((_, i) => i !== idx))} style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer' }}><Trash2 size={14} /></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifySelf: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', padding: '10px 20px', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" style={{ background: 'var(--color-gold)', border: 'none', padding: '10px 24px', borderRadius: '6px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Save Changes</button>
+              </div>
+            </form>
+          )}
+
+          {/* ELEMENT FORM */}
+          {modalType === 'element' && (
+            <form onSubmit={handleSaveElement} className="glass-panel" style={{ maxWidth: '540px', width: '100%', padding: '30px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '90vh', overflowY: 'auto', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Edit Element: {editingItem?.name}</h3>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Element Name</label>
+                  <input type="text" required value={eleName} onChange={(e) => setEleName(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Zone / Direction</label>
+                  <input type="text" required value={eleZone} onChange={(e) => setEleZone(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>Color Hex/Var</label>
+                  <input type="text" required value={eleColorHex} onChange={(e) => setEleColorHex(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>BG Alpha Color</label>
+                  <input type="text" required value={eleBgCode} onChange={(e) => setEleBgCode(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>Icon Name</label>
+                  <select value={eleIconName} onChange={(e) => setEleIconName(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>
+                    <option value="Droplets">Droplets</option>
+                    <option value="Zap">Zap</option>
+                    <option value="Mountain">Mountain</option>
+                    <option value="Wind">Wind</option>
+                    <option value="Star">Star</option>
+                    <option value="Leaf">Leaf</option>
+                    <option value="Sun">Sun</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Benefit / Focus</label>
+                <textarea rows="2" required value={eleBenefit} onChange={(e) => setEleBenefit(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', resize: 'vertical' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Recommended Colors</label>
+                <input type="text" required value={eleColors} onChange={(e) => setEleColors(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
+              </div>
+
+              <div style={{ display: 'flex', justifySelf: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', padding: '10px 20px', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" style={{ background: 'var(--color-gold)', border: 'none', padding: '10px 24px', borderRadius: '6px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Save Changes</button>
+              </div>
+            </form>
+          )}
+
+        </div>
+      )}
+
+    </div>
+  );
+}

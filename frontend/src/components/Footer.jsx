@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, Phone, Mail, MapPin } from 'lucide-react';
+import { Compass, MessageCircle, MapPin } from 'lucide-react';
 
 export default function Footer() {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
@@ -60,12 +60,17 @@ export default function Footer() {
               </div>
             </li>
             <li style={{ display: 'flex', gap: '12px', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              <Phone size={18} style={{ color: 'var(--color-gold)' }} />
-              <span>+91 95590 96656</span>
-            </li>
-            <li style={{ display: 'flex', gap: '12px', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              <Mail size={18} style={{ color: 'var(--color-gold)' }} />
-              <span>connect@achyutammaestro.com</span>
+              <MessageCircle size={18} style={{ color: 'var(--color-gold)' }} />
+              <a 
+                href="https://wa.me/919559096656" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={(e) => e.target.style.color = 'var(--color-gold)'}
+                onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
+              >
+                +91 95590 96656 (WhatsApp)
+              </a>
             </li>
           </ul>
         </div>
