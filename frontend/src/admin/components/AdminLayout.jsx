@@ -56,7 +56,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div style={{
+    <div className="admin-layout-container" style={{
       display: 'flex',
       minHeight: '100vh',
       background: 'var(--bg-dark)',

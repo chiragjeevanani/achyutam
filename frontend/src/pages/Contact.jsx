@@ -1,16 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle, Phone, MapPin, Calendar, Clock, Check } from 'lucide-react';
+
+const defaultContactInfo = {
+  header: {
+    badge: 'CONNECT',
+    title: 'Book Consultation',
+    description: 'Schedule a custom directional or numerological assessment session with Upasana Ji. Feel free to reach out to our Mumbai headquarters.'
+  },
+  location: {
+    title: 'Our Headquarters',
+    label: 'Office Location',
+    addressLines: [
+      'TS Police Academy, INDIS PBEL CITY,',
+      'Nehru Outer Ring Rd, Exit - 18,',
+      'Hyderabad, Telangana 500091'
+    ]
+  },
+  whatsapp: {
+    label: 'WhatsApp Number',
+    number: '+91 95590 96656',
+    link: 'https://wa.me/919559096656'
+  },
+  slots: ['10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM']
+};
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: 'vastu', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [contactInfo, setContactInfo] = useState(null);
 
-  const times = ['10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM'];
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/contact-info`)
+      .then(res => res.json())
+      .then(data => setContactInfo(data))
+      .catch(err => console.error('Failed to fetch contact info:', err));
+  }, []);
 
-  const handleSubmit = (e) => {
+  const activeInfo = contactInfo || defaultContactInfo;
+  const times = activeInfo.slots || defaultContactInfo.slots;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/contacts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...form,
+          preferredTime: selectedTime || ''
+        }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || 'Failed to submit booking request.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error. Failed to submit.');
+    }
   };
 
   return (
@@ -18,10 +70,10 @@ export default function Contact() {
       
       {/* Title */}
       <section style={{ textAlign: 'center', padding: '0 0 20px' }} className="reveal-zoom-out">
-        <span style={{ color: 'var(--color-purple)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>CONNECT</span>
-        <h1 style={{ fontSize: '2.3rem', marginTop: '10px', marginBottom: '15px' }} className="gold-gradient-text">Book Consultation</h1>
+        <span style={{ color: 'var(--color-purple)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>{activeInfo.header.badge}</span>
+        <h1 style={{ fontSize: '2.3rem', marginTop: '10px', marginBottom: '15px' }} className="gold-gradient-text">{activeInfo.header.title}</h1>
         <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto', lineHeight: '1.7' }}>
-          Schedule a custom directional or numerological assessment session with Upasana Ji. Feel free to reach out to our Mumbai headquarters.
+          {activeInfo.header.description}
         </p>
       </section>
 
@@ -32,33 +84,36 @@ export default function Contact() {
         <div className="reveal-stagger" data-stagger-step="100" style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
           
           <div className="glass-panel reveal-left magnetic-hover" style={{ padding: '30px' }}>
-            <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', marginBottom: '20px', color: 'var(--color-gold)' }}>Our Headquarters</h3>
+            <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', marginBottom: '20px', color: 'var(--color-gold)' }}>{activeInfo.location.title}</h3>
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '20px', listStyle: 'none' }}>
               <li style={{ display: 'flex', gap: '16px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
                 <MapPin size={24} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
                 <div>
-                  <strong>Office Location</strong>
+                  <strong>{activeInfo.location.label}</strong>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '4px' }}>
-                    TS Police Academy, INDIS PBEL CITY,<br />
-                    Nehru Outer Ring Rd, Exit - 18,<br />
-                    Hyderabad, Telangana 500091
+                    {activeInfo.location.addressLines.map((line, idx) => (
+                      <React.Fragment key={idx}>
+                        {line}
+                        {idx < activeInfo.location.addressLines.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
                   </p>
                 </div>
               </li>
               <li style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--text-primary)' }}>
                 <MessageCircle size={20} style={{ color: 'var(--color-indigo)' }} />
                 <div>
-                  <strong>WhatsApp Number</strong>
+                  <strong>{activeInfo.whatsapp.label}</strong>
                   <p style={{ marginTop: '2px' }}>
                     <a 
-                      href="https://wa.me/919559096656" 
+                      href={activeInfo.whatsapp.link} 
                       target="_blank" 
                       rel="noopener noreferrer" 
                       style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}
                       onMouseEnter={(e) => e.target.style.color = 'var(--color-gold)'}
                       onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
                     >
-                      +91 95590 96656
+                      {activeInfo.whatsapp.number}
                     </a>
                   </p>
                 </div>
@@ -100,6 +155,7 @@ export default function Contact() {
           </div>
 
         </div>
+
 
         {/* Contact Form */}
         <div className="glass-panel reveal-right" style={{ padding: '40px 30px' }}>

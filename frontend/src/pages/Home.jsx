@@ -1,10 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Sun, Star, Award, Compass, ChevronRight, Check, AlertCircle, Quote } from 'lucide-react';
+
+const iconMapper = {
+  Compass: <Compass size={22} />,
+  Sparkles: <Sparkles size={22} />,
+  Sun: <Sun size={22} />,
+  Star: <Star size={22} />,
+  Award: <Award size={22} />
+};
+
+const defaultHomeContent = {
+  hero: {
+    badge: 'CELESTIAL HARMONY',
+    titleLine1: 'Achyutam Maestro',
+    titleLine2: 'Transforming Spaces & Destiny',
+    description: 'Unlock peace, wealth, and abundance through logical, scientific Vastu alignments and supportive numerological frequency corrections.',
+    imageUrl: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.29.57-AM-2.jpeg',
+    ctaText: 'Book a Consultation',
+    compassCtaText: 'Align Your Compass'
+  },
+  compass: {
+    badge: 'INTERACTIVE STABILITY',
+    title: 'Test Your Energy Direction',
+    description: 'Our universe works through direct currents. Tap the Vastu Chakra on the left to rotate and align the spatial flow. In ancient Vastu, each of the 16 sectors governs a key area of life.',
+    successText: 'Vastu Energy Flow Fully Calibrated!',
+    instructionText: 'Tap the Vastu Chakra to calibrate space flow.'
+  },
+  methodology: {
+    title: 'Our Three-Step Scientific Flow',
+    steps: [
+      { num: '01', title: 'Energy Mapping', desc: 'We map the precise directional layout of your premises against the cosmic horoscope coordinates of the primary resident.', icon: 'Compass' },
+      { num: '02', title: 'No-Demolition Balancing', desc: 'Imbalances are rectified using natural colors, specific metal rods, or celestial crystals. 0% structural changes required.', icon: 'Sparkles' },
+      { num: '03', title: 'Progressive Remedies', desc: 'We introduce subtle remedies and personal name corrections to align the environment’s frequency with supportive forces.', icon: 'Sun' }
+    ]
+  },
+  whyUs: {
+    badge: 'TRUST PRINCIPLES',
+    title: 'Why Align With Us?',
+    description: 'We provide clear, practical guides that adapt Vastu and Numerology principles to contemporary living standards.',
+    benefits: [
+      { text: '100% Scientific directional mapping', color: 'var(--color-purple)' },
+      { text: 'Custom-tailored Lo Shu grid numerology analysis', color: 'var(--color-yellow)' },
+      { text: 'Practical, modern Vastu guidelines (0% demolition)', color: 'var(--color-indigo)' },
+      { text: 'Experienced consulting with direct remote guidance', color: 'var(--color-gold)' }
+    ],
+    stats: [
+      { target: 98, suffix: '%', text: 'Harmony Success Rate', border: 'var(--color-purple)', shadow: 'rgba(59, 130, 246, 0.12)' },
+      { target: 0, suffix: '%', text: 'Construction Demolitions', border: 'var(--color-indigo)', shadow: 'rgba(16, 185, 129, 0.12)' },
+      { target: 16, suffix: '', text: 'Directions Balanced', border: 'var(--color-yellow)', shadow: 'rgba(251, 191, 36, 0.12)' },
+      { target: 1500, suffix: '+', text: 'Homes & Offices Cured', border: 'var(--color-gold)', shadow: 'rgba(255, 51, 51, 0.12)' }
+    ]
+  },
+  testimonialSpotlight: {
+    quote: '"Through your guidance in Vastu, Astrology, and Numerology, I not only received the right direction but also gained confidence and mental peace. Your suggestions led to absolute clarity, balance, and positive changes in my life."',
+    author: 'POOJA KASHYAP',
+    role: 'Client & Testimony',
+    ctaText: 'Read More Reviews'
+  },
+  ctaSection: {
+    title: 'Ready to Align Your Life?',
+    description: 'Take the first step towards a balanced environment. Request your directional mapping consult today.',
+    ctaText: 'Schedule Consultation Now'
+  }
+};
 
 export default function Home() {
   const [compassAngle, setCompassAngle] = useState(0);
   const [calibrated, setCalibrated] = useState(false);
+  const [homeContent, setHomeContent] = useState(null);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/home`)
+      .then(res => res.json())
+      .then(data => setHomeContent(data))
+      .catch(err => console.error('Failed to fetch home content:', err));
+  }, []);
+
+  const activeContent = homeContent || defaultHomeContent;
+
 
   const vastuDirections = [
     { name: 'NORTH', angle: 0, color: '#3B82F6', element: 'Water', attribute: 'Money, Career & Opportunities', line1: 'Money &', line2: 'Opportunities', deity: 'Bhudhar / Soma', bg: 'rgba(59, 130, 246, 0.25)' },
@@ -336,45 +410,17 @@ export default function Home() {
     );
   };
 
-  const steps = [
-    {
-      num: '01',
-      title: 'Energy Mapping',
-      desc: 'We map the precise directional layout of your premises against the cosmic horoscope coordinates of the primary resident.',
-      color: 'var(--color-purple)',
-      bg: 'rgba(59, 130, 246, 0.08)',
-      border: 'rgba(59, 130, 246, 0.25)',
-      glow: 'rgba(59, 130, 246, 0.12)',
-      icon: <Compass size={22} />
-    },
-    {
-      num: '02',
-      title: 'No-Demolition Balancing',
-      desc: 'Imbalances are rectified using natural colors, specific metal rods, or celestial crystals. 0% structural changes required.',
-      color: 'var(--color-indigo)',
-      bg: 'rgba(16, 185, 129, 0.08)',
-      border: 'rgba(16, 185, 129, 0.25)',
-      glow: 'rgba(16, 185, 129, 0.12)',
-      icon: <Sparkles size={22} />
-    },
-    {
-      num: '03',
-      title: 'Progressive Remedies',
-      desc: 'We introduce subtle remedies and personal name corrections to align the environment’s frequency with supportive forces.',
-      color: 'var(--color-gold)',
-      bg: 'rgba(255, 51, 51, 0.08)',
-      border: 'rgba(255, 51, 51, 0.25)',
-      glow: 'rgba(255, 51, 51, 0.12)',
-      icon: <Sun size={22} />
-    }
-  ];
+  const steps = activeContent.methodology.steps.map(st => ({
+    ...st,
+    color: st.icon === 'Compass' ? 'var(--color-purple)' : st.icon === 'Sparkles' ? 'var(--color-indigo)' : 'var(--color-gold)',
+    bg: st.icon === 'Compass' ? 'rgba(59, 130, 246, 0.08)' : st.icon === 'Sparkles' ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 51, 51, 0.08)',
+    border: st.icon === 'Compass' ? 'rgba(59, 130, 246, 0.25)' : st.icon === 'Sparkles' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(255, 51, 51, 0.25)',
+    glow: st.icon === 'Compass' ? 'rgba(59, 130, 246, 0.12)' : st.icon === 'Sparkles' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(255, 51, 51, 0.12)',
+    icon: iconMapper[st.icon] || <Compass size={22} />
+  }));
 
-  const benefits = [
-    { text: '100% Scientific directional mapping', color: 'var(--color-purple)' },
-    { text: 'Custom-tailored Lo Shu grid numerology analysis', color: 'var(--color-yellow)' },
-    { text: 'Practical, modern Vastu guidelines (0% demolition)', color: 'var(--color-indigo)' },
-    { text: 'Experienced consulting with direct remote guidance', color: 'var(--color-gold)' }
-  ];
+  const benefits = activeContent.whyUs.benefits;
+
 
   const renderTextReveal = (text, delayStart = 0) => {
     return text.split(' ').map((word, wordIdx) => (
@@ -409,24 +455,24 @@ export default function Home() {
             style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '20px', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.25)', width: 'fit-content' }}
           >
             <Sparkles size={14} style={{ color: 'var(--color-purple)' }} />
-            <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.1em', color: 'var(--color-purple)' }}>CELESTIAL HARMONY</span>
+            <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.1em', color: 'var(--color-purple)' }}>{activeContent.hero.badge}</span>
           </div>
           
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.2rem)', lineHeight: '1.1', fontWeight: '800' }}>
-            <span className="gold-gradient-text reveal-blur inline-block in-view" style={{ animationDelay: '0ms' }}>Achyutam Maestro</span><br />
-            {renderTextReveal("Transforming Spaces & Destiny", 12)}
+            <span className="gold-gradient-text reveal-blur inline-block in-view" style={{ animationDelay: '0ms' }}>{activeContent.hero.titleLine1}</span><br />
+            {renderTextReveal(activeContent.hero.titleLine2, 12)}
           </h1>
           
           <p className="reveal delay-300" style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.7', maxWidth: '500px' }}>
-            Unlock peace, wealth, and abundance through logical, scientific Vastu alignments and supportive numerological frequency corrections.
+            {activeContent.hero.description}
           </p>
 
           <div className="reveal delay-400" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '10px' }}>
             <Link to="/contact" className="cosmic-button">
-              Book a Consultation <ChevronRight size={18} />
+              {activeContent.hero.ctaText} <ChevronRight size={18} />
             </Link>
             <a href="#compass" className="gold-button">
-              Align Your Compass
+              {activeContent.hero.compassCtaText}
             </a>
           </div>
         </div>
@@ -434,7 +480,7 @@ export default function Home() {
         <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }} className="reveal-blur delay-200">
           <div className="glass-panel magnetic-hover" style={{ width: '100%', maxWidth: '440px', overflow: 'hidden', padding: '12px', border: '1.5px solid var(--color-purple)', boxShadow: '0 8px 32px rgba(59, 130, 246, 0.12)' }}>
             <img 
-              src="https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.29.57-AM-2.jpeg" 
+              src={activeContent.hero.imageUrl} 
               alt="Achyutam Maestro Hero" 
               style={{ width: '100%', borderRadius: '12px', objectFit: 'cover', height: '480px' }}
             />
@@ -495,11 +541,11 @@ export default function Home() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="reveal-right">
-          <span style={{ color: 'var(--color-indigo)', letterSpacing: '0.15em', fontSize: '0.8rem', fontWeight: 'bold' }}>INTERACTIVE STABILITY</span>
-          <h2 style={{ fontSize: '2.2rem' }} className="gold-gradient-text">Test Your Energy Direction</h2>
+          <span style={{ color: 'var(--color-indigo)', letterSpacing: '0.15em', fontSize: '0.8rem', fontWeight: 'bold' }}>{activeContent.compass.badge}</span>
+          <h2 style={{ fontSize: '2.2rem' }} className="gold-gradient-text">{activeContent.compass.title}</h2>
           
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: '1.7' }}>
-            Our universe works through direct currents. Tap the Vastu Chakra on the left to rotate and align the spatial flow. In ancient Vastu, each of the 16 sectors governs a key area of life.
+            {activeContent.compass.description}
           </p>
 
           {/* Active Direction Live Readout */}
@@ -528,11 +574,11 @@ export default function Home() {
           <div style={{ padding: '16px 20px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.05)', border: '1.5px dashed var(--color-indigo)' }}>
             {calibrated ? (
               <p style={{ color: 'var(--color-indigo)', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: '600', margin: 0 }}>
-                <Check size={20} /> Vastu Energy Flow Fully Calibrated!
+                <Check size={20} /> {activeContent.compass.successText}
               </p>
             ) : (
               <p style={{ color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px', margin: 0 }}>
-                <AlertCircle size={20} style={{ color: 'var(--color-indigo)' }} /> Tap the Vastu Chakra to calibrate space flow.
+                <AlertCircle size={20} style={{ color: 'var(--color-indigo)' }} /> {activeContent.compass.instructionText}
               </p>
             )}
           </div>
@@ -543,7 +589,7 @@ export default function Home() {
       <section style={{ padding: '80px 0', borderTop: '1px solid var(--border-glass)' }}>
         <div style={{ textAlign: 'center', marginBottom: '50px' }} className="reveal">
           <span style={{ color: 'var(--color-gold)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>METHODOLOGY</span>
-          <h2 style={{ fontSize: '2.5rem', marginTop: '10px' }} className="gold-gradient-text">Our Three-Step Scientific Flow</h2>
+          <h2 style={{ fontSize: '2.5rem', marginTop: '10px' }} className="gold-gradient-text">{activeContent.methodology.title}</h2>
         </div>
 
         <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
@@ -609,11 +655,11 @@ export default function Home() {
       {/* 4. Why Us & Beautiful Stats */}
       <section style={{ padding: '80px 0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="reveal-left">
-          <span style={{ color: 'var(--color-gold)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>TRUST PRINCIPLES</span>
-          <h2 style={{ fontSize: '2.2rem' }} className="gold-gradient-text">Why Align With Us?</h2>
+          <span style={{ color: 'var(--color-gold)', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: 'bold' }}>{activeContent.whyUs.badge}</span>
+          <h2 style={{ fontSize: '2.2rem' }} className="gold-gradient-text">{activeContent.whyUs.title}</h2>
           
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: '1.7' }}>
-            We provide clear, practical guides that adapt Vastu and Numerology principles to contemporary living standards.
+            {activeContent.whyUs.description}
           </p>
 
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -629,12 +675,7 @@ export default function Home() {
         </div>
 
         <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-          {[
-            { target: 98, suffix: '%', text: 'Harmony Success Rate', border: 'var(--color-purple)', shadow: 'rgba(59, 130, 246, 0.12)' },
-            { target: 0, suffix: '%', text: 'Construction Demolitions', border: 'var(--color-indigo)', shadow: 'rgba(16, 185, 129, 0.12)' },
-            { target: 16, suffix: '', text: 'Directions Balanced', border: 'var(--color-yellow)', shadow: 'rgba(251, 191, 36, 0.12)' },
-            { target: 1500, suffix: '+', text: 'Homes & Offices Cured', border: 'var(--color-gold)', shadow: 'rgba(255, 51, 51, 0.12)' }
-          ].map((stat, i) => (
+          {activeContent.whyUs.stats.map((stat, i) => (
             <div key={i} className="glass-panel reveal magnetic-hover" style={{ padding: '30px', textAlign: 'center', borderColor: stat.border, boxShadow: `0 8px 20px ${stat.shadow}` }}>
               <h3 style={{ fontSize: '2.5rem', color: stat.border, fontFamily: 'var(--font-serif)' }}>
                 <span className="count-up" data-target={stat.target} data-suffix={stat.suffix}>0{stat.suffix}</span>
@@ -650,26 +691,26 @@ export default function Home() {
         <div className="glass-panel" style={{ padding: '50px 40px', position: 'relative', display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'center', textAlign: 'center', borderColor: 'var(--color-purple)', boxShadow: '0 8px 32px rgba(59, 130, 246, 0.12)' }}>
           <Quote size={40} style={{ color: 'rgba(59, 130, 246, 0.15)' }} />
           <p style={{ fontSize: '1.25rem', lineHeight: '1.7', fontStyle: 'italic', maxWidth: '800px', color: 'var(--text-primary)' }}>
-            "Through your guidance in Vastu, Astrology, and Numerology, I not only received the right direction but also gained confidence and mental peace. Your suggestions led to absolute clarity, balance, and positive changes in my life."
+            {activeContent.testimonialSpotlight.quote}
           </p>
           <div>
-            <h4 style={{ fontSize: '1.15rem', color: 'var(--color-purple)', fontFamily: 'var(--font-serif)' }}>POOJA KASHYAP</h4>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>Client & Testimony</p>
+            <h4 style={{ fontSize: '1.15rem', color: 'var(--color-purple)', fontFamily: 'var(--font-serif)' }}>{activeContent.testimonialSpotlight.author}</h4>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>{activeContent.testimonialSpotlight.role}</p>
           </div>
           <Link to="/testimonials" className="gold-button" style={{ border: '1px solid rgba(59, 130, 246, 0.3)' }}>
-            Read More Reviews
+            {activeContent.testimonialSpotlight.ctaText}
           </Link>
         </div>
       </section>
 
       {/* 6. High-Converting CTA */}
       <section style={{ padding: '60px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }} className="reveal">
-        <h2 style={{ fontSize: '2.5rem' }} className="gold-gradient-text">Ready to Align Your Life?</h2>
+        <h2 style={{ fontSize: '2.5rem' }} className="gold-gradient-text">{activeContent.ctaSection.title}</h2>
         <p style={{ color: 'var(--text-muted)', maxWidth: '500px', lineHeight: '1.6' }}>
-          Take the first step towards a balanced environment. Request your directional mapping consult today.
+          {activeContent.ctaSection.description}
         </p>
         <Link to="/contact" className="cosmic-button" style={{ fontSize: '1.1rem', padding: '14px 36px' }}>
-          Schedule Consultation Now <ChevronRight size={20} />
+          {activeContent.ctaSection.ctaText} <ChevronRight size={20} />
         </Link>
       </section>
 

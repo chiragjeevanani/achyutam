@@ -40,6 +40,7 @@ export default function Navbar() {
     { name: 'Services', path: '/services' },
     { name: 'Yogadhan', path: '/yogadhan' },
     { name: 'Vastu Tips', path: '/vastu-tips' },
+    { name: 'Teaching', path: '/teaching' },
     { name: 'Blog', path: '/blog' },
     { name: 'Testimonials', path: '/testimonials' },
     { name: 'Contact Us', path: '/contact' }

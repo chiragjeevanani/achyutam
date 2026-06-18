@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 import { Sparkles, Sun, Star, Compass, Heart, Eye, Calendar, Clock, User, CheckCircle2, ChevronRight, ChevronLeft, CreditCard, Receipt, Printer, ArrowRight, Radio } from 'lucide-react';
 import api from '../admin/api/axios';
 
@@ -61,6 +62,7 @@ export default function Booking() {
   const [transactionId, setTransactionId] = useState('');
 
   const [servicesList, setServicesList] = useState([]);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -76,12 +78,22 @@ export default function Booking() {
             duration: typeof s.duration === 'number' ? `${s.duration} Mins` : s.duration
           }));
         setServicesList(activeServices);
+
+        const serviceParam = searchParams.get('service');
+        if (serviceParam) {
+          const matched = activeServices.find(s => s.title.toLowerCase() === serviceParam.toLowerCase() || s.category.toLowerCase() === serviceParam.toLowerCase());
+          if (matched) {
+            setSelectedService(matched);
+            setSelectedCategory(matched.category);
+            setStep(2);
+          }
+        }
       } catch (err) {
         console.error('Error fetching services:', err);
       }
     };
     fetchServices();
-  }, []);
+  }, [searchParams]);
 
   const categories = ['ALL', ...new Set(servicesList.map(s => s.category))];
 
@@ -134,8 +146,19 @@ export default function Booking() {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Simulate Razorpay secure payment checkout flow
-  const triggerRazorpayCheckout = () => {
+  // Helper to dynamically load Razorpay script
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  // Real Razorpay secure payment checkout flow / Free booking flow
+  const triggerRazorpayCheckout = async () => {
     if (!formData.name || !formData.email || !formData.phone) {
       alert("Please fill in Name, Email, and Phone to proceed.");
       return;
@@ -143,50 +166,117 @@ export default function Booking() {
     
     setIsProcessingPayment(true);
     
-    // Simulate Razorpay Gateway Opening & Loading
-    setTimeout(async () => {
-      // Create random Txn ID
-      const fakeTxnId = 'pay_' + Math.random().toString(36).substr(2, 9).toUpperCase();
-      
-      try {
-        const payload = {
-          service: {
-            id: selectedService._id || selectedService.id,
-            title: selectedService.title,
-            category: selectedService.category,
-            price: Number(selectedService.price),
-            duration: typeof selectedService.duration === 'string' ? parseInt(selectedService.duration) : selectedService.duration
-          },
-          appointmentDate: selectedDate,
-          timeSlot: selectedTimeSlot,
-          customer: {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone
-          },
-          additionalInfo: {
-            notes: formData.notes || '',
-            birthDate: formData.birthDate || '',
-            birthTime: formData.birthTime || '',
-            birthPlace: formData.birthPlace || '',
-            vastuAddress: formData.vastuAddress || ''
-          },
-          paymentStatus: 'paid',
-          transactionId: fakeTxnId
-        };
-        
-        await api.post('/bookings', payload);
-        
-        setTransactionId(fakeTxnId);
-        setIsProcessingPayment(false);
+    try {
+      const isFree = Number(selectedService.price) === 0;
+
+      // 1. Create booking in pending status or paid if free
+      const bookingPayload = {
+        service: {
+          id: selectedService._id || selectedService.id,
+          title: selectedService.title,
+          category: selectedService.category,
+          price: Number(selectedService.price),
+          duration: typeof selectedService.duration === 'string' ? parseInt(selectedService.duration) : selectedService.duration
+        },
+        appointmentDate: selectedDate,
+        timeSlot: selectedTimeSlot,
+        customer: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone
+        },
+        additionalInfo: {
+          notes: formData.notes || '',
+          birthDate: formData.birthDate || '',
+          birthTime: formData.birthTime || '',
+          birthPlace: formData.birthPlace || '',
+          vastuAddress: formData.vastuAddress || ''
+        },
+        paymentStatus: isFree ? 'paid' : 'pending',
+        transactionId: isFree ? 'free_booking' : undefined
+      };
+
+      const { data: booking } = await api.post('/bookings', bookingPayload);
+
+      if (isFree) {
+        setTransactionId('free_booking');
         setPaymentSuccess(true);
         setStep(4);
-      } catch (err) {
-        console.error('Error creating booking:', err);
-        alert(err.response?.data?.message || 'Payment simulated successfully, but failed to save booking to database.');
         setIsProcessingPayment(false);
+        return;
       }
-    }, 2500);
+
+      // 2. Create Razorpay order on the backend
+      const { data: order } = await api.post('/payments/create-order', {
+        bookingId: booking._id
+      });
+
+      // 3. Load Razorpay Web Checkout SDK
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        alert('Failed to load Razorpay SDK. Please check your internet connection.');
+        setIsProcessingPayment(false);
+        return;
+      }
+
+      // 4. Open Razorpay Checkout overlay
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SatrrxFwKXJX8e',
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Achyutam Maestro',
+        description: `Booking for ${selectedService.title}`,
+        order_id: order.id,
+        handler: async (response) => {
+          try {
+            setIsProcessingPayment(true);
+            
+            // 5. Verify signature on the backend
+            const verifyPayload = {
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+              bookingId: booking._id
+            };
+            
+            const { data: verification } = await api.post('/payments/verify', verifyPayload);
+            
+            if (verification.status === 'success') {
+              setTransactionId(response.razorpay_payment_id);
+              setPaymentSuccess(true);
+              setStep(4);
+            } else {
+              alert('Payment verification failed.');
+            }
+          } catch (err) {
+            console.error('Verification error:', err);
+            alert(err.response?.data?.message || 'Verification failed. Please contact support.');
+          } finally {
+            setIsProcessingPayment(false);
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.phone
+        },
+        theme: {
+          color: '#D32F2F'
+        },
+        modal: {
+          ondismiss: () => {
+            setIsProcessingPayment(false);
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error('Checkout error:', err);
+      alert(err.response?.data?.message || 'Error occurred while initializing payment checkout.');
+      setIsProcessingPayment(false);
+    }
   };
 
   const handlePrint = () => {
@@ -443,7 +533,7 @@ export default function Booking() {
                       if (!activeDays.includes(dayName)) {
                         isDisabled = true;
                       }
-                    } else if (selectedService?.id === 'yogadhan') {
+                    } else if (selectedService?.id === 'yogadhan' || selectedService?.title?.toLowerCase().includes('yogadhan')) {
                       const isThursday = date.getDay() === 4;
                       if (!isThursday) isDisabled = true;
                     }
@@ -700,13 +790,13 @@ export default function Booking() {
               >
                 <ChevronLeft size={16} /> Back
               </button>
-              <button
+               <button
                 disabled={!formData.name || !formData.email || !formData.phone}
                 onClick={triggerRazorpayCheckout}
-                className="gold-button"
+                className={selectedService?.price === 0 ? "cosmic-button" : "gold-button"}
                 style={{ opacity: formData.name && formData.email && formData.phone ? 1 : 0.5 }}
               >
-                Secure Razorpay Checkout <ArrowRight size={16} />
+                {selectedService?.price === 0 ? "Confirm Free Booking" : "Secure Razorpay Checkout"} <ArrowRight size={16} />
               </button>
             </div>
           </div>
@@ -830,7 +920,7 @@ export default function Booking() {
 
               {/* Receipt Footer stamp */}
               <div style={{ textAlign: 'center', borderTop: '1px solid rgba(217, 125, 100, 0.15)', paddingTop: '15px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                <span>Securely Processed via Razorpay standard SDK. This is a system-generated receipt. No signature required.</span>
+                <span>{selectedService?.price === 0 ? "Complimentary service. This is a system-generated receipt." : "Securely Processed via Razorpay standard SDK. This is a system-generated receipt. No signature required."}</span>
               </div>
             </div>
 

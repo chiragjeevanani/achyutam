@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-  LayoutDashboard, Calendar, Mail, Landmark, Sparkles, BookOpen, MessageSquare, Compass, LogOut, Moon, Sun, Home 
+  LayoutDashboard, Calendar, Mail, Landmark, Sparkles, BookOpen, MessageSquare, Compass, LogOut, Moon, Sun, Home, GraduationCap, Info, Phone 
 } from 'lucide-react';
 
 export default function AdminSidebar({ theme, toggleTheme }) {
@@ -12,16 +12,21 @@ export default function AdminSidebar({ theme, toggleTheme }) {
   const menuItems = [
     { name: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={18} /> },
     { name: 'Bookings', path: '/admin/bookings', icon: <Calendar size={18} /> },
+    { name: 'Yogdan Bookings', path: '/admin/yogdan-bookings', icon: <Calendar size={18} /> },
     { name: 'Contacts', path: '/admin/contacts', icon: <Mail size={18} /> },
+    { name: 'Teaching Applicants', path: '/admin/teaching', icon: <GraduationCap size={18} /> },
     { name: 'Payments', path: '/admin/payments', icon: <Landmark size={18} /> },
   ];
 
   const cmsItems = [
     { name: 'Home Page', path: '/admin/cms/home', icon: <Home size={18} /> },
+    { name: 'About Us', path: '/admin/cms/about', icon: <Info size={18} /> },
     { name: 'Services', path: '/admin/cms/services', icon: <Sparkles size={18} /> },
+    { name: 'Yogadhan', path: '/admin/cms/yogadhan', icon: <Compass size={18} /> },
     { name: 'Blogs', path: '/admin/cms/blogs', icon: <BookOpen size={18} /> },
     { name: 'Testimonials', path: '/admin/cms/testimonials', icon: <MessageSquare size={18} /> },
     { name: 'Vastu Tips', path: '/admin/cms/vastu-tips', icon: <Compass size={18} /> },
+    { name: 'Contact Info', path: '/admin/cms/contact-info', icon: <Phone size={18} /> },
   ];
 
   const isActive = (path) => {
@@ -99,31 +104,63 @@ export default function AdminSidebar({ theme, toggleTheme }) {
         </div>
       </div>
 
-      {/* Main menu */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <span style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.1em', color: '#555', paddingLeft: '8px', textTransform: 'uppercase' }}>
-          Main Operations
-        </span>
-        {menuItems.map((item) => (
-          <Link key={item.name} to={item.path} style={linkStyle(item.path)}>
-            {item.icon}
-            {item.name}
-          </Link>
-        ))}
+      {/* Scrollable Menus Container */}
+      <div 
+        style={{ 
+          flex: 1, 
+          minHeight: 0,
+          overflowY: 'auto', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '24px', 
+          marginBottom: '20px', 
+          paddingRight: '4px',
+          scrollbarWidth: 'thin'
+        }} 
+        className="sidebar-scrollable-menu"
+      >
+        {/* Main menu */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <span style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.1em', color: 'var(--text-muted)', paddingLeft: '8px', textTransform: 'uppercase' }}>
+            Main Operations
+          </span>
+          {menuItems.map((item) => (
+            <Link key={item.name} to={item.path} style={linkStyle(item.path)}>
+              {item.icon}
+              {item.name}
+            </Link>
+          ))}
+        </div>
+
+        {/* CMS menu */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <span style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.1em', color: 'var(--text-muted)', paddingLeft: '8px', textTransform: 'uppercase' }}>
+            Content Management (CMS)
+          </span>
+          {cmsItems.map((item) => (
+            <Link key={item.name} to={item.path} style={linkStyle(item.path)}>
+              {item.icon}
+              {item.name}
+            </Link>
+          ))}
+        </div>
       </div>
 
-      {/* CMS menu */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '24px' }}>
-        <span style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.1em', color: '#555', paddingLeft: '8px', textTransform: 'uppercase' }}>
-          Content Management (CMS)
-        </span>
-        {cmsItems.map((item) => (
-          <Link key={item.name} to={item.path} style={linkStyle(item.path)}>
-            {item.icon}
-            {item.name}
-          </Link>
-        ))}
-      </div>
+      <style>{`
+        .sidebar-scrollable-menu::-webkit-scrollbar {
+          width: 4px;
+        }
+        .sidebar-scrollable-menu::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .sidebar-scrollable-menu::-webkit-scrollbar-thumb {
+          background: rgba(197, 168, 128, 0.2);
+          border-radius: 4px;
+        }
+        .sidebar-scrollable-menu::-webkit-scrollbar-thumb:hover {
+          background: rgba(197, 168, 128, 0.4);
+        }
+      `}</style>
 
       {/* Footer */}
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -136,7 +173,7 @@ export default function AdminSidebar({ theme, toggleTheme }) {
             gap: '12px',
             padding: '12px 16px',
             borderRadius: '8px',
-            background: 'rgba(255, 255, 255, 0.02)',
+            background: theme === 'light' ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.02)',
             border: '1px solid var(--border-glass)',
             color: 'var(--text-primary)',
             fontSize: '0.9rem',
@@ -145,10 +182,10 @@ export default function AdminSidebar({ theme, toggleTheme }) {
             transition: 'all 0.2s',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+            e.currentTarget.style.background = theme === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.05)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+            e.currentTarget.style.background = theme === 'light' ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.02)';
           }}
         >
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}

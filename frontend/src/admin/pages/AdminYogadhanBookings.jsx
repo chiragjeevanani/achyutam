@@ -4,25 +4,14 @@ import {
   Search, Trash2, Calendar, User, Eye, X, Phone, Mail, Clock, ShieldAlert 
 } from 'lucide-react';
 
-export default function AdminBookings() {
+export default function AdminYogadhanBookings() {
   const [bookings, setBookings] = useState([]);
-  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const [serviceFilter, setServiceFilter] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedBooking, setSelectedBooking] = useState(null);
-
-  const fetchServices = async () => {
-    try {
-      const { data } = await api.get('/services');
-      setServices(data || []);
-    } catch (error) {
-      console.error('Error fetching services:', error);
-    }
-  };
 
   const fetchBookings = async () => {
     try {
@@ -30,30 +19,24 @@ export default function AdminBookings() {
       const params = {
         pageNumber: page,
         keyword: search,
+        serviceTitle: 'Yogadhan System',
       };
       if (statusFilter) {
         params.paymentStatus = statusFilter;
-      }
-      if (serviceFilter) {
-        params.serviceTitle = serviceFilter;
       }
       const { data } = await api.get('/bookings', { params });
       setBookings(data.bookings || []);
       setTotalPages(data.pages || 1);
     } catch (error) {
-      console.error('Error fetching bookings:', error);
+      console.error('Error fetching Yogadhan bookings:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchServices();
-  }, []);
-
-  useEffect(() => {
     fetchBookings();
-  }, [page, statusFilter, serviceFilter]);
+  }, [page, statusFilter]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -81,10 +64,10 @@ export default function AdminBookings() {
       {/* Header */}
       <div>
         <h1 style={{ fontSize: '2rem', fontFamily: 'var(--font-serif)', color: 'var(--text-heading)', margin: 0 }}>
-          Manage Bookings
+          Yogadhan Bookings
         </h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '4px' }}>
-          Browse client appointments, consult notes, birth details, and payment histories.
+          Browse client appointments, consult notes, birth details, and free energy exchange booking records.
         </p>
       </div>
 
@@ -104,7 +87,7 @@ export default function AdminBookings() {
             </span>
             <input
               type="text"
-              placeholder="Search by client or service..."
+              placeholder="Search by client..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{
@@ -160,35 +143,6 @@ export default function AdminBookings() {
               <option value="paid">Paid</option>
               <option value="pending">Pending</option>
               <option value="failed">Failed</option>
-            </select>
-          </div>
-
-          {/* Service Filter */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Service:</span>
-            <select
-              value={serviceFilter}
-              onChange={(e) => {
-                setServiceFilter(e.target.value);
-                setPage(1);
-              }}
-              style={{
-                padding: '10px 16px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid var(--border-glass)',
-                borderRadius: '8px',
-                color: '#fff',
-                outline: 'none',
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-              }}
-            >
-              <option value="">All Services</option>
-              {services.map((s) => (
-                <option key={s._id} value={s.title}>
-                  {s.title}
-                </option>
-              ))}
             </select>
           </div>
         </div>

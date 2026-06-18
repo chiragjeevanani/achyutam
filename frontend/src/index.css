@@ -1201,6 +1201,53 @@ a {
   }
 }
 
+/* Admin Panel Global Inputs & Headings Theme Adaptations */
+.admin-layout-container input,
+.admin-layout-container textarea,
+.admin-layout-container select {
+  color: var(--text-primary) !important;
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid var(--border-glass) !important;
+  transition: all 0.2s ease;
+}
+
+.admin-layout-container input:focus,
+.admin-layout-container textarea:focus,
+.admin-layout-container select:focus {
+  border-color: var(--border-active) !important;
+  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1) !important;
+}
+
+.light-theme .admin-layout-container input,
+.light-theme .admin-layout-container textarea,
+.light-theme .admin-layout-container select {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  border-color: rgba(211, 47, 47, 0.25) !important;
+  color: var(--text-primary) !important;
+}
+
+.light-theme .admin-layout-container input:focus,
+.light-theme .admin-layout-container textarea:focus,
+.light-theme .admin-layout-container select:focus {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: var(--color-gold) !important;
+}
+
+.admin-layout-container h1,
+.admin-layout-container h2,
+.admin-layout-container h3,
+.admin-layout-container h4,
+.admin-layout-container h5,
+.admin-layout-container h6 {
+  color: var(--text-heading) !important;
+}
+
+.light-theme .admin-layout-container input::placeholder,
+.light-theme .admin-layout-container textarea::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.6;
+}
+
 
 
 

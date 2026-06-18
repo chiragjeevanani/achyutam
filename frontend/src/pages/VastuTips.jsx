@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import VastuBook from '../components/VastuBook';
 import {
   Compass, Sparkles, Home, Bed, Coffee, Monitor, Coins, Heart,
   CheckCircle, AlertCircle, ArrowUpRight, Calendar, Sun, Droplets,
@@ -180,128 +181,7 @@ const directionsData = {
   }
 };
 
-const rooms = [
-  {
-    title: 'Main Entrance (Mahadwaar)',
-    icon: <Home size={22} />,
-    element: 'All Elements',
-    color: 'var(--color-gold)',
-    bg: 'rgba(255,51,51,0.08)',
-    border: 'rgba(255,51,51,0.25)',
-    tips: [
-      { label: 'Direction', value: 'Ideally North, East, or Northeast facing.' },
-      { label: 'Lighting', value: 'Keep it brightly lit at all times — it attracts positive energy.' },
-      { label: 'Decoration', value: 'Hang auspicious symbols: Om, Swastika, or Ganesha idol at the entrance.' },
-      { label: 'Cleanliness', value: 'Never place shoes, dustbins, or broken items directly facing the door.' },
-      { label: 'Nameplate', value: 'A polished metal nameplate on the main door invites prosperity.' },
-    ]
-  },
-  {
-    title: 'Kitchen (Rasoi — Fire Element)',
-    icon: <Zap size={22} />,
-    element: 'Fire (Agni)',
-    color: 'var(--color-yellow)',
-    bg: 'rgba(251,191,36,0.08)',
-    border: 'rgba(251,191,36,0.25)',
-    tips: [
-      { label: 'Location', value: 'Southeast corner of the house is ideal for the kitchen.' },
-      { label: 'Cooking Direction', value: 'Face East while cooking to improve health and positivity.' },
-      { label: 'Stove Placement', value: 'Position the cooking stove in the SE corner of the kitchen itself.' },
-      { label: 'Water & Fire', value: 'Keep the sink (water) and stove (fire) apart — never adjacent or opposite.' },
-      { label: 'Storage', value: 'Store grains and provisions in the South or West direction.' },
-    ]
-  },
-  {
-    title: 'Master Bedroom (Earth Element)',
-    icon: <Bed size={22} />,
-    element: 'Earth (Prithvi)',
-    color: 'var(--color-indigo)',
-    bg: 'rgba(16,185,129,0.08)',
-    border: 'rgba(16,185,129,0.25)',
-    tips: [
-      { label: 'Location', value: 'Southwest zone of the home for stability and strong relationships.' },
-      { label: 'Bed Position', value: 'Headboard against the South or West wall; never face North while sleeping.' },
-      { label: 'Electronics', value: 'Avoid TVs, computers, or mirrors directly facing the sleeping bed.' },
-      { label: 'Colors', value: 'Use soothing earth tones: beige, cream, light brown, or warm green.' },
-      { label: 'Clutter', value: 'Keep under-bed storage to a minimum; heavy storage blocks energy flow.' },
-    ]
-  },
-  {
-    title: 'Living Room (Air Element)',
-    icon: <Wind size={22} />,
-    element: 'Air (Vayu)',
-    color: 'var(--color-purple)',
-    bg: 'rgba(59,130,246,0.08)',
-    border: 'rgba(59,130,246,0.25)',
-    tips: [
-      { label: 'Heavy Furniture', value: 'Place sofas in the West or South; avoid the North and East walls.' },
-      { label: 'TV Placement', value: 'Best on the Southeast wall; sit facing East or North to watch.' },
-      { label: 'Decor', value: 'Use a beautiful painting of a mountain on the South wall for stability.' },
-      { label: 'Plants', value: 'Fresh green plants in the East and North corners boost vitality.' },
-      { label: 'Lighting', value: 'Keep the NE corner bright and clutter-free for mental clarity.' },
-    ]
-  },
-  {
-    title: 'Children\'s Room (Wood / Air)',
-    icon: <Leaf size={22} />,
-    element: 'Air / Wood',
-    color: 'var(--color-indigo)',
-    bg: 'rgba(16,185,129,0.08)',
-    border: 'rgba(16,185,129,0.25)',
-    tips: [
-      { label: 'Location', value: 'West or Northwest bedroom is ideal for children.' },
-      { label: 'Study Direction', value: 'Child should face East or North while studying for focus.' },
-      { label: 'Bed Direction', value: 'Head towards East or South for restful sleep and good memory.' },
-      { label: 'Colors', value: 'Light green, yellow, and sky blue stimulate creativity and learning.' },
-      { label: 'Avoid', value: 'Never place children\'s room in the Southeast (Agni) — causes restlessness.' },
-    ]
-  },
-  {
-    title: 'Home Office / Study (Space Element)',
-    icon: <Monitor size={22} />,
-    element: 'Space (Akash)',
-    color: 'var(--color-purple)',
-    bg: 'rgba(59,130,246,0.08)',
-    border: 'rgba(59,130,246,0.25)',
-    tips: [
-      { label: 'Ideal Location', value: 'North or East of the house for maximum career and income energy.' },
-      { label: 'Sitting Direction', value: 'Sit facing North (wealth) or East (new opportunities).' },
-      { label: 'Cash Locker', value: 'Place your safe/cash box in the North, door opening towards North.' },
-      { label: 'Back Support', value: 'Your back should face a solid wall, not a window or door.' },
-      { label: 'Plants', value: 'A Money Plant or Jade plant in the Southeast corner boosts income.' },
-    ]
-  },
-  {
-    title: 'Bathroom & Toilet',
-    icon: <Droplets size={22} />,
-    element: 'Water (Jal)',
-    color: 'var(--color-purple)',
-    bg: 'rgba(59,130,246,0.08)',
-    border: 'rgba(59,130,246,0.25)',
-    tips: [
-      { label: 'Ideal Location', value: 'Northwest or West direction is best for toilets.' },
-      { label: 'Door', value: 'Bathroom door should always remain closed; never face a bedroom or kitchen.' },
-      { label: 'Leaks', value: 'Fix all plumbing leaks immediately — they drain financial energy.' },
-      { label: 'Colors', value: 'Use white or light pastel shades; avoid red or dark colors.' },
-      { label: 'Avoid', value: 'Never build bathrooms in the Northeast or directly above the prayer room.' },
-    ]
-  },
-  {
-    title: 'Pooja Room (Prayer Space)',
-    icon: <Star size={22} />,
-    element: 'Ether (Akash)',
-    color: 'var(--color-gold)',
-    bg: 'rgba(255,51,51,0.08)',
-    border: 'rgba(255,51,51,0.25)',
-    tips: [
-      { label: 'Ideal Location', value: 'Northeast corner is the most sacred zone for a Pooja room.' },
-      { label: 'Idol Facing', value: 'Idols should face West or South; worshipper faces East or North.' },
-      { label: 'Height', value: 'Pooja shelf should be at eye level — not too high, not at floor level.' },
-      { label: 'Cleanliness', value: 'Keep the space immaculately clean; light a lamp and incense daily.' },
-      { label: 'Avoid', value: 'Never place the Pooja room under a staircase or attached to a toilet wall.' },
-    ]
-  }
-];
+
 
 const commonMistakes = [
   {
@@ -498,10 +378,32 @@ const elements = [
 
 export default function VastuTips() {
   const [selectedDirection, setSelectedDirection] = useState('NE');
-  const [activeRoom, setActiveRoom] = useState(0);
   const [activeSeason, setActiveSeason] = useState(0);
   const [expandedMistake, setExpandedMistake] = useState(null);
+  const [bookPages, setBookPages] = useState([]);
+  const [heroContent, setHeroContent] = useState(null);
 
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/vastu-tips/book-pages`)
+      .then(res => res.json())
+      .then(data => { if (Array.isArray(data)) setBookPages(data); })
+      .catch(() => {});
+
+    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/vastu-tips/hero`)
+      .then(res => res.json())
+      .then(data => setHeroContent(data))
+      .catch(() => {});
+  }, []);
+
+  const defaultHero = {
+    hero: {
+      badge: 'HARMONIZE YOUR ENVIRONMENT',
+      title: 'Ancient Vastu Shastra Tips',
+      description: 'Align your home and workplace with the five natural elements — Panchtattva — for lasting health, wealth, and peace. Explore room-by-room guidance, an interactive compass, common Vastu doshas, and simple non-demolition remedies.'
+    }
+  };
+
+  const activeHero = (heroContent && heroContent.hero) ? heroContent.hero : defaultHero.hero;
   const selDir = directionsData[selectedDirection];
 
   return (
@@ -511,78 +413,32 @@ export default function VastuTips() {
       <section style={{ textAlign: 'center', padding: '0 0 50px' }} className="reveal">
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 18px', borderRadius: '20px', background: 'rgba(255,51,51,0.1)', border: '1px solid rgba(255,51,51,0.22)', margin: '0 auto 20px' }}>
           <Sparkles size={14} style={{ color: 'var(--color-gold)' }} />
-          <span style={{ fontSize: '0.75rem', fontWeight: '700', letterSpacing: '0.12em', color: 'var(--color-gold)' }}>HARMONIZE YOUR ENVIRONMENT</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: '700', letterSpacing: '0.12em', color: 'var(--color-gold)' }}>{activeHero.badge}</span>
         </div>
         <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)', marginBottom: '18px' }} className="gold-gradient-text">
-          Ancient Vastu Shastra Tips
+          {activeHero.title}
         </h1>
         <p style={{ color: 'var(--text-muted)', maxWidth: '720px', margin: '0 auto 30px', lineHeight: '1.8', fontSize: '1rem' }}>
-          Align your home and workplace with the five natural elements — <em>Panchtattva</em> — for lasting health, wealth, and peace. Explore room-by-room guidance, an interactive compass, common Vastu doshas, and simple non-demolition remedies.
+          {activeHero.description}
         </p>
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          {['Room Guide', 'Compass', 'Panchtattva', 'Mistakes & Fixes', 'Seasonal Tips'].map((label, i) => (
-            <a key={i} href={`#section-${i}`} style={{ padding: '8px 18px', borderRadius: '20px', background: i === 0 ? 'var(--color-gold)' : 'transparent', border: `1px solid ${i === 0 ? 'var(--color-gold)' : 'var(--border-glass)'}`, color: i === 0 ? '#fff' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: '600', transition: 'all 0.2s', cursor: 'pointer' }}>
-              {label}
+          {[
+            { label: 'Tips Book', href: '#section-0' },
+            { label: 'Compass', href: '#section-1' },
+            { label: 'Panchtattva', href: '#section-2' },
+            { label: 'Mistakes & Fixes', href: '#section-3' },
+            { label: 'Seasonal Tips', href: '#section-4' }
+          ].map((tab, i) => (
+            <a key={i} href={tab.href} style={{ padding: '8px 18px', borderRadius: '20px', background: i === 0 ? 'var(--color-gold)' : 'transparent', border: `1px solid ${i === 0 ? 'var(--color-gold)' : 'var(--border-glass)'}`, color: i === 0 ? '#fff' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: '600', transition: 'all 0.2s', cursor: 'pointer' }}>
+              {tab.label}
             </a>
           ))}
         </div>
       </section>
 
-      {/* ── 1. ROOM-BY-ROOM GUIDE ── */}
-      <section id="section-0" style={{ marginBottom: '80px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '40px' }} className="reveal">
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '5px 14px', borderRadius: '20px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', marginBottom: '16px' }}>
-            <Home size={13} style={{ color: 'var(--color-indigo)' }} />
-            <span style={{ fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.1em', color: 'var(--color-indigo)' }}>ROOM-BY-ROOM GUIDE</span>
-          </div>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', marginBottom: '12px' }} className="gold-gradient-text">
-            Every Space, Every Element
-          </h2>
-          <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto', lineHeight: '1.7', fontSize: '0.92rem' }}>
-            Each room in your home corresponds to a Vastu zone and a natural element. Align them correctly for transformative results.
-          </p>
-        </div>
 
-        {/* Room tabs */}
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '28px', justifyContent: 'center' }} className="reveal-scale reveal-stagger" data-stagger-step="50">
-          {rooms.map((room, idx) => (
-            <button key={idx} className="reveal" onClick={() => setActiveRoom(idx)} style={{ padding: '9px 16px', borderRadius: '10px', background: activeRoom === idx ? room.bg : 'transparent', border: `1px solid ${activeRoom === idx ? room.border : 'var(--border-glass)'}`, color: activeRoom === idx ? room.color : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: '600', cursor: 'pointer', transition: 'all 0.25s', display: 'flex', alignItems: 'center', gap: '7px' }}>
-              <span style={{ color: activeRoom === idx ? room.color : 'var(--text-muted)' }}>{room.icon}</span>
-              <span style={{ display: 'none' }} className="room-label">{room.title}</span>
-              {room.title.split(' (')[0]}
-            </button>
-          ))}
-        </div>
-
-        {/* Room detail panel */}
-        <div className="glass-panel reveal-right" style={{ padding: '35px 40px', borderLeft: `3px solid ${rooms[activeRoom].color}` }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
-            <div style={{ width: '50px', height: '50px', borderRadius: '12px', background: rooms[activeRoom].bg, border: `1px solid ${rooms[activeRoom].border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: rooms[activeRoom].color }}>
-              {rooms[activeRoom].icon}
-            </div>
-            <div>
-              <h3 style={{ fontSize: '1.5rem', color: 'var(--text-heading)', marginBottom: '4px' }}>{rooms[activeRoom].title}</h3>
-              <span style={{ fontSize: '0.78rem', color: rooms[activeRoom].color, fontWeight: '600', letterSpacing: '0.08em', background: rooms[activeRoom].bg, padding: '3px 10px', borderRadius: '10px', border: `1px solid ${rooms[activeRoom].border}` }}>
-                Element: {rooms[activeRoom].element}
-              </span>
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
-            {rooms[activeRoom].tips.map((tip, i) => (
-              <div key={i} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', padding: '14px 16px', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
-                <div style={{ minWidth: '28px', height: '28px', borderRadius: '50%', background: rooms[activeRoom].bg, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${rooms[activeRoom].border}` }}>
-                  <CheckCircle size={14} style={{ color: rooms[activeRoom].color }} />
-                </div>
-                <div>
-                  <span style={{ fontWeight: '700', fontSize: '0.82rem', color: rooms[activeRoom].color, display: 'block', marginBottom: '3px' }}>{tip.label}</span>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.55' }}>{tip.value}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ── 0. TIPS BOOK ── */}
+      <VastuBook pages={bookPages} />
 
       {/* ── 2. INTERACTIVE COMPASS ── */}
       <section id="section-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '50px', alignItems: 'center', marginBottom: '80px' }}>

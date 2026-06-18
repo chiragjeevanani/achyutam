@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import { 
-  Compass, Home, TriangleAlert, Shield, Calendar, Edit, Trash2, Plus, X, CheckCircle, Sparkles 
+  Compass, Home, TriangleAlert, Shield, Calendar, Edit, Trash2, Plus, X, CheckCircle, Sparkles, BookOpen, Upload, RefreshCw
 } from 'lucide-react';
 
 export default function AdminVastuTips() {
-  const [activeTab, setActiveTab] = useState('directions');
+  const [activeTab, setActiveTab] = useState('hero');
   const [data, setData] = useState({
     directions: [],
-    rooms: [],
     mistakes: [],
     remedies: [],
     seasons: [],
-    elements: []
+    elements: [],
+    bookPages: []
   });
+  const [heroContent, setHeroContent] = useState(null);
+  const [savingHero, setSavingHero] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Modal State
-  const [modalType, setModalType] = useState(null); // 'direction', 'room', 'mistake', 'remedy', 'season'
+  const [modalType, setModalType] = useState(null); // 'direction', 'mistake', 'remedy', 'season', 'element', 'bookPage'
   const [editingItem, setEditingItem] = useState(null);
 
   // Form states for Directions
@@ -27,14 +29,6 @@ export default function AdminVastuTips() {
   const [dirFocus, setDirFocus] = useState('');
   const [dirDos, setDirDos] = useState(['']);
   const [dirDonts, setDirDonts] = useState(['']);
-
-  // Form states for Rooms
-  const [roomTitle, setRoomTitle] = useState('');
-  const [roomElement, setRoomElement] = useState('');
-  const [roomColor, setRoomColor] = useState('');
-  const [roomBg, setRoomBg] = useState('');
-  const [roomBorder, setRoomBorder] = useState('');
-  const [roomTips, setRoomTips] = useState([{ label: '', value: '' }]);
 
   // Form states for Mistakes
   const [mistakeText, setMistakeText] = useState('');
@@ -62,15 +56,38 @@ export default function AdminVastuTips() {
   const [eleBenefit, setEleBenefit] = useState('');
   const [eleColors, setEleColors] = useState('');
 
+  // Form states for Book Pages
+  const [pageImageUrl, setPageImageUrl] = useState('');
+  const [pageCaption, setPageCaption] = useState('');
+  const [pageOrder, setPageOrder] = useState(0);
+  const [uploading, setUploading] = useState(false);
+
   const fetchData = async () => {
     try {
       setLoading(true);
       const { data: vastuData } = await api.get('/vastu-tips');
       setData(vastuData);
+      const { data: heroData } = await api.get('/vastu-tips/hero');
+      setHeroContent(heroData);
     } catch (error) {
       console.error('Error fetching Vastu Tips:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSaveHero = async (e) => {
+    e.preventDefault();
+    try {
+      setSavingHero(true);
+      const { data: updated } = await api.put('/vastu-tips/hero', heroContent);
+      setHeroContent(updated);
+      alert('Vastu Tips hero section updated successfully!');
+    } catch (error) {
+      console.error('Failed to save Vastu Tips hero:', error);
+      alert('Failed to update hero settings.');
+    } finally {
+      setSavingHero(false);
     }
   };
 
@@ -99,29 +116,7 @@ export default function AdminVastuTips() {
     }
   };
 
-  const handleSaveRoom = async (e) => {
-    e.preventDefault();
-    try {
-      const payload = {
-        title: roomTitle,
-        element: roomElement,
-        color: roomColor || 'var(--color-indigo)',
-        bg: roomBg || 'rgba(16,185,129,0.08)',
-        border: roomBorder || 'rgba(16,185,129,0.25)',
-        tips: roomTips.filter(t => t.label.trim() !== '' && t.value.trim() !== ''),
-      };
 
-      if (editingItem) {
-        await api.put(`/vastu-tips/rooms/${editingItem._id}`, payload);
-      } else {
-        await api.post('/vastu-tips/rooms', payload);
-      }
-      setModalType(null);
-      fetchData();
-    } catch (error) {
-      alert('Failed to save room changes');
-    }
-  };
 
   const handleSaveMistake = async (e) => {
     e.preventDefault();
@@ -212,18 +207,84 @@ export default function AdminVastuTips() {
     }
   };
 
-  /* ---------------- DELETE HANDLERS ---------------- */
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const handleDeleteRoom = async (id) => {
-    if (window.confirm('Delete this room details?')) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      setUploading(true);
+      const { data: res } = await api.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setPageImageUrl(res.url);
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert(error.response?.data?.message || 'Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSaveBookPage = async (e) => {
+    e.preventDefault();
+    if (!pageImageUrl) {
+      alert('Please upload an image or provide an image URL');
+      return;
+    }
+    try {
+      const payload = {
+        imageUrl: pageImageUrl,
+        caption: pageCaption,
+        order: Number(pageOrder) || 0,
+      };
+
+      if (editingItem) {
+        await api.put(`/vastu-tips/book-pages/${editingItem._id}`, payload);
+      } else {
+        await api.post('/vastu-tips/book-pages', payload);
+      }
+      setModalType(null);
+      fetchData();
+    } catch (error) {
+      alert('Failed to save book page');
+    }
+  };
+
+  const handleDeleteBookPage = async (id) => {
+    if (window.confirm('Delete this book page permanently?')) {
       try {
-        await api.delete(`/vastu-tips/rooms/${id}`);
+        await api.delete(`/vastu-tips/book-pages/${id}`);
         fetchData();
       } catch (error) {
-        alert('Failed to delete room');
+        alert('Failed to delete book page');
       }
     }
   };
+
+  const openAddBookPage = () => {
+    setEditingItem(null);
+    setPageImageUrl('');
+    setPageCaption('');
+    setPageOrder(data.bookPages?.length || 0);
+    setModalType('bookPage');
+  };
+
+  const openEditBookPage = (page) => {
+    setEditingItem(page);
+    setPageImageUrl(page.imageUrl);
+    setPageCaption(page.caption || '');
+    setPageOrder(page.order || 0);
+    setModalType('bookPage');
+  };
+
+  /* ---------------- DELETE HANDLERS ---------------- */
+
+
 
   const handleDeleteMistake = async (id) => {
     if (window.confirm('Delete this Vastu Dosha mistake?')) {
@@ -260,27 +321,7 @@ export default function AdminVastuTips() {
     setModalType('direction');
   };
 
-  const openAddRoom = () => {
-    setEditingItem(null);
-    setRoomTitle('');
-    setRoomElement('');
-    setRoomColor('');
-    setRoomBg('');
-    setRoomBorder('');
-    setRoomTips([{ label: '', value: '' }]);
-    setModalType('room');
-  };
 
-  const openEditRoom = (room) => {
-    setEditingItem(room);
-    setRoomTitle(room.title);
-    setRoomElement(room.element);
-    setRoomColor(room.color);
-    setRoomBg(room.bg);
-    setRoomBorder(room.border);
-    setRoomTips(room.tips?.length ? room.tips : [{ label: '', value: '' }]);
-    setModalType('room');
-  };
 
   const openAddMistake = () => {
     setEditingItem(null);
@@ -345,7 +386,7 @@ export default function AdminVastuTips() {
           CMS: Vastu Tips Portal
         </h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '4px' }}>
-          Fully custom CMS for all 5 interactive modules under Vastu Tips page.
+          Fully custom CMS for all 6 interactive modules under Vastu Tips page.
         </p>
       </div>
 
@@ -356,12 +397,13 @@ export default function AdminVastuTips() {
         gap: '20px',
       }}>
         {[
+          { id: 'hero', label: 'Hero Section', icon: <Sparkles size={16} /> },
           { id: 'directions', label: 'Compass Directions', icon: <Compass size={16} /> },
-          { id: 'rooms', label: 'Rooms Guide', icon: <Home size={16} /> },
           { id: 'mistakes', label: 'Common Mistakes', icon: <TriangleAlert size={16} /> },
           { id: 'remedies', label: 'Quick Remedies', icon: <Shield size={16} /> },
           { id: 'seasons', label: 'Seasonal Calendar', icon: <Calendar size={16} /> },
           { id: 'elements', label: '5 Elements', icon: <Sparkles size={16} /> },
+          { id: 'bookPages', label: 'Tips Book', icon: <BookOpen size={16} /> },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -394,6 +436,86 @@ export default function AdminVastuTips() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
+          {/* TAB 0: HERO SECTION */}
+          {activeTab === 'hero' && heroContent && (
+            <form onSubmit={handleSaveHero} className="glass-panel" style={{ padding: '30px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <h3 style={{ fontSize: '1.25rem', color: '#fff', margin: '0 0 10px', fontFamily: 'var(--font-serif)' }}>
+                Vastu Tips Hero Section Settings
+              </h3>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', color: 'var(--color-gold)', marginBottom: '6px' }}>Badge Header Text</label>
+                  <input
+                    type="text"
+                    value={heroContent.hero.badge}
+                    onChange={(e) => setHeroContent({
+                      ...heroContent,
+                      hero: { ...heroContent.hero, badge: e.target.value }
+                    })}
+                    style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', color: 'var(--color-gold)', marginBottom: '6px' }}>Title</label>
+                  <input
+                    type="text"
+                    value={heroContent.hero.title}
+                    onChange={(e) => setHeroContent({
+                      ...heroContent,
+                      hero: { ...heroContent.hero, title: e.target.value }
+                    })}
+                    style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', color: 'var(--color-gold)', marginBottom: '6px' }}>Description Paragraph</label>
+                  <textarea
+                    rows={4}
+                    value={heroContent.hero.description}
+                    onChange={(e) => setHeroContent({
+                      ...heroContent,
+                      hero: { ...heroContent.hero, description: e.target.value }
+                    })}
+                    style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none', resize: 'vertical' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+                <button
+                  type="submit"
+                  disabled={savingHero}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '12px 24px',
+                    background: 'var(--color-gold)',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem',
+                    fontWeight: '700',
+                    cursor: savingHero ? 'not-allowed' : 'pointer',
+                    opacity: savingHero ? 0.7 : 1,
+                    boxShadow: '0 4px 15px rgba(197, 168, 128, 0.2)',
+                    transition: 'all 0.25s'
+                  }}
+                >
+                  {savingHero ? <RefreshCw size={16} className="spin" style={{ animation: 'spin 1.5s linear infinite' }} /> : <Edit size={16} />}
+                  {savingHero ? 'Saving...' : 'Save Hero Settings'}
+                </button>
+              </div>
+            </form>
+          )}
+
           {/* TAB 1: DIRECTIONS */}
           {activeTab === 'directions' && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
@@ -423,54 +545,7 @@ export default function AdminVastuTips() {
             </div>
           )}
 
-          {/* TAB 2: ROOMS */}
-          {activeTab === 'rooms' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', justifySelf: 'flex-end' }}>
-                <button
-                  onClick={openAddRoom}
-                  style={{ background: 'var(--color-gold)', border: 'none', padding: '8px 16px', borderRadius: '6px', color: '#fff', fontSize: '0.82rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <Plus size={14} /> Add Room
-                </button>
-              </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
-                {data.rooms.map((room) => (
-                  <div key={room._id} className="glass-panel" style={{ padding: '20px', borderLeft: `3px solid ${room.color || 'var(--color-indigo)'}` }}>
-                    <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <h4 style={{ margin: 0, fontSize: '1.05rem', color: '#fff' }}>{room.title}</h4>
-                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Element: {room.element}</span>
-                      </div>
-                      <div style={{ display: 'flex', gap: '4px' }}>
-                        <button
-                          onClick={() => openEditRoom(room)}
-                          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
-                        >
-                          <Edit size={14} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteRoom(room._id)}
-                          style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '4px' }}
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </div>
-                    <div style={{ marginTop: '10px', fontSize: '0.8rem', borderTop: '1px solid var(--border-glass)', paddingTop: '10px' }}>
-                      <strong style={{ color: '#aaa' }}>Tips list ({room.tips?.length || 0}):</strong>
-                      <ul style={{ margin: '4px 0 0', paddingLeft: '16px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        {room.tips?.slice(0, 2).map((t, i) => (
-                          <li key={i}><strong>{t.label}:</strong> {t.value.slice(0, 40)}...</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* TAB 3: MISTAKES */}
           {activeTab === 'mistakes' && (
@@ -614,6 +689,63 @@ export default function AdminVastuTips() {
             </div>
           )}
 
+          {/* TAB 7: TIPS BOOK */}
+          {activeTab === 'bookPages' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={openAddBookPage}
+                  style={{ background: 'var(--color-gold)', border: 'none', padding: '8px 16px', borderRadius: '6px', color: '#fff', fontSize: '0.82rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <Plus size={14} /> Add Page
+                </button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
+                {data.bookPages?.map((page) => (
+                  <div key={page._id} className="glass-panel" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ position: 'relative', width: '100%', height: '180px', overflow: 'hidden', borderRadius: '6px', background: 'rgba(0,0,0,0.2)' }}>
+                      <img 
+                        src={page.imageUrl.startsWith('http') ? page.imageUrl : `http://localhost:5000${page.imageUrl.startsWith('/') ? '' : '/'}${page.imageUrl}`} 
+                        alt={page.caption || 'Book page'} 
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
+                      <span style={{ position: 'absolute', top: '8px', left: '8px', background: 'var(--color-gold)', color: '#fff', fontSize: '0.7rem', fontWeight: 'bold', padding: '2px 6px', borderRadius: '4px' }}>
+                        Order: {page.order}
+                      </span>
+                    </div>
+                    <div>
+                      <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)', minHeight: '32px', lineClamp: 2, WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {page.caption || <em style={{ opacity: 0.5 }}>No caption</em>}
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', borderTop: '1px solid var(--border-glass)', paddingTop: '10px' }}>
+                      <button
+                        onClick={() => openEditBookPage(page)}
+                        style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
+                        title="Edit page"
+                      >
+                        <Edit size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBookPage(page._id)}
+                        style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '4px' }}
+                        title="Delete page"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {(!data.bookPages || data.bookPages.length === 0) && (
+                  <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                    No pages in the book yet. Click "Add Page" to begin!
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
         </div>
       )}
 
@@ -689,63 +821,7 @@ export default function AdminVastuTips() {
             </form>
           )}
 
-          {/* ROOM FORM */}
-          {modalType === 'room' && (
-            <form onSubmit={handleSaveRoom} className="glass-panel" style={{ maxWidth: '560px', width: '100%', padding: '30px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '90vh', overflowY: 'auto', textAlign: 'left' }}>
-              <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
-                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>{editingItem ? 'Edit Room Guide' : 'Add New Room Guide'}</h3>
-                <button type="button" onClick={() => setModalType(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
-              </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Room Title</label>
-                  <input type="text" required value={roomTitle} onChange={(e) => setRoomTitle(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Governing Element</label>
-                  <input type="text" required value={roomElement} onChange={(e) => setRoomElement(e.target.value)} style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }} />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>CSS Theme Color</label>
-                  <input type="text" placeholder="var(--color-indigo)" value={roomColor} onChange={(e) => setRoomColor(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>BG Alpha Color</label>
-                  <input type="text" placeholder="rgba(16,185,129,0.08)" value={roomBg} onChange={(e) => setRoomBg(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>Border Color</label>
-                  <input type="text" placeholder="rgba(16,185,129,0.25)" value={roomBorder} onChange={(e) => setRoomBorder(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
-                </div>
-              </div>
-
-              {/* Room guide checklist items */}
-              <div>
-                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '8px' }}>
-                  Spatial Tips Guidelines
-                  <button type="button" onClick={() => setRoomTips([...roomTips, { label: '', value: '' }])} style={{ background: 'rgba(197,168,128,0.1)', border: 'none', color: 'var(--color-gold)', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>+ Add Bullet</button>
-                </label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {roomTips.map((tip, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                      <input type="text" placeholder="Label, e.g. Location" value={tip.label} onChange={(e) => { const nt = [...roomTips]; nt[i].label = e.target.value; setRoomTips(nt); }} style={{ width: '140px', padding: '8px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
-                      <input type="text" placeholder="Guidance value text..." value={tip.value} onChange={(e) => { const nt = [...roomTips]; nt[i].value = e.target.value; setRoomTips(nt); }} style={{ flex: 1, padding: '8px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
-                      <button type="button" disabled={roomTips.length === 1} onClick={() => setRoomTips(roomTips.filter((_, idx) => idx !== i))} style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', marginTop: '6px' }}><Trash2 size={14} /></button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifySelf: 'flex-end', gap: '10px', marginTop: '10px' }}>
-                <button type="button" onClick={() => setModalType(null)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', padding: '10px 20px', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>Cancel</button>
-                <button type="submit" style={{ background: 'var(--color-gold)', border: 'none', padding: '10px 24px', borderRadius: '6px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Save Changes</button>
-              </div>
-            </form>
-          )}
 
           {/* MISTAKE FORM */}
           {modalType === 'mistake' && (
@@ -923,6 +999,87 @@ export default function AdminVastuTips() {
               <div style={{ display: 'flex', justifySelf: 'flex-end', gap: '10px', marginTop: '10px' }}>
                 <button type="button" onClick={() => setModalType(null)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', padding: '10px 20px', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>Cancel</button>
                 <button type="submit" style={{ background: 'var(--color-gold)', border: 'none', padding: '10px 24px', borderRadius: '6px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>Save Changes</button>
+              </div>
+            </form>
+          )}
+
+          {/* BOOK PAGE FORM */}
+          {modalType === 'bookPage' && (
+            <form onSubmit={handleSaveBookPage} className="glass-panel" style={{ maxWidth: '540px', width: '100%', padding: '30px', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '90vh', overflowY: 'auto', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>
+                  {editingItem ? 'Edit Book Page' : 'Add Book Page'}
+                </h3>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+              </div>
+
+              {/* Image upload / input */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Page Image</label>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Paste image URL or choose file..."
+                    value={pageImageUrl}
+                    onChange={(e) => setPageImageUrl(e.target.value)}
+                    style={{ flex: 1, padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none' }}
+                  />
+                  <label style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '10px 16px',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '6px',
+                    color: 'var(--color-gold)',
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                    cursor: uploading ? 'not-allowed' : 'pointer',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {uploading ? <RefreshCw size={14} className="spin" style={{ animation: 'spin 1.5s linear infinite' }} /> : <Upload size={14} />}
+                    {uploading ? 'Uploading...' : 'Upload File'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* Caption */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Caption (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Best directional placement for the master bedroom"
+                  value={pageCaption}
+                  onChange={(e) => setPageCaption(e.target.value)}
+                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }}
+                />
+              </div>
+
+              {/* Order */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--color-gold)', marginBottom: '4px' }}>Display Order / Page Number</label>
+                <input
+                  type="number"
+                  required
+                  min="0"
+                  value={pageOrder}
+                  onChange={(e) => setPageOrder(e.target.value)}
+                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff' }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifySelf: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setModalType(null)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', padding: '10px 20px', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" disabled={uploading} style={{ background: 'var(--color-gold)', border: 'none', padding: '10px 24px', borderRadius: '6px', color: '#fff', fontWeight: 'bold', cursor: uploading ? 'not-allowed' : 'pointer' }}>Save Changes</button>
               </div>
             </form>
           )}

@@ -25,8 +25,12 @@ export const getBookings = asyncHandler(async (req, res) => {
     ? { paymentStatus: req.query.paymentStatus }
     : {};
 
-  const count = await Booking.countDocuments({ ...keyword, ...paymentStatus });
-  const bookings = await Booking.find({ ...keyword, ...paymentStatus })
+  const serviceTitle = req.query.serviceTitle
+    ? { 'service.title': req.query.serviceTitle }
+    : {};
+
+  const count = await Booking.countDocuments({ ...keyword, ...paymentStatus, ...serviceTitle });
+  const bookings = await Booking.find({ ...keyword, ...paymentStatus, ...serviceTitle })
     .sort({ appointmentDate: -1, createdAt: -1 })
     .limit(pageSize)
     .skip(pageSize * (page - 1));

@@ -1,94 +1,132 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, Sun, Star, Compass, Heart, Eye, ArrowLeft, Calendar, User, Clock, MessageSquare, ArrowRight } from 'lucide-react';
+
+const defaultBlogPosts = [
+  {
+    id: 'vastu-shastra',
+    title: 'How Vastu Shastra Can Transform Your Home and Life',
+    category: 'Vastu Shastra',
+    date: 'November 18, 2025',
+    author: 'Uppasna Keshwani',
+    readTime: '4 Min Read',
+    img: '/vastu_terracotta.png',
+    summary: 'Vastu Shastra is an ancient Indian science that focuses on balancing the five elements—earth, water, fire, air, and space—within your living environment. Every home and workplace carries energy, and when this energy flows in the right direction, it brings peace, health, and prosperity.',
+    content: [
+      'Vastu Shastra is an ancient Indian science that focuses on balancing the five elements—earth, water, fire, air, and space—within your living environment. Every home and workplace carries energy, and when this energy flows in the right direction, it brings peace, health, and prosperity. Many people experience stress, financial blocks, or relationship problems simply because the energy structure of their space is disturbed. Vastu helps to identify these imbalances and correct them through simple yet powerful changes.',
+      'The entrance of a house, placement of kitchen, bedroom direction, and even the position of mirrors play a major role in shaping your daily life. For example, sleeping in the wrong direction can cause anxiety and health issues, while an improper kitchen placement can affect finances and family harmony. Vastu does not demand expensive reconstruction; most corrections are done through rearranging furniture, colors, symbols, and energy remedies completely without demolition.',
+      'Modern life has made people ignore the connection between space and mind. When your surroundings are aligned with natural laws, your thoughts become calmer and opportunities start flowing easily. Many clients have seen improvement in business growth, marriage harmony, and children’s education after following vastu guidance. Vastu is not superstition—it is practical energy management for better living.',
+      'If you feel stuck despite hard work, your home energy might be the hidden reason. A professional vastu consultation analyzes your floor plan, directions, and personal problems to give customized solutions. Creating a vastu-balanced space is like opening a door for success to enter naturally.'
+    ]
+  },
+  {
+    id: 'astrology-gps',
+    title: 'Astrology – A Spiritual GPS for Your Life',
+    category: 'Astrology',
+    date: 'November 18, 2025',
+    author: 'Uppasna Keshwani',
+    readTime: '3 Min Read',
+    img: '/astrology_terracotta.png',
+    summary: 'Astrology is often misunderstood as predicting the future, but its true purpose is to serve as a spiritual GPS. By analyzing the planetary positions at the time of your birth, astrology reveals your strengths, life purpose, and potential hurdles.',
+    content: [
+      'Astrology is often misunderstood as predicting the future, but its true purpose is to serve as a spiritual GPS. By analyzing the planetary positions at the time of your birth, astrology reveals your strengths, life purpose, and potential hurdles. It helps you navigate career shifts, relationship dynamics, and spiritual growth with clarity.',
+      'Your birth chart (Kundli) is a map of the heavens at the exact millisecond you drew your first breath. It contains planetary angles that represent karma, subconscious desires, and energy grids. When planetary periods (Dashas) align, specific events or opportunities emerge. Knowing this timing lets you prepare instead of struggling blindly against cosmic tides.',
+      'Through practical, simple remedies—such as wearing selected crystals, performing sound chanting, or balancing cosmic elements with water or fire—you can pacify active planets and strengthen weak ones. Astrology doesn\'t restrict your free will; it empowers you with divine foresight to make choices that align with your ultimate cosmic design.'
+    ]
+  },
+  {
+    id: 'tarot-reading',
+    title: 'Tarot Reading – Listening to Your Inner Voice',
+    category: 'Tarot Reading',
+    date: 'November 18, 2025',
+    author: 'Uppasna Keshwani',
+    readTime: '3 Min Read',
+    img: '/tarot_terracotta.png',
+    summary: 'Tarot cards are powerful mirrors reflecting your subconscious mind. A tarot session doesn\'t just reveal what lies ahead; it unlocks your deep inner wisdom to help you solve present dilemmas, heal relationships, and restore mental peace.',
+    content: [
+      'Tarot cards are powerful mirrors reflecting your subconscious mind. A tarot session doesn\'t just reveal what lies ahead; it unlocks your deep inner wisdom to help you solve present dilemmas, heal relationships, and restore mental peace.',
+      'Every tarot card holds archetype symbols, colors, and astrological frequencies. The cards chosen during a session represent energy grids in your life right now. By interpreting these symbols, a professional reader acts as a guide, revealing blocks or hidden paths that your active mind has missed.',
+      'Whether you are at a crossroad in your career, feeling a distance in your relationships, or seeking spiritual clarity, Tarot reading brings a feeling of deep relief and absolute peace, allowing you to walk forward with strong purpose and renewed power.'
+    ]
+  },
+  {
+    id: 'relationship-counselling',
+    title: 'Relationship Counselling – Healing Hearts, Not Just Problems',
+    category: 'Counselling',
+    date: 'November 18, 2025',
+    author: 'Uppasna Keshwani',
+    readTime: '4 Min Read',
+    img: '/relationship_terracotta.png',
+    summary: 'Relationships are built on delicate energetic and emotional connections. Relationship counselling focuses on looking beneath arguments to heal deep communication filters, resolve core planetary/emotional blocks, and restore mutual trust.',
+    content: [
+      'Relationships are built on delicate energetic and emotional connections. Relationship counselling focuses on looking beneath arguments to heal deep communication filters, resolve core planetary/emotional blocks, and restore mutual trust.',
+      'When communication breaks down, partners start reacting from childhood patterns or planetary imbalances in their birth charts. Counselling creates a safe, neutral portal where both sides can speak and actually be heard without judgment or defensive walls.',
+      'By combining emotional mapping, empathetic communication training, and spiritual space clearing (such as cleansing Vastu energy grids), relationships can undergo a massive transformation, converting daily tension into deep mutual respect and divine connection.'
+    ]
+  },
+  {
+    id: 'numerology-numbers',
+    title: 'Numerology – The Secret Language of Numbers',
+    category: 'Numerology',
+    date: 'November 18, 2025',
+    author: 'Uppasna Keshwani',
+    readTime: '3 Min Read',
+    img: '/numerology_terracotta.png',
+    summary: 'Numbers are not just symbols for counting; they are active energetic vibrations. Numerology analyzes your name and birth date coordinates to map your personality traits, potential successes, and ideal cosmic frequencies.',
+    content: [
+      'Numbers are not just symbols for counting; they are active energetic vibrations. Numerology analyzes your name and birth date coordinates to map your personality traits, potential successes, and ideal cosmic frequencies.',
+      'Using classic grids like the Lo Shu Grid, we analyze missing numbers and dominant frequencies. Your name vibration is incredibly powerful—a simple name correction or spelling shift can align your frequency with lucky numbers, unlocking career progression, luxury attraction, and deep harmony.',
+      'Understanding your life path number and personal cycle numbers lets you sync with nature\'s seasons. Instead of pushing when the universe says "rest", or resting when opportunity gates are wide open, you learn to step forward in perfect numeric timing.'
+    ]
+  }
+];
 
 export default function Blog() {
   const [selectedPostId, setSelectedPostId] = useState(null);
+  const [dbBlogs, setDbBlogs] = useState([]);
 
-  const blogPosts = [
-    {
-      id: 'vastu-shastra',
-      title: 'How Vastu Shastra Can Transform Your Home and Life',
-      category: 'Vastu Shastra',
-      date: 'November 18, 2025',
-      author: 'Uppasna Keshwani',
-      readTime: '4 Min Read',
-      icon: <Sun size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: '/vastu_terracotta.png',
-      summary: 'Vastu Shastra is an ancient Indian science that focuses on balancing the five elements—earth, water, fire, air, and space—within your living environment. Every home and workplace carries energy, and when this energy flows in the right direction, it brings peace, health, and prosperity.',
-      content: [
-        'Vastu Shastra is an ancient Indian science that focuses on balancing the five elements—earth, water, fire, air, and space—within your living environment. Every home and workplace carries energy, and when this energy flows in the right direction, it brings peace, health, and prosperity. Many people experience stress, financial blocks, or relationship problems simply because the energy structure of their space is disturbed. Vastu helps to identify these imbalances and correct them through simple yet powerful changes.',
-        'The entrance of a house, placement of kitchen, bedroom direction, and even the position of mirrors play a major role in shaping your daily life. For example, sleeping in the wrong direction can cause anxiety and health issues, while an improper kitchen placement can affect finances and family harmony. Vastu does not demand expensive reconstruction; most corrections are done through rearranging furniture, colors, symbols, and energy remedies completely without demolition.',
-        'Modern life has made people ignore the connection between space and mind. When your surroundings are aligned with natural laws, your thoughts become calmer and opportunities start flowing easily. Many clients have seen improvement in business growth, marriage harmony, and children’s education after following vastu guidance. Vastu is not superstition—it is practical energy management for better living.',
-        'If you feel stuck despite hard work, your home energy might be the hidden reason. A professional vastu consultation analyzes your floor plan, directions, and personal problems to give customized solutions. Creating a vastu-balanced space is like opening a door for success to enter naturally.'
-      ]
-    },
-    {
-      id: 'astrology-gps',
-      title: 'Astrology – A Spiritual GPS for Your Life',
-      category: 'Astrology',
-      date: 'November 18, 2025',
-      author: 'Uppasna Keshwani',
-      readTime: '3 Min Read',
-      icon: <Compass size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: '/astrology_terracotta.png',
-      summary: 'Astrology is often misunderstood as predicting the future, but its true purpose is to serve as a spiritual GPS. By analyzing the planetary positions at the time of your birth, astrology reveals your strengths, life purpose, and potential hurdles.',
-      content: [
-        'Astrology is often misunderstood as predicting the future, but its true purpose is to serve as a spiritual GPS. By analyzing the planetary positions at the time of your birth, astrology reveals your strengths, life purpose, and potential hurdles. It helps you navigate career shifts, relationship dynamics, and spiritual growth with clarity.',
-        'Your birth chart (Kundli) is a map of the heavens at the exact millisecond you drew your first breath. It contains planetary angles that represent karma, subconscious desires, and energy grids. When planetary periods (Dashas) align, specific events or opportunities emerge. Knowing this timing lets you prepare instead of struggling blindly against cosmic tides.',
-        'Through practical, simple remedies—such as wearing selected crystals, performing sound chanting, or balancing cosmic elements with water or fire—you can pacify active planets and strengthen weak ones. Astrology doesn\'t restrict your free will; it empowers you with divine foresight to make choices that align with your ultimate cosmic design.'
-      ]
-    },
-    {
-      id: 'tarot-reading',
-      title: 'Tarot Reading – Listening to Your Inner Voice',
-      category: 'Tarot Reading',
-      date: 'November 18, 2025',
-      author: 'Uppasna Keshwani',
-      readTime: '3 Min Read',
-      icon: <Eye size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: '/tarot_terracotta.png',
-      summary: 'Tarot cards are powerful mirrors reflecting your subconscious mind. A tarot session doesn\'t just reveal what lies ahead; it unlocks your deep inner wisdom to help you solve present dilemmas, heal relationships, and restore mental peace.',
-      content: [
-        'Tarot cards are powerful mirrors reflecting your subconscious mind. A tarot session doesn\'t just reveal what lies ahead; it unlocks your deep inner wisdom to help you solve present dilemmas, heal relationships, and restore mental peace.',
-        'Every tarot card holds archetype symbols, colors, and astrological frequencies. The cards chosen during a session represent energy grids in your life right now. By interpreting these symbols, a professional reader acts as a guide, revealing blocks or hidden paths that your active mind has missed.',
-        'Whether you are at a crossroad in your career, feeling a distance in your relationships, or seeking spiritual clarity, Tarot reading brings a feeling of deep relief and absolute peace, allowing you to walk forward with strong purpose and renewed power.'
-      ]
-    },
-    {
-      id: 'relationship-counselling',
-      title: 'Relationship Counselling – Healing Hearts, Not Just Problems',
-      category: 'Counselling',
-      date: 'November 18, 2025',
-      author: 'Uppasna Keshwani',
-      readTime: '4 Min Read',
-      icon: <Heart size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: '/relationship_terracotta.png',
-      summary: 'Relationships are built on delicate energetic and emotional connections. Relationship counselling focuses on looking beneath arguments to heal deep communication filters, resolve core planetary/emotional blocks, and restore mutual trust.',
-      content: [
-        'Relationships are built on delicate energetic and emotional connections. Relationship counselling focuses on looking beneath arguments to heal deep communication filters, resolve core planetary/emotional blocks, and restore mutual trust.',
-        'When communication breaks down, partners start reacting from childhood patterns or planetary imbalances in their birth charts. Counselling creates a safe, neutral portal where both sides can speak and actually be heard without judgment or defensive walls.',
-        'By combining emotional mapping, empathetic communication training, and spiritual space clearing (such as cleansing Vastu energy grids), relationships can undergo a massive transformation, converting daily tension into deep mutual respect and divine connection.'
-      ]
-    },
-    {
-      id: 'numerology-numbers',
-      title: 'Numerology – The Secret Language of Numbers',
-      category: 'Numerology',
-      date: 'November 18, 2025',
-      author: 'Uppasna Keshwani',
-      readTime: '3 Min Read',
-      icon: <Sparkles size={20} style={{ color: 'var(--color-gold)' }} />,
-      img: '/numerology_terracotta.png',
-      summary: 'Numbers are not just symbols for counting; they are active energetic vibrations. Numerology analyzes your name and birth date coordinates to map your personality traits, potential successes, and ideal cosmic frequencies.',
-      content: [
-        'Numbers are not just symbols for counting; they are active energetic vibrations. Numerology analyzes your name and birth date coordinates to map your personality traits, potential successes, and ideal cosmic frequencies.',
-        'Using classic grids like the Lo Shu Grid, we analyze missing numbers and dominant frequencies. Your name vibration is incredibly powerful—a simple name correction or spelling shift can align your frequency with lucky numbers, unlocking career progression, luxury attraction, and deep harmony.',
-        'Understanding your life path number and personal cycle numbers lets you sync with nature\'s seasons. Instead of pushing when the universe says "rest", or resting when opportunity gates are wide open, you learn to step forward in perfect numeric timing.'
-      ]
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/blogs`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setDbBlogs(data);
+        }
+      })
+      .catch(err => console.error('Failed to fetch blogs:', err));
+  }, []);
+
+  const getBlogIcon = (category) => {
+    const cat = (category || '').toLowerCase();
+    if (cat.includes('vastu')) {
+      return <Sun size={20} style={{ color: 'var(--color-gold)' }} />;
+    } else if (cat.includes('astrology')) {
+      return <Compass size={20} style={{ color: 'var(--color-gold)' }} />;
+    } else if (cat.includes('tarot')) {
+      return <Eye size={20} style={{ color: 'var(--color-gold)' }} />;
+    } else if (cat.includes('counsel') || cat.includes('relationship')) {
+      return <Heart size={20} style={{ color: 'var(--color-gold)' }} />;
+    } else {
+      return <Sparkles size={20} style={{ color: 'var(--color-gold)' }} />;
     }
-  ];
+  };
+
+  const rawBlogs = dbBlogs.length > 0 ? dbBlogs.filter(p => p.isPublished) : defaultBlogPosts;
+
+  const blogPosts = rawBlogs.map(p => ({
+    id: p._id || p.id,
+    title: p.title,
+    category: p.category,
+    date: p.date || new Date(p.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    author: p.author || 'Uppasna Keshwani',
+    readTime: p.readTime || '3 Min Read',
+    img: p.imgUrl || p.img || '/vastu_terracotta.png',
+    summary: p.summary,
+    content: p.content,
+    icon: getBlogIcon(p.category)
+  }));
 
   const selectedPost = blogPosts.find(p => p.id === selectedPostId);
+
 
   return (
     <div style={{ padding: '45px 20px 60px', maxWidth: '1200px', margin: '0 auto' }}>

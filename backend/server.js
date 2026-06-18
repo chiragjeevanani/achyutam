@@ -17,6 +17,10 @@ import contactRoutes from './src/routes/contact.routes.js';
 import paymentRoutes from './src/routes/payment.routes.js';
 import homeRoutes from './src/routes/home.routes.js';
 import uploadRoutes from './src/routes/upload.routes.js';
+import teachingRoutes from './src/routes/teaching.routes.js';
+import aboutRoutes from './src/routes/about.routes.js';
+import yogadhanRoutes from './src/routes/yogadhan.routes.js';
+import contactInfoRoutes from './src/routes/contactInfo.routes.js';
 
 // Load env vars
 dotenv.config();
@@ -53,6 +57,10 @@ app.use('/api/v1/contacts', contactRoutes);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/home', homeRoutes);
 app.use('/api/v1/upload', uploadRoutes);
+app.use('/api/v1/teaching', teachingRoutes);
+app.use('/api/v1/about', aboutRoutes);
+app.use('/api/v1/yogadhan', yogadhanRoutes);
+app.use('/api/v1/contact-info', contactInfoRoutes);
 
 // Error Middlewares
 app.use(notFound);

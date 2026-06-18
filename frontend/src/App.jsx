@@ -12,6 +12,7 @@ import Booking from './pages/Booking';
 import Blog from './pages/Blog';
 import VastuTips from './pages/VastuTips';
 import Experience from './pages/Experience';
+import Teaching from './pages/Teaching';
 import Lenis from 'lenis';
 import { useScrollAnimation } from './hooks/useScrollAnimation';
 import ScrollProgress from './components/ScrollProgress';
@@ -290,6 +291,7 @@ export default function App() {
           <Route path="/yogadhan" element={<Yogadhan />} />
           <Route path="/vastu-tips" element={<VastuTips />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/teaching" element={<Teaching />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/experience" element={<></>} />

@@ -1,138 +1,197 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Sun, Star, Compass, Heart, Eye, ArrowRight, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const defaultServices = [
+  {
+    title: 'Vastu Discussion',
+    sub: 'Directions, Placements & Energy Corrections',
+    desc: 'Vastu consultation balances the energy of your home or workplace environment. It provides guidance on directions, placements, and necessary corrections. These suggestions help create prosperity, peace, and overall well-being completely without demolition.',
+    price: 5100,
+    duration: 60,
+    note: 'Vastu Consultation fees will decide after discussion',
+    imgUrl: '/vastu_terracotta.png',
+    list: [
+      'Residential Vastu: Peaceful living & family well-being',
+      'Office & Showroom Vastu: Enhanced sales & productivity',
+      'Factory Vastu: Machinery alignment & operational safety',
+      'School & College Vastu: Concentration & academic growth',
+      'Hotel & Hospital Vastu: Fast healing & guest comfort'
+    ],
+    category: 'Vastu Shastra'
+  },
+  {
+    title: 'Numerology Consultation',
+    sub: 'Vibrational Frequency & Lo Shu Grid',
+    desc: 'Numerology helps you understand how numbers influence your life path and personality. It provides guidance for career, relationships, and financial decisions with deeper clarity, utilizing classic birth grid alignments.',
+    price: 3100,
+    duration: 30,
+    note: 'Lifetime Report + Remedies',
+    imgUrl: '/numerology_terracotta.png',
+    list: [
+      'Name vibration tuning & correction',
+      'Birth & Destiny numbers assessment',
+      'Personal or corporate branding alignment',
+      'Lucky dates, periods & cycle guides'
+    ],
+    category: 'Numerology'
+  },
+  {
+    title: 'Astrology Consultation',
+    sub: 'Kundli Readings & Planetary Cures',
+    desc: 'Astrology consultation analyzes your birth chart to understand life challenges and opportunities. It gives clear answers related to career, marriage, health, and personal growth. Effective remedies are suggested to reduce obstacles and bring positivity.',
+    price: 4100,
+    duration: 45,
+    imgUrl: '/astrology_terracotta.png',
+    list: [
+      'Birth chart (Kundli) assessment',
+      'Major period (Dasha) analysis',
+      'Practical gemstone & elemental remedies',
+      'Negative star alignment corrections'
+    ],
+    category: 'Astrology'
+  },
+  {
+    title: 'Tarot Reading',
+    sub: 'Intuitive Insight & Future Paths',
+    desc: 'Tarot reading offers intuitive insights into your present situation and future possibilities. It helps you find answers about love, career, emotions, and important life choices. The session brings clarity, confidence, and peaceful direction to your mind.',
+    price: 2100,
+    duration: 45,
+    imgUrl: '/tarot_terracotta.png',
+    list: [
+      'Love & relationship emotional insights',
+      'Paragraph timing answers',
+      'Decision-making clarity guidance',
+      'Mindfulness & spiritual grounding'
+    ],
+    category: 'Tarot Reading'
+  },
+  {
+    title: 'Relationship Counselling',
+    sub: 'Mutual Understanding & Connection',
+    desc: 'Relationship counselling helps you improve understanding and emotional connection with your partner or family. It focuses on resolving conflicts, misunderstandings, and communication issues effectively.',
+    price: 2400,
+    duration: 60,
+    imgUrl: '/relationship_terracotta.png',
+    list: [
+      'Couples communication mapping',
+      'Resolving family grid conflicts',
+      'Overcoming generational misunderstandings',
+      'Deepening mutual trust & connection'
+    ],
+    category: 'Counselling'
+  },
+  {
+    title: 'Aura Scanner',
+    sub: 'Energy Vibrations & Environmental Scanning',
+    desc: 'Aura scanning evaluates the energy fields around you or your physical properties. By checking the energy of land, homes, and factories, it helps identify blockages, geopathic stress, and positive vibrational hot spots.',
+    price: 500,
+    note: 'To check energy of land, homes, factories',
+    imgUrl: '/vastu_terracotta.png',
+    list: [
+      'Detecting geopathic stress & energy leaks',
+      'Checking energy frequency of lands & plots',
+      'Home energy field alignment analysis',
+      'Factory machinery & workspace vibe scan'
+    ],
+    category: 'Aura Scanner'
+  }
+];
 
 export default function Services() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [flipState, setFlipState] = useState({ active: false, direction: 'forward', key: 0 });
+  const [dbServices, setDbServices] = useState([]);
 
-  const fullServices = [
-    {
-      title: 'Vastu Discussion',
-      colorVar: 'var(--color-indigo)',
-      badgeClass: 'badge-earth',
-      borderVal: 'rgba(16, 185, 129, 0.3)',
-      bgVal: 'rgba(16, 185, 129, 0.08)',
-      activeGlow: 'rgba(16, 185, 129, 0.12)',
-      sub: 'Directions, Placements & Energy Corrections',
-      desc: 'Vastu consultation balances the energy of your home or workplace environment. It provides guidance on directions, placements, and necessary corrections. These suggestions help create prosperity, peace, and overall well-being completely without demolition.',
-      price: 5100,
-      duration: '60 mins',
-      note: 'Vastu Consultation fees will decide after discussion',
-      img: '/vastu_terracotta.png',
-      icon: <Sun size={22} />,
-      list: [
-        'Residential Vastu: Peaceful living & family well-being',
-        'Office & Showroom Vastu: Enhanced sales & productivity',
-        'Factory Vastu: Machinery alignment & operational safety',
-        'School & College Vastu: Concentration & academic growth',
-        'Hotel & Hospital Vastu: Fast healing & guest comfort'
-      ]
-    },
-    {
-      title: 'Numerology Consultation',
-      colorVar: 'var(--color-yellow)',
-      badgeClass: 'badge-gold',
-      borderVal: 'rgba(251, 191, 36, 0.3)',
-      bgVal: 'rgba(251, 191, 36, 0.08)',
-      activeGlow: 'rgba(251, 191, 36, 0.12)',
-      sub: 'Vibrational Frequency & Lo Shu Grid',
-      desc: 'Numerology helps you understand how numbers influence your life path and personality. It provides guidance for career, relationships, and financial decisions with deeper clarity, utilizing classic birth grid alignments.',
-      price: 3100,
-      duration: '30 mins',
-      note: 'Lifetime Report + Remedies',
-      img: '/numerology_terracotta.png',
-      icon: <Sparkles size={22} />,
-      list: [
-        'Name vibration tuning & correction',
-        'Birth & Destiny numbers assessment',
-        'Personal or corporate branding alignment',
-        'Lucky dates, periods & cycle guides'
-      ]
-    },
-    {
-      title: 'Astrology Consultation',
-      colorVar: 'var(--color-purple)',
-      badgeClass: 'badge-water',
-      borderVal: 'rgba(59, 130, 246, 0.3)',
-      bgVal: 'rgba(59, 130, 246, 0.08)',
-      activeGlow: 'rgba(59, 130, 246, 0.12)',
-      sub: 'Kundli Readings & Planetary Cures',
-      desc: 'Astrology consultation analyzes your birth chart to understand life challenges and opportunities. It gives clear answers related to career, marriage, health, and personal growth. Effective remedies are suggested to reduce obstacles and bring positivity.',
-      price: 4100,
-      duration: '45 mins',
-      img: '/astrology_terracotta.png',
-      icon: <Compass size={22} />,
-      list: [
-        'Birth chart (Kundli) assessment',
-        'Major period (Dasha) analysis',
-        'Practical gemstone & elemental remedies',
-        'Negative star alignment corrections'
-      ]
-    },
-    {
-      title: 'Tarot Reading',
-      colorVar: 'var(--color-gold)',
-      badgeClass: 'badge-fire',
-      borderVal: 'rgba(255, 51, 51, 0.3)',
-      bgVal: 'rgba(255, 51, 51, 0.08)',
-      activeGlow: 'rgba(255, 51, 51, 0.12)',
-      sub: 'Intuitive Insight & Future Paths',
-      desc: 'Tarot reading offers intuitive insights into your present situation and future possibilities. It helps you find answers about love, career, emotions, and important life choices. The session brings clarity, confidence, and peaceful direction to your mind.',
-      price: 2100,
-      duration: '45 mins',
-      img: '/tarot_terracotta.png',
-      icon: <Eye size={22} />,
-      list: [
-        'Love & relationship emotional insights',
-        'Paragraph timing answers',
-        'Decision-making clarity guidance',
-        'Mindfulness & spiritual grounding'
-      ]
-    },
-    {
-      title: 'Relationship Counselling',
-      colorVar: 'var(--color-purple)',
-      badgeClass: 'badge-water',
-      borderVal: 'rgba(59, 130, 246, 0.3)',
-      bgVal: 'rgba(59, 130, 246, 0.08)',
-      activeGlow: 'rgba(59, 130, 246, 0.12)',
-      sub: 'Mutual Understanding & Connection',
-      desc: 'Relationship counselling helps you improve understanding and emotional connection with your partner or family. It focuses on resolving conflicts, misunderstandings, and communication issues effectively.',
-      price: 2400,
-      duration: '60 mins',
-      img: '/relationship_terracotta.png',
-      icon: <Heart size={22} />,
-      list: [
-        'Couples communication mapping',
-        'Resolving family grid conflicts',
-        'Overcoming generational misunderstandings',
-        'Deepening mutual trust & connection'
-      ]
-    },
-    {
-      title: 'Aura Scanner',
-      colorVar: 'var(--color-indigo)',
-      badgeClass: 'badge-earth',
-      borderVal: 'rgba(16, 185, 129, 0.3)',
-      bgVal: 'rgba(16, 185, 129, 0.08)',
-      activeGlow: 'rgba(16, 185, 129, 0.12)',
-      sub: 'Energy Vibrations & Environmental Scanning',
-      desc: 'Aura scanning evaluates the energy fields around you or your physical properties. By checking the energy of land, homes, and factories, it helps identify blockages, geopathic stress, and positive vibrational hot spots.',
-      price: 500,
-      note: 'To check energy of land, homes, factories',
-      img: '/vastu_terracotta.png',
-      icon: <Radio size={22} />,
-      list: [
-        'Detecting geopathic stress & energy leaks',
-        'Checking energy frequency of lands & plots',
-        'Home energy field alignment analysis',
-        'Factory machinery & workspace vibe scan'
-      ]
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/services`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setDbServices(data);
+        }
+      })
+      .catch(err => console.error('Failed to fetch services:', err));
+  }, []);
+
+  const getServiceStyles = (s) => {
+    const category = (s.category || '').toLowerCase();
+    if (category.includes('vastu')) {
+      return {
+        colorVar: 'var(--color-indigo)',
+        badgeClass: 'badge-earth',
+        borderVal: 'rgba(16, 185, 129, 0.3)',
+        bgVal: 'rgba(16, 185, 129, 0.08)',
+        activeGlow: 'rgba(16, 185, 129, 0.12)',
+        icon: <Sun size={22} />
+      };
+    } else if (category.includes('numerology')) {
+      return {
+        colorVar: 'var(--color-yellow)',
+        badgeClass: 'badge-gold',
+        borderVal: 'rgba(251, 191, 36, 0.3)',
+        bgVal: 'rgba(251, 191, 36, 0.08)',
+        activeGlow: 'rgba(251, 191, 36, 0.12)',
+        icon: <Sparkles size={22} />
+      };
+    } else if (category.includes('astrology')) {
+      return {
+        colorVar: 'var(--color-purple)',
+        badgeClass: 'badge-water',
+        borderVal: 'rgba(59, 130, 246, 0.3)',
+        bgVal: 'rgba(59, 130, 246, 0.08)',
+        activeGlow: 'rgba(59, 130, 246, 0.12)',
+        icon: <Compass size={22} />
+      };
+    } else if (category.includes('tarot')) {
+      return {
+        colorVar: 'var(--color-gold)',
+        badgeClass: 'badge-fire',
+        borderVal: 'rgba(255, 51, 51, 0.3)',
+        bgVal: 'rgba(255, 51, 51, 0.08)',
+        activeGlow: 'rgba(255, 51, 51, 0.12)',
+        icon: <Eye size={22} />
+      };
+    } else if (category.includes('counsel') || category.includes('relationship')) {
+      return {
+        colorVar: 'var(--color-purple)',
+        badgeClass: 'badge-water',
+        borderVal: 'rgba(59, 130, 246, 0.3)',
+        bgVal: 'rgba(59, 130, 246, 0.08)',
+        activeGlow: 'rgba(59, 130, 246, 0.12)',
+        icon: <Heart size={22} />
+      };
+    } else {
+      return {
+        colorVar: 'var(--color-indigo)',
+        badgeClass: 'badge-earth',
+        borderVal: 'rgba(16, 185, 129, 0.3)',
+        bgVal: 'rgba(16, 185, 129, 0.08)',
+        activeGlow: 'rgba(16, 185, 129, 0.12)',
+        icon: <Radio size={22} />
+      };
     }
-  ];
+  };
 
-  const activeService = fullServices[activeIdx];
+  const rawServices = dbServices.length > 0 ? dbServices.filter(s => s.isActive) : defaultServices;
+  
+  const fullServices = rawServices.map(s => {
+    const styles = getServiceStyles(s);
+    return {
+      title: s.title,
+      sub: s.sub || '',
+      desc: s.desc,
+      price: s.price,
+      duration: s.duration ? `${s.duration} mins` : '',
+      note: s.note || '',
+      img: s.imgUrl || s.img || '/vastu_terracotta.png',
+      list: s.list || [],
+      ...styles
+    };
+  });
+
+  const activeService = fullServices[activeIdx] || fullServices[0];
+
 
   const renderCardContent = (service, showArrows = false) => {
     if (!service) return null;

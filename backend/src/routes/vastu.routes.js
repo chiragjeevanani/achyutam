@@ -3,10 +3,6 @@ import {
   getVastuTips,
   getDirections,
   updateDirection,
-  getRooms,
-  createRoom,
-  updateRoom,
-  deleteRoom,
   getMistakes,
   createMistake,
   updateMistake,
@@ -19,6 +15,12 @@ import {
   updateSeason,
   getElements,
   updateElement,
+  getBookPages,
+  createBookPage,
+  updateBookPage,
+  deleteBookPage,
+  getVastuHero,
+  updateVastuHero,
 } from '../controllers/vastuTipController.js';
 import { protect } from '../middleware/auth.js';
 
@@ -27,19 +29,17 @@ const router = express.Router();
 // Public aggregate query
 router.get('/', getVastuTips);
 
+// Hero Section
+router.route('/hero')
+  .get(getVastuHero)
+  .put(protect, updateVastuHero);
+
 // Directions
 router.route('/directions')
   .get(getDirections);
 router.route('/directions/:code')
   .put(protect, updateDirection);
 
-// Rooms
-router.route('/rooms')
-  .get(getRooms)
-  .post(protect, createRoom);
-router.route('/rooms/:id')
-  .put(protect, updateRoom)
-  .delete(protect, deleteRoom);
 
 // Mistakes
 router.route('/mistakes')
@@ -68,5 +68,13 @@ router.route('/elements')
   .get(getElements);
 router.route('/elements/:id')
   .put(protect, updateElement);
+
+// Book Pages
+router.route('/book-pages')
+  .get(getBookPages)
+  .post(protect, createBookPage);
+router.route('/book-pages/:id')
+  .put(protect, updateBookPage)
+  .delete(protect, deleteBookPage);
 
 export default router;

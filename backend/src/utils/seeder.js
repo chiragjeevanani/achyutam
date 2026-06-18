@@ -5,12 +5,17 @@ import Service from '../models/Service.js';
 import Blog from '../models/Blog.js';
 import Testimonial from '../models/Testimonial.js';
 import VastuDirection from '../models/VastuDirection.js';
-import VastuRoom from '../models/VastuRoom.js';
 import VastuMistake from '../models/VastuMistake.js';
 import VastuRemedy from '../models/VastuRemedy.js';
 import VastuSeason from '../models/VastuSeason.js';
 import Admin from '../models/Admin.js';
 import HomeContent from '../models/HomeContent.js';
+import VastuBookPage from '../models/VastuBookPage.js';
+import AboutContent from '../models/AboutContent.js';
+import YogadhanContent from '../models/YogadhanContent.js';
+import ContactInfo from '../models/ContactInfo.js';
+import VastuContent from '../models/VastuContent.js';
+
 
 // Load environmental variables
 dotenv.config();
@@ -129,6 +134,23 @@ const services = [
     ],
     isActive: true,
     order: 5
+  },
+  {
+    title: 'Yogadhan System',
+    category: 'Yogadhan',
+    sub: 'Divine Alignment & Spatial Calibrations',
+    desc: 'Yogadhan is an integrated, scientific method developed by Uppasna Keshwani. It unites Vastu-Shastra, Numerology, and Horoscope Astrology into a single cohesive framework.',
+    price: 0,
+    duration: 30,
+    note: 'Free Thursday Energy Calibrations',
+    imgUrl: '/vastu_terracotta.png',
+    list: [
+      'Astrological Kundli alignment with home coordinates',
+      'Numerological name vibration corrections',
+      'Telluric earth energy grid calibrations'
+    ],
+    isActive: true,
+    order: 6
   }
 ];
 
@@ -449,129 +471,6 @@ const directions = [
   }
 ];
 
-const rooms = [
-  {
-    title: 'Main Entrance (Mahadwaar)',
-    element: 'All Elements',
-    color: 'var(--color-gold)',
-    bg: 'rgba(255,51,51,0.08)',
-    border: 'rgba(255,51,51,0.25)',
-    tips: [
-      { label: 'Direction', value: 'Ideally North, East, or Northeast facing.' },
-      { label: 'Lighting', value: 'Keep it brightly lit at all times — it attracts positive energy.' },
-      { label: 'Decoration', value: 'Hang auspicious symbols: Om, Swastika, or Ganesha idol at the entrance.' },
-      { label: 'Cleanliness', value: 'Never place shoes, dustbins, or broken items directly facing the door.' },
-      { label: 'Nameplate', value: 'A polished metal nameplate on the main door invites prosperity.' }
-    ],
-    order: 0
-  },
-  {
-    title: 'Kitchen (Rasoi — Fire Element)',
-    element: 'Fire (Agni)',
-    color: 'var(--color-yellow)',
-    bg: 'rgba(251,191,36,0.08)',
-    border: 'rgba(251,191,36,0.25)',
-    tips: [
-      { label: 'Location', value: 'Southeast corner of the house is ideal for the kitchen.' },
-      { label: 'Cooking Direction', value: 'Face East while cooking to improve health and positivity.' },
-      { label: 'Stove Placement', value: 'Position the cooking stove in the SE corner of the kitchen itself.' },
-      { label: 'Water & Fire', value: 'Keep the sink (water) and stove (fire) apart — never adjacent or opposite.' },
-      { label: 'Storage', value: 'Store grains and provisions in the South or West direction.' }
-    ],
-    order: 1
-  },
-  {
-    title: 'Master Bedroom (Earth Element)',
-    element: 'Earth (Prithvi)',
-    color: 'var(--color-indigo)',
-    bg: 'rgba(16,185,129,0.08)',
-    border: 'rgba(16,185,129,0.25)',
-    tips: [
-      { label: 'Location', value: 'Southwest zone of the home for stability and strong relationships.' },
-      { label: 'Bed Position', value: 'Headboard against the South or West wall; never face North while sleeping.' },
-      { label: 'Electronics', value: 'Avoid TVs, computers, or mirrors directly facing the sleeping bed.' },
-      { label: 'Colors', value: 'Use soothing earth tones: beige, cream, light brown, or warm green.' },
-      { label: 'Clutter', value: 'Keep under-bed storage to a minimum; heavy storage blocks energy flow.' }
-    ],
-    order: 2
-  },
-  {
-    title: 'Living Room (Air Element)',
-    element: 'Air (Vayu)',
-    color: 'var(--color-purple)',
-    bg: 'rgba(59,130,246,0.08)',
-    border: 'rgba(59,130,246,0.25)',
-    tips: [
-      { label: 'Heavy Furniture', value: 'Place sofas in the West or South; avoid the North and East walls.' },
-      { label: 'TV Placement', value: 'Best on the Southeast wall; sit facing East or North to watch.' },
-      { label: 'Decor', value: 'Use a beautiful painting of a mountain on the South wall for stability.' },
-      { label: 'Plants', value: 'Fresh green plants in the East and North corners boost vitality.' },
-      { label: 'Lighting', value: 'Keep the NE corner bright and clutter-free for mental clarity.' }
-    ],
-    order: 3
-  },
-  {
-    title: 'Children\'s Room (Wood / Air)',
-    element: 'Air / Wood',
-    color: 'var(--color-indigo)',
-    bg: 'rgba(16,185,129,0.08)',
-    border: 'rgba(16,185,129,0.25)',
-    tips: [
-      { label: 'Location', value: 'West or Northwest bedroom is ideal for children.' },
-      { label: 'Study Direction', value: 'Child should face East or North while studying for focus.' },
-      { label: 'Bed Direction', value: 'Head towards East or South for restful sleep and good memory.' },
-      { label: 'Colors', value: 'Light green, yellow, and sky blue stimulate creativity and learning.' },
-      { label: 'Avoid', value: 'Never place children\'s room in the Southeast (Agni) — causes restlessness.' }
-    ],
-    order: 4
-  },
-  {
-    title: 'Home Office / Study (Space Element)',
-    element: 'Space (Akash)',
-    color: 'var(--color-purple)',
-    bg: 'rgba(59,130,246,0.08)',
-    border: 'rgba(59,130,246,0.25)',
-    tips: [
-      { label: 'Ideal Location', value: 'North or East of the house for maximum career and income energy.' },
-      { label: 'Sitting Direction', value: 'Sit facing North (wealth) or East (new opportunities).' },
-      { label: 'Cash Locker', value: 'Place your safe/cash box in the North, door opening towards North.' },
-      { label: 'Back Support', value: 'Your back should face a solid wall, not a window or door.' },
-      { label: 'Plants', value: 'A Money Plant or Jade plant in the Southeast corner boosts income.' }
-    ],
-    order: 5
-  },
-  {
-    title: 'Bathroom & Toilet',
-    element: 'Water (Jal)',
-    color: 'var(--color-purple)',
-    bg: 'rgba(59,130,246,0.08)',
-    border: 'rgba(59,130,246,0.25)',
-    tips: [
-      { label: 'Ideal Location', value: 'Northwest or West direction is best for toilets.' },
-      { label: 'Door', value: 'Bathroom door should always remain closed; never face a bedroom or kitchen.' },
-      { label: 'Leaks', value: 'Fix all plumbing leaks immediately — they drain financial energy.' },
-      { label: 'Colors', value: 'Use white or light pastel shades; avoid red or dark colors.' },
-      { label: 'Avoid', value: 'Never build bathrooms in the Northeast or directly above the prayer room.' }
-    ],
-    order: 6
-  },
-  {
-    title: 'Pooja Room (Prayer Space)',
-    element: 'Ether (Akash)',
-    color: 'var(--color-gold)',
-    bg: 'rgba(255,51,51,0.08)',
-    border: 'rgba(255,51,51,0.25)',
-    tips: [
-      { label: 'Ideal Location', value: 'Northeast corner is the most sacred zone for a Pooja room.' },
-      { label: 'Idol Facing', value: 'Idols should face West or South; worshipper faces East or North.' },
-      { label: 'Height', value: 'Pooja shelf should be at eye level — not too high, not at floor level.' },
-      { label: 'Cleanliness', value: 'Keep the space immaculately clean; light a lamp and incense daily.' },
-      { label: 'Avoid', value: 'Never place the Pooja room under a staircase or attached to a toilet wall.' }
-    ],
-    order: 7
-  }
-];
-
 const commonMistakes = [
   {
     mistake: 'Toilet in the Northeast',
@@ -825,6 +724,149 @@ const defaultHomeContent = {
   }
 };
 
+const defaultBookPages = [
+  {
+    imageUrl: '/vastu_terracotta.png',
+    caption: 'North Direction Alignment for Career Flow & Financial Abundance',
+    order: 1
+  },
+  {
+    imageUrl: '/astrology_terracotta.png',
+    caption: 'Aligning Planetary Energies in the East for Health & Social Power',
+    order: 2
+  },
+  {
+    imageUrl: '/numerology_terracotta.png',
+    caption: 'Lo Shu Grid Balanced Placements for Stability & Success',
+    order: 3
+  },
+  {
+    imageUrl: '/tarot_terracotta.png',
+    caption: 'Mindfulness & Meditation Corner Alignment in the Northeast Zone',
+    order: 4
+  }
+];
+
+const defaultAboutContent = {
+  header: {
+    badge: 'COSMIC JOURNEY',
+    title: 'About Uppasna Keshwani',
+    description: 'Meet the founder of Achyutam Maestro—a professional Vastu, Numerology, and Astrology consultant transforming lives across residences, commercial offices, and industrial hubs.'
+  },
+  profile: {
+    badge: 'FOUNDER PROFILE',
+    title: 'Uppasna Keshwani',
+    subtitle: 'Professional Vastu, Numerology & Astrology Consultant',
+    desc1: 'I truly believe in the miraculous powers of the nature. The entire universe is there to take care of all our needs and help us to live a healthy and prosperous life. I am a firm believer in the fact that there is something more that meets the eye. Some more powers of the nature, that lie hidden and come forth when no scientific theories can prove their existence.',
+    desc2: 'With over 20 years of diversified experience in Aviation, Hospitality, and Information Technology industries with global leaders like Kingfisher Airlines, Cyient Limited, and Alexandria Equities Management Company, I bridge ancient cosmic structures with logical scientific metrics.',
+    imageUrl: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.10.03-AM-1.jpeg'
+  },
+  doDont: {
+    doTitle: 'What I Do',
+    doList: [
+      { title: 'Vastu & Earth Energy:', desc: 'Balance houses, offices, and factories by studying earth energy networks completely without demolition.' },
+      { title: 'Numerology Alignment:', desc: 'Map birth dates and corrections for name tuning, corporate titles, or branding flow using classic Lo Shu Grids.' },
+      { title: 'Astrology Guidance:', desc: 'Conduct detailed horoscope and Kundli readings focusing on planetary periods and remedies.' }
+    ],
+    dontTitle: "What I Don't Do",
+    dontList: [
+      { title: 'No Major Demolitions:', desc: 'We avoid recommending structural breakdowns or architectural rebuilds in 98% of Vastu cases.' },
+      { title: 'No Forced Remedies:', desc: 'We do not advocate for expensive planetary symbols or forced prescriptions. All solutions are logical.' },
+      { title: 'No Superstitions:', desc: 'Our processes are scientific energy alignments backed by structural geometry.' }
+    ]
+  },
+  journey: {
+    badge: 'THE PATH OF ALIGNMENT',
+    title: 'My Journey',
+    subtitle: 'Professional Vastu, Numerology & Astrology Consultant',
+    desc1: 'With over 20 years of diversified experience in Aviation, Hospitality, and Information Technology industries with global leaders like Kingfisher Airlines, Cyient Limited, and Alexandria Equities Management Company, Uppasna is a successful figure during the course of her journey performing her duties very effectively.',
+    desc2: 'Uppasna has a great sense of judgment and patience that comes from her initial start of career as an Cabin Crew, followed by a progressive career in the Real Estate Industry where she managed people and business with singular responsibilities. She is an excellent networker and possesses the quality of simplicity with brains.',
+    desc3: 'Uppasna is MBA by qualification and thoroughly enjoys her working for social and professional reasons, bridging corporate strategy with elemental cosmic geometry.',
+    desc4: 'Her years of learning practice, mentoring, and guiding hundreds of clients through Vastu shifts, balanced numbers, and Astrology remedies make her calculations unparalleled. Her attention to detail has built a legacy of reliance and success.',
+    ctaText: 'Book Call with Uppasna Ji',
+    imageUrl: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.10.04-AM.jpeg'
+  }
+};
+
+const defaultYogadhanContent = {
+  hero: {
+    badge: 'THE DIVINE SCIENCE',
+    title: 'Yogadhan System',
+    description: 'Yogadhan is an integrated, scientific method developed by Uppasna Keshwani. It unites ancient Vastu-Shastra, vibrational Numerology, and Horoscope Astrology into a single cohesive framework.'
+  },
+  split: {
+    title: 'Why Yogadhan?',
+    desc1: "Standard Vastu often treats spaces in isolation. Yogadhan recognizes that a house is connected to the birth chart (Kundli) of its residents. If a resident's destiny numbers mismatch the home's primary direction, blockages occur.",
+    desc2: "Our methodology rectifies this mismatch through logical, non-demolition energy balancing. By matching name numbers and planetary coordinates, Yogadhan creates an abundant ecosystem."
+  },
+  pillars: [
+    {
+      title: 'Earth Energy Grid',
+      desc: 'Mapping subtle electromagnetic and telluric currents of the plot. By balancing natural planetary lines (invisible energy grids), we clean the spatial template.',
+      iconName: 'Compass',
+      color: 'var(--color-indigo)',
+      bg: 'rgba(16, 185, 129, 0.08)',
+      border: 'rgba(16, 185, 129, 0.3)',
+      shadow: 'rgba(16, 185, 129, 0.12)'
+    },
+    {
+      title: 'Vibrational Numerology',
+      desc: 'Matching personal or business name frequencies to the DOB destiny grid. Alignment blocks natural energy bottlenecks, accelerating smooth financial cycles.',
+      iconName: 'Sparkles',
+      color: 'var(--color-purple)',
+      bg: 'rgba(59, 130, 246, 0.08)',
+      border: 'rgba(59, 130, 246, 0.3)',
+      shadow: 'rgba(59, 130, 246, 0.12)'
+    },
+    {
+      title: 'Planetary Horoscope',
+      desc: 'Looking into major/minor period star positions of the main resident. We place customized metal/color cures at high-frequency spatial hotspots.',
+      iconName: 'Sun',
+      color: 'var(--color-gold)',
+      bg: 'rgba(255, 51, 51, 0.08)',
+      border: 'rgba(255, 51, 51, 0.3)',
+      shadow: 'rgba(255, 51, 51, 0.12)'
+    }
+  ],
+  cta: {
+    title: 'Calibrate Your Spatial Energies',
+    description: 'Unlock the powerful abundant frequency inside your personal workspace or home. Get a remote Yogadhan assessment directly.',
+    ctaText: 'Book Yogadhan Consult'
+  }
+};
+
+const defaultContactInfo = {
+  header: {
+    badge: 'CONNECT',
+    title: 'Book Consultation',
+    description: 'Schedule a custom directional or numerological assessment session with Upasana Ji. Feel free to reach out to our Mumbai headquarters.'
+  },
+  location: {
+    title: 'Our Headquarters',
+    label: 'Office Location',
+    addressLines: [
+      'TS Police Academy, INDIS PBEL CITY,',
+      'Nehru Outer Ring Rd, Exit - 18,',
+      'Hyderabad, Telangana 500091'
+    ]
+  },
+  whatsapp: {
+    label: 'WhatsApp Number',
+    number: '+91 95590 96656',
+    link: 'https://wa.me/919559096656'
+  },
+  slots: ['10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM']
+};
+
+const defaultVastuContent = {
+  hero: {
+    badge: 'HARMONIZE YOUR ENVIRONMENT',
+    title: 'Ancient Vastu Shastra Tips',
+    description: 'Align your home and workplace with the five natural elements — Panchtattva — for lasting health, wealth, and peace. Explore room-by-room guidance, an interactive compass, common Vastu doshas, and simple non-demolition remedies.'
+  }
+};
+
+
 const seedDB = async () => {
   try {
     // 1. Wipe current collections
@@ -832,11 +874,15 @@ const seedDB = async () => {
     await Blog.deleteMany({});
     await Testimonial.deleteMany({});
     await VastuDirection.deleteMany({});
-    await VastuRoom.deleteMany({});
     await VastuMistake.deleteMany({});
     await VastuRemedy.deleteMany({});
     await VastuSeason.deleteMany({});
     await HomeContent.deleteMany({});
+    await VastuBookPage.deleteMany({});
+    await AboutContent.deleteMany({});
+    await YogadhanContent.deleteMany({});
+    await ContactInfo.deleteMany({});
+    await VastuContent.deleteMany({});
 
     console.log('Database wiped successfully.');
 
@@ -846,10 +892,10 @@ const seedDB = async () => {
         return {
           ...s,
           availability: {
-            activeDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            activeDays: ['Thursday'],
             slots: [
-              { label: 'Morning slots', times: ['10:30 AM', '11:00 AM', '11:30 AM'] },
-              { label: 'Afternoon slots', times: ['12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM'] }
+              { label: 'Morning slots', times: ['10:00 AM - 10:30 AM', '10:30 AM - 11:00 AM', '11:00 AM - 11:30 AM', '11:30 AM - 12:00 PM'] },
+              { label: 'Afternoon slots', times: ['12:00 PM - 12:30 PM', '12:30 PM - 01:00 PM', '01:00 PM - 01:30 PM'] }
             ]
           }
         };
@@ -878,9 +924,6 @@ const seedDB = async () => {
     await VastuDirection.insertMany(directions);
     console.log('Seeded Vastu Directions.');
 
-    await VastuRoom.insertMany(rooms);
-    console.log('Seeded Vastu Rooms.');
-
     await VastuMistake.insertMany(commonMistakes);
     console.log('Seeded Vastu Mistakes.');
 
@@ -892,6 +935,22 @@ const seedDB = async () => {
 
     await HomeContent.create(defaultHomeContent);
     console.log('Seeded Home Content.');
+
+    await VastuBookPage.insertMany(defaultBookPages);
+    console.log('Seeded Vastu Book Pages.');
+
+    await AboutContent.create(defaultAboutContent);
+    console.log('Seeded About Content.');
+
+    await YogadhanContent.create(defaultYogadhanContent);
+    console.log('Seeded Yogadhan Content.');
+
+    await ContactInfo.create(defaultContactInfo);
+    console.log('Seeded Contact Info Content.');
+
+    await VastuContent.create(defaultVastuContent);
+    console.log('Seeded Vastu Tips Hero Content.');
+
 
     console.log('Database seeding complete!');
     process.exit(0);

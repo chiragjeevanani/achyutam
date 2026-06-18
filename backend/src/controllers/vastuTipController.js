@@ -1,29 +1,30 @@
 import asyncHandler from 'express-async-handler';
 import VastuDirection from '../models/VastuDirection.js';
-import VastuRoom from '../models/VastuRoom.js';
 import VastuMistake from '../models/VastuMistake.js';
 import VastuRemedy from '../models/VastuRemedy.js';
 import VastuSeason from '../models/VastuSeason.js';
 import VastuElement from '../models/VastuElement.js';
+import VastuBookPage from '../models/VastuBookPage.js';
+import VastuContent from '../models/VastuContent.js';
 
 // @desc    Get all Vastu tips data in a single dashboard or separately
 // @route   GET /api/v1/vastu-tips
 // @access  Public
 export const getVastuTips = asyncHandler(async (req, res) => {
   const directions = await VastuDirection.find({});
-  const rooms = await VastuRoom.find({}).sort({ order: 1 });
   const mistakes = await VastuMistake.find({});
   const remedies = await VastuRemedy.find({});
   const seasons = await VastuSeason.find({});
   const elements = await VastuElement.find({});
+  const bookPages = await VastuBookPage.find({}).sort({ order: 1 });
 
   res.json({
     directions,
-    rooms,
     mistakes,
     remedies,
     seasons,
     elements,
+    bookPages,
   });
 });
 
@@ -57,62 +58,6 @@ export const updateDirection = asyncHandler(async (req, res) => {
   }
 });
 
-/* ---------------- ROOMS CRUD ---------------- */
-export const getRooms = asyncHandler(async (req, res) => {
-  const data = await VastuRoom.find({}).sort({ order: 1 });
-  res.json(data);
-});
-
-export const createRoom = asyncHandler(async (req, res) => {
-  const { title, element, color, bg, border, tips, order } = req.body;
-
-  const room = new VastuRoom({
-    title,
-    element,
-    color,
-    bg,
-    border,
-    tips,
-    order,
-  });
-
-  const created = await room.save();
-  res.status(201).json(created);
-});
-
-export const updateRoom = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { title, element, color, bg, border, tips, order } = req.body;
-
-  const room = await VastuRoom.findById(id);
-
-  if (room) {
-    room.title = title !== undefined ? title : room.title;
-    room.element = element !== undefined ? element : room.element;
-    room.color = color !== undefined ? color : room.color;
-    room.bg = bg !== undefined ? bg : room.bg;
-    room.border = border !== undefined ? border : room.border;
-    room.tips = tips !== undefined ? tips : room.tips;
-    room.order = order !== undefined ? order : room.order;
-
-    const updated = await room.save();
-    res.json(updated);
-  } else {
-    res.status(404);
-    throw new Error('Vastu Room not found');
-  }
-});
-
-export const deleteRoom = asyncHandler(async (req, res) => {
-  const room = await VastuRoom.findById(req.params.id);
-  if (room) {
-    await VastuRoom.deleteOne({ _id: req.params.id });
-    res.json({ message: 'Vastu Room removed' });
-  } else {
-    res.status(404);
-    throw new Error('Vastu Room not found');
-  }
-});
 
 /* ---------------- MISTAKES CRUD ---------------- */
 export const getMistakes = asyncHandler(async (req, res) => {
@@ -278,5 +223,80 @@ export const updateElement = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Vastu Element not found');
   }
+});
+
+/* ---------------- BOOK PAGES CRUD ---------------- */
+export const getBookPages = asyncHandler(async (req, res) => {
+  const data = await VastuBookPage.find({}).sort({ order: 1 });
+  res.json(data);
+});
+
+export const createBookPage = asyncHandler(async (req, res) => {
+  const { imageUrl, caption, order } = req.body;
+
+  const page = new VastuBookPage({
+    imageUrl,
+    caption,
+    order,
+  });
+
+  const created = await page.save();
+  res.status(201).json(created);
+});
+
+export const updateBookPage = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { imageUrl, caption, order } = req.body;
+
+  const page = await VastuBookPage.findById(id);
+
+  if (page) {
+    page.imageUrl = imageUrl !== undefined ? imageUrl : page.imageUrl;
+    page.caption = caption !== undefined ? caption : page.caption;
+    page.order = order !== undefined ? order : page.order;
+
+    const updated = await page.save();
+    res.json(updated);
+  } else {
+    res.status(404);
+    throw new Error('Book page not found');
+  }
+});
+
+export const deleteBookPage = asyncHandler(async (req, res) => {
+  const page = await VastuBookPage.findById(req.params.id);
+  if (page) {
+    await VastuBookPage.deleteOne({ _id: req.params.id });
+    res.json({ message: 'Book page removed' });
+  } else {
+    res.status(404);
+    throw new Error('Book page not found');
+  }
+});
+
+// @desc    Get Vastu tips page hero content configuration
+// @route   GET /api/v1/vastu-tips/hero
+// @access  Public
+export const getVastuHero = asyncHandler(async (req, res) => {
+  let content = await VastuContent.findOne();
+  if (!content) {
+    content = await VastuContent.create({});
+  }
+  res.json(content);
+});
+
+// @desc    Update Vastu tips page hero content configuration
+// @route   PUT /api/v1/vastu-tips/hero
+// @access  Private (Admin)
+export const updateVastuHero = asyncHandler(async (req, res) => {
+  let content = await VastuContent.findOne();
+  if (!content) {
+    content = new VastuContent(req.body);
+  } else {
+    Object.assign(content, req.body);
+  }
+
+  const updatedContent = await content.save();
+  res.json(updatedContent);
 });
 
