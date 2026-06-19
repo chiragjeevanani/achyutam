@@ -1263,6 +1263,16 @@ a {
   }
 }
 
+/* Fix visibility of option elements in all admin select dropdowns */
+.admin-layout-container select option,
+.admin-layout-container select optgroup,
+div[style*="position: fixed"] select option,
+form select option {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-dark) !important;
+}
+
+
 
 
 
