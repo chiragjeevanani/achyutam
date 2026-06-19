@@ -172,13 +172,7 @@ export default function Home() {
       }
     }
 
-    // Organs mapper to align with 16 directions
-    const organsList = [
-      'KIDNEY', 'BLADDER', 'PERICARDIUM', 'CIRCULATION', 
-      'LIVER', 'CIRCULATION', 'GALL BLADDER', 'SPLEEN', 
-      'SPLEEN', 'HEART', 'HEART', 'LUNG', 
-      'LUNG', 'COLON', 'INTESTINE', 'INTESTINE'
-    ];
+
 
     // Deities 1 quadrants definitions
     const quadrants = [
@@ -245,18 +239,7 @@ export default function Home() {
                 <tspan x={xAttr} dy="7.5">{d.line2}</tspan>
               </text>
 
-              <text 
-                x={xOrgan} 
-                y={yOrgan} 
-                fill="rgba(244, 63, 94, 0.85)" 
-                fontSize="6" 
-                fontWeight="bold"
-                textAnchor="middle" 
-                dominantBaseline="middle"
-                transform={`rotate(${d.angle}, ${xOrgan}, ${yOrgan})`}
-              >
-                {organsList[index]}
-              </text>
+
 
               <text 
                 x={xDir} 
@@ -374,7 +357,6 @@ export default function Home() {
         })}
 
         <circle cx={cx} cy={cy} r={R_ticks_inner} fill="none" stroke="#FBBF24" strokeWidth="1.5" />
-        <circle cx={cx} cy={cy} r={R_organs} fill="none" stroke="rgba(217, 125, 100, 0.4)" strokeWidth="0.8" />
         <circle cx={cx} cy={cy} r={R_directions} fill="none" stroke="rgba(217, 125, 100, 0.5)" strokeWidth="1.2" />
         <circle cx={cx} cy={cy} r={R_subsectors} fill="none" stroke="rgba(217, 125, 100, 0.4)" strokeWidth="0.8" />
         <circle cx={cx} cy={cy} r={R_deities2} fill="none" stroke="#FBBF24" strokeWidth="1" />

@@ -424,8 +424,6 @@ export default function AdminVastuTips() {
         {[
           { id: 'hero', label: 'Hero Section', icon: <Sparkles size={16} /> },
           { id: 'directions', label: 'Compass Directions', icon: <Compass size={16} /> },
-          { id: 'mistakes', label: 'Common Mistakes', icon: <TriangleAlert size={16} /> },
-          { id: 'remedies', label: 'Quick Remedies', icon: <Shield size={16} /> },
           { id: 'seasons', label: 'Seasonal Calendar', icon: <Calendar size={16} /> },
           { id: 'elements', label: '5 Elements', icon: <Sparkles size={16} /> },
           { id: 'bookPages', label: 'Tips Book', icon: <BookOpen size={16} /> },
@@ -572,91 +570,7 @@ export default function AdminVastuTips() {
 
 
 
-          {/* TAB 3: MISTAKES */}
-          {activeTab === 'mistakes' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', justifySelf: 'flex-end' }}>
-                <button
-                  onClick={openAddMistake}
-                  style={{ background: 'var(--color-gold)', border: 'none', padding: '8px 16px', borderRadius: '6px', color: '#fff', fontSize: '0.82rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <Plus size={14} /> Add Dosha
-                </button>
-              </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '20px' }}>
-                {data.mistakes.map((item) => (
-                  <div key={item._id} className="glass-panel" style={{ padding: '20px', borderLeft: `3px solid ${item.color || 'var(--color-gold)'}` }}>
-                    <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
-                      <h4 style={{ margin: 0, fontSize: '1rem', color: '#fff', width: '70%' }}>{item.mistake}</h4>
-                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                        <span style={{ fontSize: '0.65rem', padding: '2px 6px', background: `${item.color}15`, color: item.color, border: `1px solid ${item.color}30`, borderRadius: '4px' }}>{item.severity}</span>
-                        <button
-                          onClick={() => openEditMistake(item)}
-                          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '2px' }}
-                        >
-                          <Edit size={13} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteMistake(item._id)}
-                          style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '2px' }}
-                        >
-                          <Trash2 size={13} />
-                        </button>
-                      </div>
-                    </div>
-                    <p style={{ margin: '10px 0 0', fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-                      <strong>Impact:</strong> {item.impact}
-                    </p>
-                    <p style={{ margin: '6px 0 0', fontSize: '0.8rem', color: 'var(--color-indigo)', lineHeight: '1.4' }}>
-                      <strong>Remedy:</strong> {item.remedy}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* TAB 4: REMEDIES */}
-          {activeTab === 'remedies' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', justifySelf: 'flex-end' }}>
-                <button
-                  onClick={openAddRemedy}
-                  style={{ background: 'var(--color-gold)', border: 'none', padding: '8px 16px', borderRadius: '6px', color: '#fff', fontSize: '0.82rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <Plus size={14} /> Add Remedy
-                </button>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
-                {data.remedies.map((item) => (
-                  <div key={item._id} className="glass-panel" style={{ padding: '20px' }}>
-                    <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
-                      <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--color-purple)' }}>{item.title}</h4>
-                      <div style={{ display: 'flex', gap: '4px' }}>
-                        <button
-                          onClick={() => openEditRemedy(item)}
-                          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
-                        >
-                          <Edit size={14} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteRemedy(item._id)}
-                          style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '4px' }}
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </div>
-                    <p style={{ margin: '8px 0 0', fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
-                      {item.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* TAB 5: SEASONS */}
           {activeTab === 'seasons' && (

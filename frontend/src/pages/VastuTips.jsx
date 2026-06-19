@@ -374,6 +374,26 @@ const elements = [
   { name: 'Space (Akash)', zone: 'West & Center', color: '#A78BFA', bg: 'rgba(167,139,250,0.12)', icon: <Star size={22} />, benefit: 'Mental expansiveness, intuition, spiritual clarity', colors: 'White, Grey, Silver, Violet' }
 ];
 
+const getLucideIcon = (name, size = 20) => {
+  switch (name) {
+    case 'Droplets': return <Droplets size={size} />;
+    case 'Zap': return <Zap size={size} />;
+    case 'Mountain': return <Mountain size={size} />;
+    case 'Wind': return <Wind size={size} />;
+    case 'Star': return <Star size={size} />;
+    case 'Leaf': return <Leaf size={size} />;
+    case 'Clock': return <Clock size={size} />;
+    case 'Coffee': return <Coffee size={size} />;
+    case 'Coins': return <Coins size={size} />;
+    case 'Heart': return <Heart size={size} />;
+    case 'Home': return <Home size={size} />;
+    case 'Bed': return <Bed size={size} />;
+    case 'Monitor': return <Monitor size={size} />;
+    case 'Sun': return <Sun size={size} />;
+    default: return <Sparkles size={size} />;
+  }
+};
+
 /* ─────────── COMPONENT ─────────── */
 
 export default function VastuTips() {
@@ -382,12 +402,21 @@ export default function VastuTips() {
   const [expandedMistake, setExpandedMistake] = useState(null);
   const [bookPages, setBookPages] = useState([]);
   const [heroContent, setHeroContent] = useState(null);
+  const [dbElements, setDbElements] = useState([]);
+  const [dbDirections, setDbDirections] = useState([]);
+  const [dbSeasons, setDbSeasons] = useState([]);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/vastu-tips/book-pages`)
+    // Fetch aggregate public data
+    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/vastu-tips`)
       .then(res => res.json())
-      .then(data => { if (Array.isArray(data)) setBookPages(data); })
-      .catch(() => {});
+      .then(data => {
+        if (data.bookPages && Array.isArray(data.bookPages)) setBookPages(data.bookPages);
+        if (data.elements && Array.isArray(data.elements)) setDbElements(data.elements);
+        if (data.directions && Array.isArray(data.directions)) setDbDirections(data.directions);
+        if (data.seasons && Array.isArray(data.seasons)) setDbSeasons(data.seasons);
+      })
+      .catch((err) => console.error('Failed to fetch aggregate vastu tips:', err));
 
     fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/vastu-tips/hero`)
       .then(res => res.json())
@@ -404,7 +433,46 @@ export default function VastuTips() {
   };
 
   const activeHero = (heroContent && heroContent.hero) ? heroContent.hero : defaultHero.hero;
-  const selDir = directionsData[selectedDirection];
+
+  // Resolve dynamic directions Data
+  const activeDirections = dbDirections.length > 0 ? dbDirections.reduce((acc, dir) => {
+    acc[dir.code] = {
+      name: dir.name,
+      deity: dir.deity,
+      element: dir.element,
+      elementIcon: getLucideIcon(dir.code === 'N' || dir.code === 'NE' ? 'Droplets' : dir.code === 'SE' || dir.code === 'S' ? 'Zap' : dir.code === 'SW' ? 'Mountain' : dir.code === 'E' || dir.code === 'NW' ? 'Wind' : 'Star', 16),
+      elementColor: dir.elementColor || 'var(--color-gold)',
+      elementBg: dir.elementBg || 'rgba(255,51,51,0.12)',
+      focus: dir.focus,
+      dos: dir.dos || [],
+      donts: dir.donts || []
+    };
+    return acc;
+  }, {}) : directionsData;
+
+  const selDir = activeDirections[selectedDirection] || activeDirections['NE'] || directionsData['NE'];
+
+  // Resolve dynamic seasons
+  const activeSeasons = dbSeasons.length > 0 ? dbSeasons.map(s => ({
+    season: s.season,
+    months: s.months,
+    icon: getLucideIcon(s.icon, 20),
+    color: s.color,
+    bg: s.bg,
+    border: s.border,
+    tips: s.tips
+  })) : seasons;
+
+  // Resolve dynamic elements
+  const activeElements = dbElements.length > 0 ? dbElements.map(el => ({
+    name: el.name,
+    zone: el.zone,
+    color: el.colorHex,
+    bg: el.bgCode,
+    icon: getLucideIcon(el.iconName, 22),
+    benefit: el.benefit,
+    colors: el.colors
+  })) : elements;
 
   return (
     <div style={{ padding: '45px 20px 60px', maxWidth: '1240px', margin: '0 auto' }}>
@@ -465,14 +533,14 @@ export default function VastuTips() {
                 <span style={{ fontSize: '0.85rem', fontWeight: '800', color: selDir.elementColor }}>{selectedDirection}</span>
               </div>
 
-              {Object.keys(directionsData).map((dir, idx) => {
+              {Object.keys(activeDirections).map((dir, idx) => {
                 const angle = (idx * 45) - 90;
                 const r = 105;
                 const x = Math.cos((angle * Math.PI) / 180) * r;
                 const y = Math.sin((angle * Math.PI) / 180) * r;
                 const isSel = selectedDirection === dir;
                 return (
-                  <button key={dir} onClick={() => setSelectedDirection(dir)} style={{ position: 'absolute', left: `calc(50% + ${x}px - 22px)`, top: `calc(50% + ${y}px - 22px)`, width: '44px', height: '44px', borderRadius: '50%', background: isSel ? directionsData[dir].elementColor : 'var(--bg-dark)', border: `1.5px solid ${isSel ? directionsData[dir].elementColor : 'var(--border-glass)'}`, color: isSel ? '#fff' : 'var(--text-primary)', fontWeight: '800', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: isSel ? `0 0 16px ${directionsData[dir].elementBg}` : 'none', transition: 'all 0.25s', zIndex: 3 }}>
+                  <button key={dir} onClick={() => setSelectedDirection(dir)} style={{ position: 'absolute', left: `calc(50% + ${x}px - 22px)`, top: `calc(50% + ${y}px - 22px)`, width: '44px', height: '44px', borderRadius: '50%', background: isSel ? activeDirections[dir].elementColor : 'var(--bg-dark)', border: `1.5px solid ${isSel ? activeDirections[dir].elementColor : 'var(--border-glass)'}`, color: isSel ? '#fff' : 'var(--text-primary)', fontWeight: '800', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: isSel ? `0 0 16px ${activeDirections[dir].elementBg}` : 'none', transition: 'all 0.25s', zIndex: 3 }}>
                     {dir}
                   </button>
                 );
@@ -547,7 +615,7 @@ export default function VastuTips() {
         </div>
 
         <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '18px' }}>
-          {elements.map((el, i) => (
+          {activeElements.map((el, i) => (
             <div key={i} className="reveal-zoom-out glass-panel magnetic-hover" style={{ padding: '28px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center', borderTop: `3px solid ${el.color}` }}>
               <div style={{ width: '52px', height: '52px', borderRadius: '50%', background: el.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: el.color, border: `1px solid ${el.color}33` }}>
                 {el.icon}
@@ -566,76 +634,6 @@ export default function VastuTips() {
         </div>
       </section>
 
-      {/* ── 4. COMMON MISTAKES & FIXES ── */}
-      <section id="section-3" style={{ marginBottom: '80px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '40px' }} className="reveal">
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '5px 14px', borderRadius: '20px', background: 'rgba(255,51,51,0.1)', border: '1px solid rgba(255,51,51,0.22)', marginBottom: '16px' }}>
-            <AlertCircle size={13} style={{ color: 'var(--color-gold)' }} />
-            <span style={{ fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.1em', color: 'var(--color-gold)' }}>VASTU DOSHAS</span>
-          </div>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', marginBottom: '12px' }} className="gold-gradient-text">
-            Common Vastu Mistakes & Remedies
-          </h2>
-          <p style={{ color: 'var(--text-muted)', maxWidth: '640px', margin: '0 auto', lineHeight: '1.7', fontSize: '0.92rem' }}>
-            Most Vastu Doshas are unintentional. Click each card to reveal its impact and the non-demolition remedy to fix it.
-          </p>
-        </div>
-
-        <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-          {commonMistakes.map((item, i) => (
-            <div key={i} className="glass-panel reveal-flip" style={{ padding: '0', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.3s' }} onClick={() => setExpandedMistake(expandedMistake === i ? null : i)}>
-              <div style={{ padding: '20px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ minWidth: '8px', height: '8px', borderRadius: '50%', background: item.color }} />
-                  <span style={{ fontWeight: '700', fontSize: '0.9rem', color: 'var(--text-heading)' }}>{item.mistake}</span>
-                </div>
-                <span style={{ fontSize: '0.7rem', fontWeight: '600', padding: '3px 9px', borderRadius: '8px', background: `${item.color}18`, color: item.color, border: `1px solid ${item.color}33`, whiteSpace: 'nowrap' }}>
-                  {item.severity}
-                </span>
-              </div>
-              <div className={`sleek-expandable ${expandedMistake === i ? 'active' : ''}`}>
-                <div style={{ padding: '10px 22px 20px', display: 'flex', flexDirection: 'column', gap: '12px', borderTop: '1px solid var(--border-glass)' }}>
-                  <div style={{ paddingTop: '14px' }}>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '10px' }}>
-                      <AlertCircle size={15} style={{ color: 'var(--color-gold)', marginTop: '1px', flexShrink: 0 }} />
-                      <div>
-                        <span style={{ fontSize: '0.72rem', fontWeight: '700', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Impact</span>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.83rem', lineHeight: '1.55', marginTop: '3px' }}>{item.impact}</p>
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', padding: '12px', background: 'rgba(16,185,129,0.06)', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)' }}>
-                      <Lightbulb size={15} style={{ color: 'var(--color-indigo)', marginTop: '1px', flexShrink: 0 }} />
-                      <div>
-                        <span style={{ fontSize: '0.72rem', fontWeight: '700', color: 'var(--color-indigo)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Remedy</span>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.83rem', lineHeight: '1.55', marginTop: '3px' }}>{item.remedy}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Quick Remedies */}
-        <div style={{ marginTop: '50px' }}>
-          <h3 style={{ fontSize: '1.5rem', textAlign: 'center', marginBottom: '10px' }} className="gold-gradient-text">Quick Vastu Remedies</h3>
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', fontSize: '0.88rem', marginBottom: '30px', lineHeight: '1.6' }}>
-            Simple, affordable, and effective remedies that anyone can implement without any renovation.
-          </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-            {quickRemedies.map((r, i) => (
-              <div key={i} className="glass-panel reveal" style={{ padding: '24px', borderTop: `2px solid ${r.color}`, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: r.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: r.color, border: `1px solid ${r.border}` }}>
-                  {r.icon}
-                </div>
-                <h4 style={{ fontSize: '1rem', color: r.color }}>{r.title}</h4>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.83rem', lineHeight: '1.6' }}>{r.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── 5. SEASONAL VASTU TIPS ── */}
       <section id="section-4" style={{ marginBottom: '80px' }}>
@@ -653,7 +651,7 @@ export default function VastuTips() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '28px' }} className="reveal">
-          {seasons.map((s, i) => (
+          {activeSeasons.map((s, i) => (
             <button key={i} onClick={() => setActiveSeason(i)} style={{ padding: '9px 18px', borderRadius: '20px', background: activeSeason === i ? s.bg : 'transparent', border: `1px solid ${activeSeason === i ? s.border : 'var(--border-glass)'}`, color: activeSeason === i ? s.color : 'var(--text-muted)', fontSize: '0.82rem', fontWeight: '600', cursor: 'pointer', transition: 'all 0.25s', display: 'flex', alignItems: 'center', gap: '7px' }}>
               <span style={{ color: activeSeason === i ? s.color : 'var(--text-muted)' }}>{s.icon}</span>
               {s.season}
@@ -661,25 +659,27 @@ export default function VastuTips() {
           ))}
         </div>
 
-        <div className="glass-panel reveal" style={{ padding: '35px 40px', borderLeft: `3px solid ${seasons[activeSeason].color}` }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: seasons[activeSeason].bg, border: `1px solid ${seasons[activeSeason].border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: seasons[activeSeason].color }}>
-              {seasons[activeSeason].icon}
-            </div>
-            <div>
-              <h3 style={{ fontSize: '1.4rem', color: 'var(--text-heading)' }}>{seasons[activeSeason].season}</h3>
-              <span style={{ fontSize: '0.78rem', color: seasons[activeSeason].color, fontWeight: '600' }}>{seasons[activeSeason].months}</span>
-            </div>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
-            {seasons[activeSeason].tips.map((tip, i) => (
-              <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '14px 16px', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
-                <CheckCircle size={15} style={{ color: seasons[activeSeason].color, marginTop: '2px', flexShrink: 0 }} />
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.55' }}>{tip}</span>
+        {activeSeasons[activeSeason] && (
+          <div className="glass-panel reveal" style={{ padding: '35px 40px', borderLeft: `3px solid ${activeSeasons[activeSeason].color}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: activeSeasons[activeSeason].bg, border: `1px solid ${activeSeasons[activeSeason].border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: activeSeasons[activeSeason].color }}>
+                {activeSeasons[activeSeason].icon}
               </div>
-            ))}
+              <div>
+                <h3 style={{ fontSize: '1.4rem', color: 'var(--text-heading)' }}>{activeSeasons[activeSeason].season}</h3>
+                <span style={{ fontSize: '0.78rem', color: activeSeasons[activeSeason].color, fontWeight: '600' }}>{activeSeasons[activeSeason].months}</span>
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
+              {activeSeasons[activeSeason].tips && activeSeasons[activeSeason].tips.map((tip, i) => (
+                <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '14px 16px', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
+                  <CheckCircle size={15} style={{ color: activeSeasons[activeSeason].color, marginTop: '2px', flexShrink: 0 }} />
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.55' }}>{tip}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* ── CTA ── */}
