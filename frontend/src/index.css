@@ -1248,6 +1248,22 @@ a {
   opacity: 0.6;
 }
 
+/* Responsive Split Layout for Admin CMS Pages */
+.admin-cms-split-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .admin-cms-split-layout {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+
 
 
 

@@ -2,10 +2,19 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-  LayoutDashboard, Calendar, Mail, Landmark, Sparkles, BookOpen, MessageSquare, Compass, LogOut, Moon, Sun, Home, GraduationCap, Info, Phone 
+  LayoutDashboard, Calendar, Mail, Landmark, Sparkles, BookOpen, MessageSquare, Compass, 
+  LogOut, Moon, Sun, Home, GraduationCap, Info, Phone, ChevronLeft, ChevronRight, X, User
 } from 'lucide-react';
 
-export default function AdminSidebar({ theme, toggleTheme }) {
+export default function AdminSidebar({ 
+  theme, 
+  toggleTheme, 
+  isCollapsed, 
+  toggleSidebar, 
+  isMobile, 
+  isMobileOpen, 
+  setIsMobileOpen 
+}) {
   const { logout, admin } = useAuth();
   const location = useLocation();
 
@@ -39,7 +48,8 @@ export default function AdminSidebar({ theme, toggleTheme }) {
   const linkStyle = (path) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    justifyContent: isCollapsed && !isMobile ? 'center' : 'flex-start',
+    gap: isCollapsed && !isMobile ? '0px' : '12px',
     padding: '12px 16px',
     borderRadius: '8px',
     color: isActive(path) ? 'var(--color-gold)' : 'var(--text-muted)',
@@ -49,44 +59,124 @@ export default function AdminSidebar({ theme, toggleTheme }) {
     fontSize: '0.9rem',
     fontWeight: '600',
     transition: 'all 0.25s',
+    width: '100%',
+    boxSizing: 'border-box',
   });
+
+  // Calculate sidebar width based on layout
+  let sidebarWidth = '260px';
+  if (isMobile) {
+    sidebarWidth = '280px';
+  } else if (isCollapsed) {
+    sidebarWidth = '76px';
+  }
 
   return (
     <div style={{
-      width: '260px',
+      width: sidebarWidth,
       background: theme === 'light' ? '#f3ebd9' : '#0d0d0f',
       borderRight: '1px solid var(--border-glass)',
       display: 'flex',
       flexDirection: 'column',
       height: '100vh',
-      position: 'sticky',
+      position: isMobile ? 'fixed' : 'sticky',
       top: 0,
-      padding: '24px 16px',
+      left: 0,
+      zIndex: isMobile ? 999 : 100,
+      padding: isCollapsed && !isMobile ? '24px 10px' : '24px 16px',
       boxSizing: 'border-box',
+      transform: isMobile ? (isMobileOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none',
+      transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease',
     }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '32px', padding: '0 8px' }}>
-        <div style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '50%',
-          border: '1.5px solid var(--color-gold)',
-          background: 'rgba(255, 51, 51, 0.1)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--color-gold)',
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between',
+        marginBottom: '24px', 
+        padding: '0 4px',
+        position: 'relative'
+      }}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '10px',
+          overflow: 'hidden'
         }}>
-          <Moon size={18} style={{ animation: 'pulse 2s infinite alternate' }} />
+          <div style={{
+            width: '36px',
+            height: '36px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <img 
+              src={theme === 'dark' ? '/achyutamlogodark.png' : '/achyutamlogo.png'} 
+              alt="Logo" 
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+              }}
+            />
+          </div>
+          {(!isCollapsed || isMobile) && (
+            <div style={{ transition: 'opacity 0.2s', opacity: 1, whiteSpace: 'nowrap' }}>
+              <h2 style={{ fontSize: '1rem', fontWeight: 'bold', letterSpacing: '0.05em', color: 'var(--text-heading)', margin: 0 }}>
+                ACHYUTAM
+              </h2>
+              <span style={{ fontSize: '0.7rem', color: 'var(--color-gold)', fontWeight: '700', letterSpacing: '0.1em' }}>
+                ADMIN PORTAL
+              </span>
+            </div>
+          )}
         </div>
-        <div>
-          <h2 style={{ fontSize: '1rem', fontWeight: 'bold', letterSpacing: '0.05em', color: 'var(--text-heading)', margin: 0 }}>
-            ACHYUTAM
-          </h2>
-          <span style={{ fontSize: '0.7rem', color: 'var(--color-gold)', fontWeight: '700', letterSpacing: '0.1em' }}>
-            ADMIN PORTAL
-          </span>
-        </div>
+
+        {/* Toggle / Close Buttons */}
+        {isMobile ? (
+          <button
+            onClick={() => setIsMobileOpen(false)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '4px',
+            }}
+          >
+            <X size={20} />
+          </button>
+        ) : (
+          <button
+            onClick={toggleSidebar}
+            style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid var(--border-glass)',
+              borderRadius: '50%',
+              width: '24px',
+              height: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              transition: 'background 0.2s',
+              position: isCollapsed ? 'absolute' : 'relative',
+              left: isCollapsed ? '50%' : 'auto',
+              transform: isCollapsed ? 'translateX(-50%) translateY(40px)' : 'none',
+              zIndex: 10,
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
+            title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+          >
+            {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          </button>
+        )}
       </div>
 
       {/* Admin details */}
@@ -94,14 +184,40 @@ export default function AdminSidebar({ theme, toggleTheme }) {
         background: 'rgba(255, 255, 255, 0.02)',
         border: '1px solid var(--border-glass)',
         borderRadius: '8px',
-        padding: '12px',
+        padding: isCollapsed && !isMobile ? '12px 6px' : '12px',
         marginBottom: '24px',
         fontSize: '0.8rem',
-      }}>
-        <div style={{ color: 'var(--text-muted)' }}>Logged in as:</div>
-        <div style={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.85rem', marginTop: '2px' }}>
-          {admin?.username || 'Administrator'}
-        </div>
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: isCollapsed && !isMobile ? 'center' : 'stretch',
+        transition: 'padding 0.3s ease',
+        marginTop: isCollapsed && !isMobile ? '24px' : '0px',
+      }}
+      title={admin?.username || 'Administrator'}
+      >
+        {isCollapsed && !isMobile ? (
+          <div style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: '50%',
+            background: 'var(--border-glass)',
+            color: 'var(--color-gold)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 'bold',
+            fontSize: '0.9rem',
+          }}>
+            {admin?.username ? admin.username.charAt(0).toUpperCase() : <User size={14} />}
+          </div>
+        ) : (
+          <>
+            <div style={{ color: 'var(--text-muted)' }}>Logged in as:</div>
+            <div style={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '0.85rem', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {admin?.username || 'Administrator'}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Scrollable Menus Container */}
@@ -114,33 +230,49 @@ export default function AdminSidebar({ theme, toggleTheme }) {
           flexDirection: 'column', 
           gap: '24px', 
           marginBottom: '20px', 
-          paddingRight: '4px',
+          paddingRight: isCollapsed && !isMobile ? '0px' : '4px',
           scrollbarWidth: 'thin'
         }} 
         className="sidebar-scrollable-menu"
       >
         {/* Main menu */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <span style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.1em', color: 'var(--text-muted)', paddingLeft: '8px', textTransform: 'uppercase' }}>
-            Main Operations
-          </span>
+          {(!isCollapsed || isMobile) && (
+            <span style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.1em', color: 'var(--text-muted)', paddingLeft: '8px', textTransform: 'uppercase' }}>
+              Main Operations
+            </span>
+          )}
           {menuItems.map((item) => (
-            <Link key={item.name} to={item.path} style={linkStyle(item.path)}>
+            <Link 
+              key={item.name} 
+              to={item.path} 
+              style={linkStyle(item.path)} 
+              title={isCollapsed && !isMobile ? item.name : undefined}
+              onClick={() => isMobile && setIsMobileOpen(false)}
+            >
               {item.icon}
-              {item.name}
+              {(!isCollapsed || isMobile) && <span>{item.name}</span>}
             </Link>
           ))}
         </div>
 
         {/* CMS menu */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <span style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.1em', color: 'var(--text-muted)', paddingLeft: '8px', textTransform: 'uppercase' }}>
-            Content Management (CMS)
-          </span>
+          {(!isCollapsed || isMobile) && (
+            <span style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.1em', color: 'var(--text-muted)', paddingLeft: '8px', textTransform: 'uppercase' }}>
+              Content Management (CMS)
+            </span>
+          )}
           {cmsItems.map((item) => (
-            <Link key={item.name} to={item.path} style={linkStyle(item.path)}>
+            <Link 
+              key={item.name} 
+              to={item.path} 
+              style={linkStyle(item.path)} 
+              title={isCollapsed && !isMobile ? item.name : undefined}
+              onClick={() => isMobile && setIsMobileOpen(false)}
+            >
               {item.icon}
-              {item.name}
+              {(!isCollapsed || isMobile) && <span>{item.name}</span>}
             </Link>
           ))}
         </div>
@@ -163,14 +295,22 @@ export default function AdminSidebar({ theme, toggleTheme }) {
       `}</style>
 
       {/* Footer */}
-      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ 
+        marginTop: 'auto', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '10px',
+        alignItems: isCollapsed && !isMobile ? 'center' : 'stretch',
+      }}>
         <button
           onClick={toggleTheme}
+          title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
           style={{
             width: '100%',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            justifyContent: isCollapsed && !isMobile ? 'center' : 'flex-start',
+            gap: isCollapsed && !isMobile ? '0px' : '12px',
             padding: '12px 16px',
             borderRadius: '8px',
             background: theme === 'light' ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.02)',
@@ -189,16 +329,18 @@ export default function AdminSidebar({ theme, toggleTheme }) {
           }}
         >
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          {(!isCollapsed || isMobile) && <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
         </button>
 
         <button
           onClick={logout}
+          title="Logout Session"
           style={{
             width: '100%',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            justifyContent: isCollapsed && !isMobile ? 'center' : 'flex-start',
+            gap: isCollapsed && !isMobile ? '0px' : '12px',
             padding: '12px 16px',
             borderRadius: '8px',
             background: 'rgba(255, 51, 51, 0.05)',
@@ -217,9 +359,10 @@ export default function AdminSidebar({ theme, toggleTheme }) {
           }}
         >
           <LogOut size={18} />
-          Logout Session
+          {(!isCollapsed || isMobile) && <span>Logout Session</span>}
         </button>
       </div>
     </div>
   );
 }
+

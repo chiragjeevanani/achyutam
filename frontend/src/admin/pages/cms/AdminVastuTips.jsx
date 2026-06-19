@@ -419,11 +419,23 @@ export default function AdminVastuTips() {
       </div>
 
       {/* Tabs list */}
-      <div style={{
-        display: 'flex',
-        borderBottom: '1px solid var(--border-glass)',
-        gap: '20px',
-      }}>
+      <div 
+        className="admin-tabs-scroll-container"
+        style={{
+          display: 'flex',
+          borderBottom: '1px solid var(--border-glass)',
+          gap: '20px',
+          overflowX: 'auto',
+          maxWidth: '100%',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        }}
+      >
+        <style>{`
+          .admin-tabs-scroll-container::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
         {[
           { id: 'hero', label: 'Hero Section', icon: <Sparkles size={16} /> },
           { id: 'directions', label: 'Compass Directions', icon: <Compass size={16} /> },
@@ -448,6 +460,8 @@ export default function AdminVastuTips() {
               cursor: 'pointer',
               transition: 'all 0.25s',
               paddingBottom: '14px',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
             }}
           >
             {tab.icon}

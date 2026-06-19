@@ -144,7 +144,7 @@ export default function AdminYogadhan() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '30px', alignItems: 'start' }}>
+      <div className="admin-cms-split-layout">
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           {tabs.map((tab) => (
             <button

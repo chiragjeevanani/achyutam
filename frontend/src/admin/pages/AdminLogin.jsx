@@ -12,12 +12,23 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
 
   useEffect(() => {
     if (admin) {
       navigate('/admin');
     }
   }, [admin, navigate]);
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light-theme');
+      document.body.classList.add('light-theme');
+    } else {
+      document.documentElement.classList.remove('light-theme');
+      document.body.classList.remove('light-theme');
+    }
+  }, [theme]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,7 +53,7 @@ export default function AdminLogin() {
   return (
     <div style={{
       height: '100vh',
-      background: '#070709',
+      background: 'var(--bg-dark)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -59,18 +70,22 @@ export default function AdminLogin() {
       }}>
         {/* Logo */}
         <div style={{
-          width: '60px',
-          height: '60px',
-          borderRadius: '50%',
-          border: '2px solid var(--color-gold)',
-          background: 'rgba(255, 51, 51, 0.08)',
+          width: '100px',
+          height: '100px',
           margin: '0 auto 20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'var(--color-gold)',
         }}>
-          <Moon size={30} style={{ animation: 'pulse 1.5s infinite alternate' }} />
+          <img 
+            src={theme === 'dark' ? '/achyutamlogodark.png' : '/achyutamlogo.png'} 
+            alt="Logo" 
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+            }}
+          />
         </div>
 
         <h1 style={{

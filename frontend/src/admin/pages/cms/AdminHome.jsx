@@ -209,7 +209,7 @@ export default function AdminHome() {
       )}
 
       {/* Tabs Layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '30px', alignItems: 'start' }}>
+      <div className="admin-cms-split-layout">
         
         {/* Navigation Sidebar */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
