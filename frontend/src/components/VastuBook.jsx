@@ -4,7 +4,7 @@ import './VastuBook.css';
 
 const API_BASE = 'http://localhost:5000';
 
-export default function VastuBook({ pages = [] }) {
+export default function VastuBook({ pages = [], bookMeta = {} }) {
   const [activeLeaf, setActiveLeaf] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [mobilePage, setMobilePage] = useState(0); // For mobile sequential sliding
@@ -24,8 +24,27 @@ export default function VastuBook({ pages = [] }) {
   const getImageUrl = (url) => {
     if (!url) return '';
     if (url.startsWith('http')) return url;
-    return `${API_BASE}${url.startsWith('/') ? '' : '/'}${url}`;
+    if (url.startsWith('/uploads')) {
+      return `${API_BASE}${url}`;
+    }
+    return url;
   };
+
+  const meta = {
+    coverTitle: bookMeta.coverTitle || 'Vastu Shastra\nTips Book',
+    coverSubtitle: bookMeta.coverSubtitle || 'Sacred Wisdom',
+    coverLogo: bookMeta.coverLogo || '/achyutamlogodark.png',
+    introTitle: bookMeta.introTitle || 'Introduction',
+    introText: bookMeta.introText || '"Harmonize your environment to balance the five natural elements, opening the doors to happiness and health."',
+    outroTitle: bookMeta.outroTitle || 'Achyutam Maestro',
+    outroText: bookMeta.outroText || 'Bringing ancient cosmic wisdom to contemporary homes and offices.',
+    endTitle: bookMeta.endTitle || 'ACHYUTAM MAESTRO',
+    endSubtitle: bookMeta.endSubtitle || 'PEACE • WEALTH • HARMONY',
+    endLogo: bookMeta.endLogo || '/achyutamlogodark.png'
+  };
+
+  const coverLogoUrl = getImageUrl(meta.coverLogo);
+  const endLogoUrl = getImageUrl(meta.endLogo);
 
   if (pages.length === 0) {
     return (
@@ -57,14 +76,14 @@ export default function VastuBook({ pages = [] }) {
         <div className="book-cover-border" />
         <div className="book-cover-badge" style={{ width: '100px', height: '100px' }}>
           <img 
-            src="/achyutamlogodark.png" 
-            alt="Achyutam Logo" 
+            src={coverLogoUrl} 
+            alt="Cover Logo" 
             style={{ width: '75px', height: '75px', objectFit: 'contain' }} 
           />
         </div>
-        <h2 className="book-cover-title">Vastu Shastra<br />Tips Book</h2>
+        <h2 className="book-cover-title" style={{ whiteSpace: 'pre-line' }}>{meta.coverTitle}</h2>
         <div style={{ width: '60px', height: '2px', background: 'var(--book-gold)', margin: '15px 0' }} />
-        <span className="book-cover-subtitle">Sacred Wisdom</span>
+        <span className="book-cover-subtitle">{meta.coverSubtitle}</span>
         <span className="book-cover-hint">— tap to open book —</span>
       </div>
     ),
@@ -72,9 +91,9 @@ export default function VastuBook({ pages = [] }) {
       <div className="leaf-page leaf-page-back inside-liner">
         <div className="inside-liner-pattern">
           <BookOpen size={48} style={{ color: 'rgba(139, 69, 19, 0.25)', marginBottom: '15px' }} />
-          <h3 style={{ fontFamily: 'var(--font-serif)', color: '#5c4c38', fontSize: '1.25rem', margin: '0 0 8px' }}>Introduction</h3>
+          <h3 style={{ fontFamily: 'var(--font-serif)', color: '#5c4c38', fontSize: '1.25rem', margin: '0 0 8px', textAlign: 'center' }}>{meta.introTitle}</h3>
           <p style={{ fontStyle: 'italic', fontSize: '0.8rem', color: '#7a6a54', textAlign: 'center', width: '80%', lineHeight: '1.6', margin: 0 }}>
-            "Harmonize your environment to balance the five natural elements, opening the doors to happiness and health."
+            {meta.introText}
           </p>
         </div>
       </div>
@@ -134,9 +153,9 @@ export default function VastuBook({ pages = [] }) {
       <div className="leaf-page leaf-page-front inside-liner">
         <div className="inside-liner-pattern">
           <Sparkles size={40} style={{ color: 'rgba(139, 69, 19, 0.25)', marginBottom: '15px' }} />
-          <h3 style={{ fontFamily: 'var(--font-serif)', color: '#5c4c38', fontSize: '1.25rem', margin: '0 0 8px' }}>Achyutam Maestro</h3>
+          <h3 style={{ fontFamily: 'var(--font-serif)', color: '#5c4c38', fontSize: '1.25rem', margin: '0 0 8px', textAlign: 'center' }}>{meta.outroTitle}</h3>
           <p style={{ fontStyle: 'italic', fontSize: '0.8rem', color: '#7a6a54', textAlign: 'center', width: '80%', lineHeight: '1.6', margin: 0 }}>
-            Bringing ancient cosmic wisdom to contemporary homes and offices.
+            {meta.outroText}
           </p>
         </div>
       </div>
@@ -145,12 +164,12 @@ export default function VastuBook({ pages = [] }) {
       <div className="leaf-page leaf-page-back">
         <div className="book-cover-border" />
         <img 
-          src="/achyutamlogodark.png" 
-          alt="Achyutam Logo" 
+          src={endLogoUrl} 
+          alt="End Cover Logo" 
           style={{ width: '120px', height: '120px', objectFit: 'contain', marginBottom: '15px' }} 
         />
-        <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--book-gold)', fontSize: '1.3rem', marginTop: '10px', letterSpacing: '0.08em', textAlign: 'center' }}>ACHYUTAM MAESTRO</h3>
-        <span style={{ fontSize: '0.65rem', color: 'rgba(229, 193, 88, 0.4)', marginTop: '30px', letterSpacing: '0.15em' }}>PEACE &bull; WEALTH &bull; HARMONY</span>
+        <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--book-gold)', fontSize: '1.3rem', marginTop: '10px', letterSpacing: '0.08em', textAlign: 'center' }}>{meta.endTitle}</h3>
+        <span style={{ fontSize: '0.65rem', color: 'rgba(229, 193, 88, 0.4)', marginTop: '30px', letterSpacing: '0.15em' }}>{meta.endSubtitle}</span>
       </div>
     )
   });
@@ -193,14 +212,14 @@ export default function VastuBook({ pages = [] }) {
         <div className="book-cover-border" />
         <div className="book-cover-badge" style={{ width: '85px', height: '85px' }}>
           <img 
-            src="/achyutamlogodark.png" 
-            alt="Achyutam Logo" 
+            src={coverLogoUrl} 
+            alt="Cover Logo" 
             style={{ width: '65px', height: '65px', objectFit: 'contain' }} 
           />
         </div>
-        <h2 className="book-cover-title" style={{ fontSize: '1.65rem' }}>Vastu Shastra<br />Tips Book</h2>
+        <h2 className="book-cover-title" style={{ fontSize: '1.65rem', whiteSpace: 'pre-line' }}>{meta.coverTitle}</h2>
         <div style={{ width: '50px', height: '1.5px', background: 'var(--book-gold)', margin: '15px 0' }} />
-        <span className="book-cover-subtitle" style={{ fontSize: '0.75rem' }}>Sacred Wisdom</span>
+        <span className="book-cover-subtitle" style={{ fontSize: '0.75rem' }}>{meta.coverSubtitle}</span>
         <span className="book-cover-hint" style={{ marginTop: '20px' }}>— swipe to read —</span>
       </div>
     )
@@ -214,9 +233,9 @@ export default function VastuBook({ pages = [] }) {
       <div className="mobile-book-card inside-liner">
         <div className="inside-liner-pattern">
           <BookOpen size={40} style={{ color: 'rgba(139, 69, 19, 0.25)', marginBottom: '15px' }} />
-          <h3 style={{ fontFamily: 'var(--font-serif)', color: '#5c4c38', fontSize: '1.2rem', margin: '0 0 8px' }}>Introduction</h3>
+          <h3 style={{ fontFamily: 'var(--font-serif)', color: '#5c4c38', fontSize: '1.2rem', margin: '0 0 8px', textAlign: 'center' }}>{meta.introTitle}</h3>
           <p style={{ fontStyle: 'italic', fontSize: '0.8rem', color: '#7a6a54', textAlign: 'center', width: '80%', lineHeight: '1.6', margin: 0 }}>
-            "Harmonize your environment to balance the five natural elements, opening the doors to happiness and health."
+            {meta.introText}
           </p>
         </div>
       </div>
@@ -252,9 +271,9 @@ export default function VastuBook({ pages = [] }) {
       <div className="mobile-book-card inside-liner">
         <div className="inside-liner-pattern">
           <Sparkles size={36} style={{ color: 'rgba(139, 69, 19, 0.25)', marginBottom: '15px' }} />
-          <h3 style={{ fontFamily: 'var(--font-serif)', color: '#5c4c38', fontSize: '1.2rem', margin: '0 0 8px' }}>Achyutam Maestro</h3>
+          <h3 style={{ fontFamily: 'var(--font-serif)', color: '#5c4c38', fontSize: '1.2rem', margin: '0 0 8px', textAlign: 'center' }}>{meta.outroTitle}</h3>
           <p style={{ fontStyle: 'italic', fontSize: '0.8rem', color: '#7a6a54', textAlign: 'center', width: '80%', lineHeight: '1.6', margin: 0 }}>
-            Bringing ancient cosmic wisdom to contemporary homes and offices.
+            {meta.outroText}
           </p>
         </div>
       </div>
@@ -269,12 +288,12 @@ export default function VastuBook({ pages = [] }) {
       <div className="mobile-book-card cover-page">
         <div className="book-cover-border" />
         <img 
-          src="/achyutamlogodark.png" 
-          alt="Achyutam Logo" 
+          src={endLogoUrl} 
+          alt="End Cover Logo" 
           style={{ width: '100px', height: '100px', objectFit: 'contain', marginBottom: '15px' }} 
         />
-        <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--book-gold)', fontSize: '1.25rem', marginTop: '10px', letterSpacing: '0.08em', textAlign: 'center' }}>ACHYUTAM MAESTRO</h3>
-        <span style={{ fontSize: '0.6rem', color: 'rgba(229, 193, 88, 0.4)', marginTop: '20px', letterSpacing: '0.15em' }}>PEACE &bull; WEALTH &bull; HARMONY</span>
+        <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--book-gold)', fontSize: '1.25rem', marginTop: '10px', letterSpacing: '0.08em', textAlign: 'center' }}>{meta.endTitle}</h3>
+        <span style={{ fontSize: '0.6rem', color: 'rgba(229, 193, 88, 0.4)', marginTop: '20px', letterSpacing: '0.15em' }}>{meta.endSubtitle}</span>
       </div>
     )
   });

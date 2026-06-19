@@ -5,6 +5,7 @@ export default function Teaching() {
   const [form, setForm] = useState({
     name: '',
     email: '',
+    countryCode: '+91',
     phone: '',
     experience: 'None',
     message: ''
@@ -13,10 +14,46 @@ export default function Teaching() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Name check
+    if (!form.name || form.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters long.';
+    }
+
+    // Email check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email || !emailRegex.test(form.email.trim())) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+
+    // Phone check - restricted to exactly 10 digits
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!form.phone || !phoneRegex.test(form.phone)) {
+      newErrors.phone = 'Phone number must be exactly 10 digits.';
+    }
+
+    // Message check
+    if (!form.message || form.message.trim().length < 15) {
+      newErrors.message = 'Statement of purpose must be at least 15 characters long.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/teaching/apply`, {
@@ -24,7 +61,13 @@ export default function Teaching() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim().toLowerCase(),
+          phone: `${form.countryCode} ${form.phone.trim()}`,
+          experience: form.experience,
+          message: form.message.trim()
+        }),
       });
 
       const data = await response.json();
@@ -139,39 +182,117 @@ export default function Teaching() {
               )}
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Full Name</label>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: errors.name ? '#ff4d4d' : 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Full Name</label>
                 <input 
                   type="text" 
                   required 
                   value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }} 
+                  onChange={(e) => {
+                    setForm({ ...form, name: e.target.value });
+                    if (errors.name) setErrors({ ...errors, name: '' });
+                  }}
+                  style={{ 
+                    width: '100%', 
+                    padding: '12px', 
+                    borderRadius: '8px', 
+                    background: 'var(--bg-dark)', 
+                    border: errors.name ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                    color: 'var(--text-primary)', 
+                    fontSize: '0.95rem',
+                    outline: 'none'
+                  }} 
                   placeholder="Rahul Sharma"
                 />
+                {errors.name && (
+                  <span style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.name}</span>
+                )}
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Email Address</label>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: errors.email ? '#ff4d4d' : 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Email Address</label>
                 <input 
                   type="email" 
                   required 
                   value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }} 
+                  onChange={(e) => {
+                    setForm({ ...form, email: e.target.value });
+                    if (errors.email) setErrors({ ...errors, email: '' });
+                  }}
+                  style={{ 
+                    width: '100%', 
+                    padding: '12px', 
+                    borderRadius: '8px', 
+                    background: 'var(--bg-dark)', 
+                    border: errors.email ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                    color: 'var(--text-primary)', 
+                    fontSize: '0.95rem',
+                    outline: 'none'
+                  }} 
                   placeholder="name@email.com"
                 />
+                {errors.email && (
+                  <span style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.email}</span>
+                )}
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Phone Number</label>
-                <input 
-                  type="tel" 
-                  required 
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }} 
-                  placeholder="+91 99000 00000"
-                />
+                <label style={{ display: 'block', fontSize: '0.75rem', color: errors.phone ? '#ff4d4d' : 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Phone Number</label>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <select
+                    value={form.countryCode}
+                    onChange={(e) => setForm({ ...form, countryCode: e.target.value })}
+                    style={{ 
+                      width: '90px', 
+                      padding: '12px', 
+                      borderRadius: '8px', 
+                      background: 'var(--bg-dark)', 
+                      border: errors.phone ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                      color: 'var(--text-primary)', 
+                      fontSize: '0.95rem',
+                      outline: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value="+91">+91 (IN)</option>
+                    <option value="+1">+1 (US/CA)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+61">+61 (AU)</option>
+                    <option value="+971">+971 (AE)</option>
+                    <option value="+65">+65 (SG)</option>
+                    <option value="+966">+966 (SA)</option>
+                    <option value="+974">+974 (QA)</option>
+                    <option value="+977">+977 (NP)</option>
+                    <option value="+880">+880 (BD)</option>
+                    <option value="+94">+94 (LK)</option>
+                  </select>
+                  <input 
+                    type="tel" 
+                    required 
+                    value={form.phone}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, ''); // restrict to only digits
+                      if (val.length <= 10) {
+                        setForm({ ...form, phone: val });
+                      }
+                      if (errors.phone) setErrors({ ...errors, phone: '' });
+                    }}
+                    maxLength={10}
+                    style={{ 
+                      flex: 1, 
+                      padding: '12px', 
+                      borderRadius: '8px', 
+                      background: 'var(--bg-dark)', 
+                      border: errors.phone ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                      color: 'var(--text-primary)', 
+                      fontSize: '0.95rem',
+                      outline: 'none'
+                    }} 
+                    placeholder="99000 00000"
+                  />
+                </div>
+                {errors.phone && (
+                  <span style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.phone}</span>
+                )}
               </div>
 
               <div>
@@ -179,7 +300,7 @@ export default function Teaching() {
                 <select 
                   value={form.experience}
                   onChange={(e) => setForm({ ...form, experience: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }}
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem', outline: 'none' }}
                 >
                   <option value="None">None (Absolute Beginner)</option>
                   <option value="Beginner">Beginner (Read books / online material)</option>
@@ -189,15 +310,32 @@ export default function Teaching() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Statement of Purpose</label>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: errors.message ? '#ff4d4d' : 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Statement of Purpose</label>
                 <textarea 
                   rows="5" 
                   required
                   value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem', resize: 'vertical', lineHeight: '1.5' }} 
+                  onChange={(e) => {
+                    setForm({ ...form, message: e.target.value });
+                    if (errors.message) setErrors({ ...errors, message: '' });
+                  }}
+                  style={{ 
+                    width: '100%', 
+                    padding: '12px', 
+                    borderRadius: '8px', 
+                    background: 'var(--bg-dark)', 
+                    border: errors.message ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                    color: 'var(--text-primary)', 
+                    fontSize: '0.95rem', 
+                    resize: 'vertical', 
+                    lineHeight: '1.5',
+                    outline: 'none'
+                  }} 
                   placeholder="Explain why you wish to learn these skills and how you plan to teach/guide others in the future..."
                 />
+                {errors.message && (
+                  <span style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.message}</span>
+                )}
               </div>
 
               <button 

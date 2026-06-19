@@ -382,8 +382,8 @@ export default function Services() {
       key: Date.now()
     });
 
-    const swapDelay = (count - 1) * 70 + 225;
-    const totalDelay = (count - 1) * 70 + 450;
+    const swapDelay = (count - 1) * 40 + 130;
+    const totalDelay = (count - 1) * 40 + 290;
 
     // Swap content at exactly the vertical midpoint of the last turning page sheet
     setTimeout(() => {
@@ -495,7 +495,7 @@ export default function Services() {
                     key={idx}
                     className={`paper-sheet-overlay flip-page-${flipState.direction}`}
                     style={{
-                      animationDelay: `${idx * 70}ms`,
+                      animationDelay: `${idx * 40}ms`,
                       zIndex: flipState.direction === 'forward' 
                         ? 200 + (flipState.sheetPages.length - idx) 
                         : 200 + idx

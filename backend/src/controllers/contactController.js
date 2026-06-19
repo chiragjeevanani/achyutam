@@ -21,12 +21,41 @@ export const submitContact = asyncHandler(async (req, res) => {
     throw new Error('Please fill in all required fields (name, email, phone, message)');
   }
 
+  // Name validation
+  const trimmedName = name.trim();
+  if (trimmedName.length < 2) {
+    res.status(400);
+    throw new Error('Name must be at least 2 characters long.');
+  }
+
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email.trim())) {
+    res.status(400);
+    throw new Error('Please provide a valid email address.');
+  }
+
+  // Phone validation (allows + prefix and 10 to 15 digits, ignoring spaces/dashes)
+  const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+  const phoneRegex = /^\+?[0-9]{10,15}$/;
+  if (!phoneRegex.test(cleanPhone)) {
+    res.status(400);
+    throw new Error('Please provide a valid phone number (10 to 15 digits).');
+  }
+
+  // Message validation
+  const trimmedMessage = message.trim();
+  if (trimmedMessage.length < 15) {
+    res.status(400);
+    throw new Error('Message details must be at least 15 characters long.');
+  }
+
   const contact = new Contact({
-    name,
-    email,
-    phone,
+    name: trimmedName,
+    email: email.trim().toLowerCase(),
+    phone: phone.trim(),
     service,
-    message,
+    message: trimmedMessage,
     preferredTime,
   });
 

@@ -438,7 +438,7 @@ export default function VastuTips() {
 
 
       {/* ── 0. TIPS BOOK ── */}
-      <VastuBook pages={bookPages} />
+      <VastuBook pages={bookPages} bookMeta={heroContent?.bookMeta} />
 
       {/* ── 2. INTERACTIVE COMPASS ── */}
       <section id="section-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '50px', alignItems: 'center', marginBottom: '80px' }}>

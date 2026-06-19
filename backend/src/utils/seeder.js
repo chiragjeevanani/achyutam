@@ -725,26 +725,18 @@ const defaultHomeContent = {
 };
 
 const defaultBookPages = [
-  {
-    imageUrl: '/vastu_terracotta.png',
-    caption: 'North Direction Alignment for Career Flow & Financial Abundance',
-    order: 1
-  },
-  {
-    imageUrl: '/astrology_terracotta.png',
-    caption: 'Aligning Planetary Energies in the East for Health & Social Power',
-    order: 2
-  },
-  {
-    imageUrl: '/numerology_terracotta.png',
-    caption: 'Lo Shu Grid Balanced Placements for Stability & Success',
-    order: 3
-  },
-  {
-    imageUrl: '/tarot_terracotta.png',
-    caption: 'Mindfulness & Meditation Corner Alignment in the Northeast Zone',
-    order: 4
-  }
+  { imageUrl: '/vastu_tips/vastu_page_1.jpeg', caption: 'Vastu Shastra Tips — Page 1', order: 1 },
+  { imageUrl: '/vastu_tips/vastu_page_2.jpeg', caption: 'Vastu Shastra Tips — Page 2', order: 2 },
+  { imageUrl: '/vastu_tips/vastu_page_3.jpeg', caption: 'Vastu Shastra Tips — Page 3', order: 3 },
+  { imageUrl: '/vastu_tips/vastu_page_4.jpeg', caption: 'Vastu Shastra Tips — Page 4', order: 4 },
+  { imageUrl: '/vastu_tips/vastu_page_5.jpeg', caption: 'Vastu Shastra Tips — Page 5', order: 5 },
+  { imageUrl: '/vastu_tips/vastu_page_6.jpeg', caption: 'Vastu Shastra Tips — Page 6', order: 6 },
+  { imageUrl: '/vastu_tips/vastu_page_7.jpeg', caption: 'Vastu Shastra Tips — Page 7', order: 7 },
+  { imageUrl: '/vastu_tips/vastu_page_8.jpeg', caption: 'Vastu Shastra Tips — Page 8', order: 8 },
+  { imageUrl: '/vastu_tips/vastu_page_9.jpeg', caption: 'Vastu Shastra Tips — Page 9', order: 9 },
+  { imageUrl: '/vastu_tips/vastu_page_10.jpeg', caption: 'Vastu Shastra Tips — Page 10', order: 10 },
+  { imageUrl: '/vastu_tips/vastu_page_11.jpeg', caption: 'Vastu Shastra Tips — Page 11', order: 11 },
+  { imageUrl: '/vastu_tips/vastu_page_12.jpeg', caption: 'Vastu Shastra Tips — Page 12', order: 12 }
 ];
 
 const defaultAboutContent = {
@@ -863,6 +855,18 @@ const defaultVastuContent = {
     badge: 'HARMONIZE YOUR ENVIRONMENT',
     title: 'Ancient Vastu Shastra Tips',
     description: 'Align your home and workplace with the five natural elements — Panchtattva — for lasting health, wealth, and peace. Explore room-by-room guidance, an interactive compass, common Vastu doshas, and simple non-demolition remedies.'
+  },
+  bookMeta: {
+    coverTitle: 'Vastu Shastra\nTips Book',
+    coverSubtitle: 'Sacred Wisdom',
+    coverLogo: '/achyutamlogodark.png',
+    introTitle: 'Introduction',
+    introText: '"Harmonize your environment to balance the five natural elements, opening the doors to happiness and health."',
+    outroTitle: 'Achyutam Maestro',
+    outroText: 'Bringing ancient cosmic wisdom to contemporary homes and offices.',
+    endTitle: 'ACHYUTAM MAESTRO',
+    endSubtitle: 'PEACE • WEALTH • HARMONY',
+    endLogo: '/achyutamlogodark.png'
   }
 };
 

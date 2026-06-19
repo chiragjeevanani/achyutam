@@ -6,6 +6,18 @@ const vastuContentSchema = new mongoose.Schema(
       badge: { type: String, default: 'HARMONIZE YOUR ENVIRONMENT' },
       title: { type: String, default: 'Ancient Vastu Shastra Tips' },
       description: { type: String, default: 'Align your home and workplace with the five natural elements — Panchtattva — for lasting health, wealth, and peace. Explore room-by-room guidance, an interactive compass, common Vastu doshas, and simple non-demolition remedies.' }
+    },
+    bookMeta: {
+      coverTitle: { type: String, default: 'Vastu Shastra\nTips Book' },
+      coverSubtitle: { type: String, default: 'Sacred Wisdom' },
+      coverLogo: { type: String, default: '/achyutamlogodark.png' },
+      introTitle: { type: String, default: 'Introduction' },
+      introText: { type: String, default: '"Harmonize your environment to balance the five natural elements, opening the doors to happiness and health."' },
+      outroTitle: { type: String, default: 'Achyutam Maestro' },
+      outroText: { type: String, default: 'Bringing ancient cosmic wisdom to contemporary homes and offices.' },
+      endTitle: { type: String, default: 'ACHYUTAM MAESTRO' },
+      endSubtitle: { type: String, default: 'PEACE • WEALTH • HARMONY' },
+      endLogo: { type: String, default: '/achyutamlogodark.png' }
     }
   },
   {

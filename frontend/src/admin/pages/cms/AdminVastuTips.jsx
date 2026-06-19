@@ -230,6 +230,31 @@ export default function AdminVastuTips() {
     }
   };
 
+  const handleMetaLogoUpload = async (e, field) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const { data: res } = await api.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setHeroContent({
+        ...heroContent,
+        bookMeta: {
+          ...heroContent.bookMeta,
+          [field]: res.url
+        }
+      });
+    } catch (error) {
+      alert('Failed to upload logo');
+    }
+  };
+
   const handleSaveBookPage = async (e) => {
     e.preventDefault();
     if (!pageImageUrl) {
@@ -692,6 +717,193 @@ export default function AdminVastuTips() {
           {/* TAB 7: TIPS BOOK */}
           {activeTab === 'bookPages' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              
+              {heroContent && heroContent.bookMeta && (
+                <div className="glass-panel" style={{ padding: '24px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '20px' }}>
+                  <h3 style={{ fontSize: '1.2rem', color: '#fff', margin: 0, fontFamily: 'var(--font-serif)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <BookOpen size={18} style={{ color: 'var(--color-gold)' }} />
+                    Vastu Book Layout & Covers Config
+                  </h3>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+                    {/* Cover Section */}
+                    <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <h4 style={{ margin: 0, color: 'var(--color-gold)', fontSize: '0.9rem' }}>Front Cover</h4>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>Title (use \n for line breaks)</label>
+                        <textarea
+                          rows={2}
+                          value={heroContent.bookMeta.coverTitle || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, coverTitle: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem', resize: 'vertical' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>Subtitle</label>
+                        <input
+                          type="text"
+                          value={heroContent.bookMeta.coverSubtitle || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, coverSubtitle: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>Cover Logo URL / Upload</label>
+                        <input
+                          type="text"
+                          value={heroContent.bookMeta.coverLogo || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, coverLogo: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem', marginBottom: '6px' }}
+                        />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleMetaLogoUpload(e, 'coverLogo')}
+                          style={{ fontSize: '0.7rem', color: '#aaa' }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Introduction Section */}
+                    <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <h4 style={{ margin: 0, color: 'var(--color-gold)', fontSize: '0.9rem' }}>Introduction Page</h4>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>Title</label>
+                        <input
+                          type="text"
+                          value={heroContent.bookMeta.introTitle || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, introTitle: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>Content Text</label>
+                        <textarea
+                          rows={4}
+                          value={heroContent.bookMeta.introText || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, introText: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem', resize: 'vertical' }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Outro Section */}
+                    <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <h4 style={{ margin: 0, color: 'var(--color-gold)', fontSize: '0.9rem' }}>Outro Page</h4>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>Title</label>
+                        <input
+                          type="text"
+                          value={heroContent.bookMeta.outroTitle || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, outroTitle: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>Content Text</label>
+                        <textarea
+                          rows={4}
+                          value={heroContent.bookMeta.outroText || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, outroText: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem', resize: 'vertical' }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* End Cover Section */}
+                    <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <h4 style={{ margin: 0, color: 'var(--color-gold)', fontSize: '0.9rem' }}>Back Cover</h4>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>Title</label>
+                        <input
+                          type="text"
+                          value={heroContent.bookMeta.endTitle || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, endTitle: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>Subtitle</label>
+                        <input
+                          type="text"
+                          value={heroContent.bookMeta.endSubtitle || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, endSubtitle: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: '#aaa', marginBottom: '4px' }}>End Logo URL / Upload</label>
+                        <input
+                          type="text"
+                          value={heroContent.bookMeta.endLogo || ''}
+                          onChange={(e) => setHeroContent({
+                            ...heroContent,
+                            bookMeta: { ...heroContent.bookMeta, endLogo: e.target.value }
+                          })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '4px', color: '#fff', fontSize: '0.8rem', marginBottom: '6px' }}
+                        />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleMetaLogoUpload(e, 'endLogo')}
+                          style={{ fontSize: '0.7rem', color: '#aaa' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+                    <button
+                      onClick={handleSaveHero}
+                      style={{
+                        padding: '10px 20px',
+                        background: 'var(--color-gold)',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '0.85rem',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        boxShadow: '0 4px 15px rgba(197, 168, 128, 0.2)',
+                        transition: 'all 0.25s'
+                      }}
+                    >
+                      <Edit size={14} /> Save Book Metadata
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button
                   onClick={openAddBookPage}
@@ -706,7 +918,7 @@ export default function AdminVastuTips() {
                   <div key={page._id} className="glass-panel" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <div style={{ position: 'relative', width: '100%', height: '180px', overflow: 'hidden', borderRadius: '6px', background: 'rgba(0,0,0,0.2)' }}>
                       <img 
-                        src={page.imageUrl.startsWith('http') ? page.imageUrl : `http://localhost:5000${page.imageUrl.startsWith('/') ? '' : '/'}${page.imageUrl}`} 
+                        src={page.imageUrl.startsWith('http') ? page.imageUrl : (page.imageUrl.startsWith('/uploads') ? `http://localhost:5000${page.imageUrl}` : page.imageUrl)} 
                         alt={page.caption || 'Book page'} 
                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                       />

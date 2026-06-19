@@ -25,10 +25,12 @@ const defaultContactInfo = {
 };
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', service: 'vastu', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', countryCode: '+91', phone: '', service: 'vastu', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [selectedTime, setSelectedTime] = useState(null);
   const [contactInfo, setContactInfo] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/contact-info`)
@@ -40,8 +42,43 @@ export default function Contact() {
   const activeInfo = contactInfo || defaultContactInfo;
   const times = activeInfo.slots || defaultContactInfo.slots;
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Name check
+    if (!form.name || form.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters long.';
+    }
+
+    // Email check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email || !emailRegex.test(form.email.trim())) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+
+    // Phone check
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!form.phone || !phoneRegex.test(form.phone)) {
+      newErrors.phone = 'Phone number must be exactly 10 digits.';
+    }
+
+    // Message check
+    if (!form.message || form.message.trim().length < 15) {
+      newErrors.message = 'Message details must be at least 15 characters long.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg('');
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/contacts`, {
         method: 'POST',
@@ -49,7 +86,11 @@ export default function Contact() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...form,
+          name: form.name.trim(),
+          email: form.email.trim().toLowerCase(),
+          phone: `${form.countryCode} ${form.phone.trim()}`,
+          service: form.service,
+          message: form.message.trim(),
           preferredTime: selectedTime || ''
         }),
       });
@@ -57,11 +98,11 @@ export default function Contact() {
         setSubmitted(true);
       } else {
         const errorData = await res.json();
-        alert(errorData.message || 'Failed to submit booking request.');
+        setErrorMsg(errorData.message || 'Failed to submit booking request.');
       }
     } catch (err) {
       console.error(err);
-      alert('Network error. Failed to submit.');
+      setErrorMsg('Network error. Failed to submit.');
     }
   };
 
@@ -83,76 +124,84 @@ export default function Contact() {
         {/* Contact details */}
         <div className="reveal-stagger" data-stagger-step="100" style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
           
-          <div className="glass-panel reveal-left magnetic-hover" style={{ padding: '30px' }}>
-            <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', marginBottom: '20px', color: 'var(--color-gold)' }}>{activeInfo.location.title}</h3>
-            <ul style={{ display: 'flex', flexDirection: 'column', gap: '20px', listStyle: 'none' }}>
-              <li style={{ display: 'flex', gap: '16px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
-                <MapPin size={24} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
-                <div>
-                  <strong>{activeInfo.location.label}</strong>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '4px' }}>
-                    {activeInfo.location.addressLines.map((line, idx) => (
-                      <React.Fragment key={idx}>
-                        {line}
-                        {idx < activeInfo.location.addressLines.length - 1 && <br />}
-                      </React.Fragment>
-                    ))}
-                  </p>
-                </div>
-              </li>
-              <li style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--text-primary)' }}>
-                <MessageCircle size={20} style={{ color: 'var(--color-indigo)' }} />
-                <div>
-                  <strong>{activeInfo.whatsapp.label}</strong>
-                  <p style={{ marginTop: '2px' }}>
-                    <a 
-                      href={activeInfo.whatsapp.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}
-                      onMouseEnter={(e) => e.target.style.color = 'var(--color-gold)'}
-                      onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
-                    >
-                      {activeInfo.whatsapp.number}
-                    </a>
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
+          {(activeInfo.location?.addressLines?.some(line => line && line.trim()) || activeInfo.whatsapp?.number?.trim()) && (
+            <div className="glass-panel reveal-left magnetic-hover" style={{ padding: '30px' }}>
+              <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', marginBottom: '20px', color: 'var(--color-gold)' }}>{activeInfo.location?.title || 'Our Headquarters'}</h3>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '20px', listStyle: 'none' }}>
+                {activeInfo.location?.addressLines?.some(line => line && line.trim()) && (
+                  <li style={{ display: 'flex', gap: '16px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
+                    <MapPin size={24} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
+                    <div>
+                      {activeInfo.location.label && <strong>{activeInfo.location.label}</strong>}
+                      <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '4px' }}>
+                        {activeInfo.location.addressLines.filter(line => line && line.trim()).map((line, idx, filtered) => (
+                          <React.Fragment key={idx}>
+                            {line}
+                            {idx < filtered.length - 1 && <br />}
+                          </React.Fragment>
+                        ))}
+                      </p>
+                    </div>
+                  </li>
+                )}
+                {activeInfo.whatsapp?.number?.trim() && (
+                  <li style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--text-primary)' }}>
+                    <MessageCircle size={20} style={{ color: 'var(--color-indigo)' }} />
+                    <div>
+                      {activeInfo.whatsapp.label && <strong>{activeInfo.whatsapp.label}</strong>}
+                      <p style={{ marginTop: '2px' }}>
+                        <a 
+                          href={activeInfo.whatsapp.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}
+                          onMouseEnter={(e) => e.target.style.color = 'var(--color-gold)'}
+                          onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
+                        >
+                          {activeInfo.whatsapp.number}
+                        </a>
+                      </p>
+                    </div>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
 
           {/* Time mock */}
-          <div className="glass-panel reveal-left magnetic-hover" style={{ padding: '30px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Clock size={20} style={{ color: 'var(--color-purple)' }} /> Today's Time Slots
-            </h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-              {times.map((time) => (
-                <button
-                  key={time}
-                  onClick={() => setSelectedTime(time)}
-                  style={{
-                    padding: '8px 16px',
-                    borderRadius: '20px',
-                    border: '1px solid',
-                    borderColor: selectedTime === time ? 'var(--color-purple)' : 'var(--border-glass)',
-                    background: selectedTime === time ? 'rgba(59, 130, 246, 0.15)' : 'var(--bg-dark)',
-                    color: selectedTime === time ? 'var(--color-purple)' : 'var(--text-primary)',
-                    cursor: 'pointer',
-                    fontSize: '0.85rem',
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  {time}
-                </button>
-              ))}
+          {times && times.length > 0 && times.some(time => time && time.trim()) && (
+            <div className="glass-panel reveal-left magnetic-hover" style={{ padding: '30px' }}>
+              <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Clock size={20} style={{ color: 'var(--color-purple)' }} /> Today's Time Slots
+              </h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                {times.filter(time => time && time.trim()).map((time) => (
+                  <button
+                    key={time}
+                    onClick={() => setSelectedTime(time)}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '20px',
+                      border: '1px solid',
+                      borderColor: selectedTime === time ? 'var(--color-purple)' : 'var(--border-glass)',
+                      background: selectedTime === time ? 'rgba(59, 130, 246, 0.15)' : 'var(--bg-dark)',
+                      color: selectedTime === time ? 'var(--color-purple)' : 'var(--text-primary)',
+                      cursor: 'pointer',
+                      fontSize: '0.85rem',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    {time}
+                  </button>
+                ))}
+              </div>
+              {selectedTime && (
+                <p style={{ fontSize: '0.85rem', color: 'var(--color-purple)', marginTop: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Check size={14} /> Selected {selectedTime} Slot
+                </p>
+              )}
             </div>
-            {selectedTime && (
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-purple)', marginTop: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Check size={14} /> Selected {selectedTime} Slot
-              </p>
-            )}
-          </div>
+          )}
 
         </div>
 
@@ -173,48 +222,132 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="reveal-stagger" data-stagger-step="60" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', marginBottom: '10px' }} className="reveal">Send Consultation Request</h3>
               
+              {errorMsg && (
+                <div style={{ padding: '12px', borderRadius: '8px', background: 'rgba(255, 77, 77, 0.08)', border: '1px solid rgba(255, 77, 77, 0.2)', color: '#ff4d4d', fontSize: '0.85rem' }}>
+                  {errorMsg}
+                </div>
+              )}
+
               <div className="reveal">
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Full Name</label>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: errors.name ? '#ff4d4d' : 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Full Name</label>
                 <input 
                   type="text" 
                   required 
                   value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }} 
+                  onChange={(e) => {
+                    setForm({ ...form, name: e.target.value });
+                    if (errors.name) setErrors({ ...errors, name: '' });
+                  }}
+                  style={{ 
+                    width: '100%', 
+                    padding: '12px', 
+                    borderRadius: '8px', 
+                    background: 'var(--bg-dark)', 
+                    border: errors.name ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                    color: 'var(--text-primary)', 
+                    fontSize: '0.95rem',
+                    outline: 'none'
+                  }} 
                   placeholder="e.g. Rahul Sharma"
                 />
+                {errors.name && (
+                  <span style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.name}</span>
+                )}
               </div>
 
               <div className="reveal">
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Phone Number</label>
-                <input 
-                  type="tel" 
-                  required 
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }} 
-                  placeholder="+91 99000 00000"
-                />
+                <label style={{ display: 'block', fontSize: '0.8rem', color: errors.phone ? '#ff4d4d' : 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Phone Number</label>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <select
+                    value={form.countryCode}
+                    onChange={(e) => setForm({ ...form, countryCode: e.target.value })}
+                    style={{ 
+                      width: '90px', 
+                      padding: '12px', 
+                      borderRadius: '8px', 
+                      background: 'var(--bg-dark)', 
+                      border: errors.phone ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                      color: 'var(--text-primary)', 
+                      fontSize: '0.95rem',
+                      outline: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value="+91">+91 (IN)</option>
+                    <option value="+1">+1 (US/CA)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+61">+61 (AU)</option>
+                    <option value="+971">+971 (AE)</option>
+                    <option value="+65">+65 (SG)</option>
+                    <option value="+966">+966 (SA)</option>
+                    <option value="+974">+974 (QA)</option>
+                    <option value="+977">+977 (NP)</option>
+                    <option value="+880">+880 (BD)</option>
+                    <option value="+94">+94 (LK)</option>
+                  </select>
+                  <input 
+                    type="tel" 
+                    required 
+                    value={form.phone}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, ''); // restrict to only digits
+                      if (val.length <= 10) {
+                        setForm({ ...form, phone: val });
+                      }
+                      if (errors.phone) setErrors({ ...errors, phone: '' });
+                    }}
+                    maxLength={10}
+                    style={{ 
+                      flex: 1, 
+                      padding: '12px', 
+                      borderRadius: '8px', 
+                      background: 'var(--bg-dark)', 
+                      border: errors.phone ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                      color: 'var(--text-primary)', 
+                      fontSize: '0.95rem',
+                      outline: 'none'
+                    }} 
+                    placeholder="99000 00000"
+                  />
+                </div>
+                {errors.phone && (
+                  <span style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.phone}</span>
+                )}
               </div>
 
               <div className="reveal">
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email Address</label>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: errors.email ? '#ff4d4d' : 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Email Address</label>
                 <input 
                   type="email" 
                   required 
                   value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }} 
+                  onChange={(e) => {
+                    setForm({ ...form, email: e.target.value });
+                    if (errors.email) setErrors({ ...errors, email: '' });
+                  }}
+                  style={{ 
+                    width: '100%', 
+                    padding: '12px', 
+                    borderRadius: '8px', 
+                    background: 'var(--bg-dark)', 
+                    border: errors.email ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                    color: 'var(--text-primary)', 
+                    fontSize: '0.95rem',
+                    outline: 'none'
+                  }} 
                   placeholder="name@email.com"
                 />
+                {errors.email && (
+                  <span style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.email}</span>
+                )}
               </div>
 
               <div className="reveal">
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Consultation Type</label>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Consultation Type</label>
                 <select 
                   value={form.service}
                   onChange={(e) => setForm({ ...form, service: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem' }}
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem', outline: 'none' }}
                 >
                   <option value="vastu">Maha Vastu Consulting</option>
                   <option value="numerology">Numerology & Name Correction</option>
@@ -224,14 +357,31 @@ export default function Contact() {
               </div>
 
               <div className="reveal">
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Message / Details</label>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: errors.message ? '#ff4d4d' : 'var(--color-indigo)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>Message / Details</label>
                 <textarea 
                   rows="4" 
+                  required
                   value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--bg-dark)', border: '1px solid var(--border-glass)', color: 'var(--text-primary)', fontSize: '0.95rem', resize: 'vertical' }} 
+                  onChange={(e) => {
+                    setForm({ ...form, message: e.target.value });
+                    if (errors.message) setErrors({ ...errors, message: '' });
+                  }}
+                  style={{ 
+                    width: '100%', 
+                    padding: '12px', 
+                    borderRadius: '8px', 
+                    background: 'var(--bg-dark)', 
+                    border: errors.message ? '1px solid #ff4d4d' : '1px solid var(--border-glass)', 
+                    color: 'var(--text-primary)', 
+                    fontSize: '0.95rem', 
+                    resize: 'vertical',
+                    outline: 'none'
+                  }} 
                   placeholder="Mention your birth details or Vastu site type..."
                 />
+                {errors.message && (
+                  <span style={{ color: '#ff4d4d', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.message}</span>
+                )}
               </div>
 
               <button type="submit" className="cosmic-button reveal" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}>
