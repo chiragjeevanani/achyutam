@@ -55,6 +55,7 @@ export default function AdminVastuTips() {
   const [eleIconName, setEleIconName] = useState('Sparkles');
   const [eleBenefit, setEleBenefit] = useState('');
   const [eleColors, setEleColors] = useState('');
+  const [eleOrder, setEleOrder] = useState(1);
 
   // Form states for Book Pages
   const [pageImageUrl, setPageImageUrl] = useState('');
@@ -197,7 +198,8 @@ export default function AdminVastuTips() {
         bgCode: eleBgCode,
         iconName: eleIconName,
         benefit: eleBenefit,
-        colors: eleColors
+        colors: eleColors,
+        order: Number(eleOrder) || 1
       };
       await api.put(`/vastu-tips/elements/${editingItem._id}`, payload);
       setModalType(null);
@@ -399,6 +401,7 @@ export default function AdminVastuTips() {
     setEleIconName(el.iconName || 'Sparkles');
     setEleBenefit(el.benefit);
     setEleColors(el.colors);
+    setEleOrder(el.order || 1);
     setModalType('element');
   };
 
@@ -609,7 +612,9 @@ export default function AdminVastuTips() {
                 <div key={el._id} className="glass-panel" style={{ padding: '20px', borderTop: `2px solid ${el.colorHex || 'var(--color-indigo)'}` }}>
                   <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
                     <div>
-                      <h4 style={{ margin: 0, fontSize: '1.05rem', color: el.colorHex }}>{el.name}</h4>
+                      <h4 style={{ margin: 0, fontSize: '1.05rem', color: el.colorHex }}>
+                        {el.name} <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>(Order: {el.order || 1})</span>
+                      </h4>
                       <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{el.zone}</span>
                     </div>
                     <button
@@ -1089,26 +1094,30 @@ export default function AdminVastuTips() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>Color Hex/Var</label>
-                  <input type="text" required value={eleColorHex} onChange={(e) => setEleColorHex(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                   <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>Color Hex/Var</label>
+                   <input type="text" required value={eleColorHex} onChange={(e) => setEleColorHex(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>BG Alpha Color</label>
-                  <input type="text" required value={eleBgCode} onChange={(e) => setEleBgCode(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
+                   <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>BG Alpha Color</label>
+                   <input type="text" required value={eleBgCode} onChange={(e) => setEleBgCode(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>Icon Name</label>
-                  <select value={eleIconName} onChange={(e) => setEleIconName(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>
-                    <option value="Droplets">Droplets</option>
-                    <option value="Zap">Zap</option>
-                    <option value="Mountain">Mountain</option>
-                    <option value="Wind">Wind</option>
-                    <option value="Star">Star</option>
-                    <option value="Leaf">Leaf</option>
-                    <option value="Sun">Sun</option>
-                  </select>
+                   <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>Icon Name</label>
+                   <select value={eleIconName} onChange={(e) => setEleIconName(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}>
+                     <option value="Droplets">Droplets</option>
+                     <option value="Zap">Zap</option>
+                     <option value="Mountain">Mountain</option>
+                     <option value="Wind">Wind</option>
+                     <option value="Star">Star</option>
+                     <option value="Leaf">Leaf</option>
+                     <option value="Sun">Sun</option>
+                   </select>
+                </div>
+                <div>
+                   <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)' }}>Placement Order</label>
+                   <input type="number" required min="1" value={eleOrder} onChange={(e) => setEleOrder(e.target.value)} style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontSize: '0.8rem' }} />
                 </div>
               </div>
 

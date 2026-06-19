@@ -15,7 +15,7 @@ export const getVastuTips = asyncHandler(async (req, res) => {
   const mistakes = await VastuMistake.find({});
   const remedies = await VastuRemedy.find({});
   const seasons = await VastuSeason.find({});
-  const elements = await VastuElement.find({});
+  const elements = await VastuElement.find({}).sort({ order: 1 });
   const bookPages = await VastuBookPage.find({}).sort({ order: 1 });
 
   res.json({
@@ -198,13 +198,13 @@ export const updateSeason = asyncHandler(async (req, res) => {
 
 /* ---------------- ELEMENTS CRUD ---------------- */
 export const getElements = asyncHandler(async (req, res) => {
-  const data = await VastuElement.find({});
+  const data = await VastuElement.find({}).sort({ order: 1 });
   res.json(data);
 });
 
 export const updateElement = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, zone, colorHex, bgCode, iconName, benefit, colors } = req.body;
+  const { name, zone, colorHex, bgCode, iconName, benefit, colors, order } = req.body;
 
   const item = await VastuElement.findById(id);
 
@@ -216,6 +216,7 @@ export const updateElement = asyncHandler(async (req, res) => {
     item.iconName = iconName !== undefined ? iconName : item.iconName;
     item.benefit = benefit !== undefined ? benefit : item.benefit;
     item.colors = colors !== undefined ? colors : item.colors;
+    item.order = order !== undefined ? Number(order) : item.order;
 
     const updated = await item.save();
     res.json(updated);
