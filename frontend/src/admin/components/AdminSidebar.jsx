@@ -23,9 +23,9 @@ export default function AdminSidebar({ theme, toggleTheme }) {
     { name: 'About Us', path: '/admin/cms/about', icon: <Info size={18} /> },
     { name: 'Services', path: '/admin/cms/services', icon: <Sparkles size={18} /> },
     { name: 'Yogadhan', path: '/admin/cms/yogadhan', icon: <Compass size={18} /> },
+    { name: 'Vastu Tips', path: '/admin/cms/vastu-tips', icon: <Compass size={18} /> },
     { name: 'Blogs', path: '/admin/cms/blogs', icon: <BookOpen size={18} /> },
     { name: 'Testimonials', path: '/admin/cms/testimonials', icon: <MessageSquare size={18} /> },
-    { name: 'Vastu Tips', path: '/admin/cms/vastu-tips', icon: <Compass size={18} /> },
     { name: 'Contact Info', path: '/admin/cms/contact-info', icon: <Phone size={18} /> },
   ];
 

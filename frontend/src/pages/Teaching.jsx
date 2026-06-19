@@ -119,8 +119,14 @@ export default function Teaching() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {[
                 { icon: <Compass size={18} style={{ color: 'var(--color-indigo)' }} />, title: 'Advanced Vastu Shastra', desc: 'Go deep into directional alignments, planetary layouts, and remedial corrections without demolition.' },
-                { icon: <BookOpen size={18} style={{ color: 'var(--color-purple)' }} />, title: 'Pyra-Numerology & Sounds', desc: 'Understand the power of grids, phonetic frequencies, and name correction methods.' },
-                { icon: <Shield size={18} style={{ color: 'var(--color-gold)' }} />, title: 'Pedagogical Training', desc: 'Acquire the tools, curriculum, and structure to confidently host your own workshops and courses.' }
+                { icon: <BookOpen size={18} style={{ color: 'var(--color-purple)' }} />, title: 'Numerology & Sounds', desc: 'Understand the power of grids, phonetic frequencies, and name correction methods.' },
+                
+                
+                
+                // { icon: <Shield size={18} style={{ color: 'var(--color-gold)' }} />, title: 'Pedagogical Training', desc: 'Acquire the tools, curriculum, and structure to confidently host your own workshops and courses.' }
+              
+              
+              
               ].map((pill, idx) => (
                 <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                   <div style={{ marginTop: '3px' }}>{pill.icon}</div>
