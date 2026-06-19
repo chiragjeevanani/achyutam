@@ -27,6 +27,9 @@ export default function VastuBook({ pages = [], bookMeta = {} }) {
     if (url.startsWith('/uploads')) {
       return `${API_BASE}${url}`;
     }
+    if (url.startsWith('uploads/')) {
+      return `${API_BASE}/${url}`;
+    }
     return url;
   };
 

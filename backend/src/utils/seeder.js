@@ -725,18 +725,18 @@ const defaultHomeContent = {
 };
 
 const defaultBookPages = [
-  { imageUrl: '/vastu_tips/vastu_page_1.jpeg', caption: 'Vastu Shastra Tips — Page 1', order: 1 },
-  { imageUrl: '/vastu_tips/vastu_page_2.jpeg', caption: 'Vastu Shastra Tips — Page 2', order: 2 },
+  { imageUrl: '/vastu_tips/vastu_page_1.png', caption: 'Vastu Shastra Tips — Page 1', order: 1 },
+  { imageUrl: '/vastu_tips/vastu_page_2.png', caption: 'Vastu Shastra Tips — Page 2', order: 2 },
   { imageUrl: '/vastu_tips/vastu_page_3.jpeg', caption: 'Vastu Shastra Tips — Page 3', order: 3 },
   { imageUrl: '/vastu_tips/vastu_page_4.jpeg', caption: 'Vastu Shastra Tips — Page 4', order: 4 },
-  { imageUrl: '/vastu_tips/vastu_page_5.jpeg', caption: 'Vastu Shastra Tips — Page 5', order: 5 },
-  { imageUrl: '/vastu_tips/vastu_page_6.jpeg', caption: 'Vastu Shastra Tips — Page 6', order: 6 },
-  { imageUrl: '/vastu_tips/vastu_page_7.jpeg', caption: 'Vastu Shastra Tips — Page 7', order: 7 },
-  { imageUrl: '/vastu_tips/vastu_page_8.jpeg', caption: 'Vastu Shastra Tips — Page 8', order: 8 },
-  { imageUrl: '/vastu_tips/vastu_page_9.jpeg', caption: 'Vastu Shastra Tips — Page 9', order: 9 },
-  { imageUrl: '/vastu_tips/vastu_page_10.jpeg', caption: 'Vastu Shastra Tips — Page 10', order: 10 },
-  { imageUrl: '/vastu_tips/vastu_page_11.jpeg', caption: 'Vastu Shastra Tips — Page 11', order: 11 },
-  { imageUrl: '/vastu_tips/vastu_page_12.jpeg', caption: 'Vastu Shastra Tips — Page 12', order: 12 }
+  { imageUrl: '/vastu_tips/vastu_page_5.png', caption: 'Vastu Shastra Tips — Page 5', order: 5 },
+  { imageUrl: '/vastu_tips/vastu_page_6.png', caption: 'Vastu Shastra Tips — Page 6', order: 6 },
+  { imageUrl: '/vastu_tips/vastu_page_7.png', caption: 'Vastu Shastra Tips — Page 7', order: 7 },
+  { imageUrl: '/vastu_tips/vastu_page_8.png', caption: 'Vastu Shastra Tips — Page 8', order: 8 },
+  { imageUrl: '/vastu_tips/vastu_page_9.png', caption: 'Vastu Shastra Tips — Page 9', order: 9 },
+  { imageUrl: '/vastu_tips/vastu_page_10.png', caption: 'Vastu Shastra Tips — Page 10', order: 10 },
+  { imageUrl: '/vastu_tips/vastu_page_11.png', caption: 'Vastu Shastra Tips — Page 11', order: 11 },
+  { imageUrl: '/vastu_tips/vastu_page_12.png', caption: 'Vastu Shastra Tips — Page 12', order: 12 }
 ];
 
 const defaultAboutContent = {
