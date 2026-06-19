@@ -8,18 +8,12 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const checkAdminSession = async () => {
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
     try {
       const { data } = await api.get('/auth/me');
       setAdmin(data);
     } catch (error) {
       console.error('Session validation failed:', error);
-      logout();
+      setAdmin(null);
     } finally {
       setLoading(false);
     }
@@ -32,7 +26,6 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const { data } = await api.post('/auth/login', { username, password });
-      localStorage.setItem('adminToken', data.token);
       setAdmin({ _id: data._id, username: data.username });
       return { success: true };
     } catch (error) {
@@ -43,8 +36,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('adminToken');
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Failed to log out on backend:', error);
+    }
     setAdmin(null);
   };
 

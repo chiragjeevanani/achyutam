@@ -5,14 +5,27 @@ import Admin from '../models/Admin.js';
 export const protect = asyncHandler(async (req, res, next) => {
   let token;
 
-  if (
+  // Extract from cookies first
+  const cookies = req.headers.cookie ? req.headers.cookie.split(';').reduce((acc, c) => {
+    const parts = c.split('=');
+    if (parts[0]) {
+      acc[parts[0].trim()] = parts[1] ? parts[1].trim() : '';
+    }
+    return acc;
+  }, {}) : {};
+
+  if (cookies.adminToken) {
+    token = cookies.adminToken;
+  } else if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
-    try {
-      // Get token from header
-      token = req.headers.authorization.split(' ')[1];
+    // Get token from header
+    token = req.headers.authorization.split(' ')[1];
+  }
 
+  if (token) {
+    try {
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'achyutam_jwt_secret_2026');
 
