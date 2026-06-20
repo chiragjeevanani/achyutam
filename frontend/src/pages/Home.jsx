@@ -72,8 +72,13 @@ export default function Home() {
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/home`)
-      .then(res => res.json())
-      .then(data => setHomeContent(data))
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => {
+        // Only accept a well-formed payload; otherwise keep the defaults
+        if (data && data.methodology && Array.isArray(data.methodology.steps)) {
+          setHomeContent(data);
+        }
+      })
       .catch(err => console.error('Failed to fetch home content:', err));
   }, []);
 
