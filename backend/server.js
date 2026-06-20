@@ -33,9 +33,16 @@ const app = express();
 // Body parser & CORS
 app.use(express.json());
 
-const allowedOrigins = process.env.CLIENT_URL 
-  ? process.env.CLIENT_URL.split(',').map(o => o.trim()) 
-  : ['http://localhost:5173', 'http://localhost:3000'];
+const defaultOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://achyutammaestro.com',
+  'https://www.achyutammaestro.com',
+];
+
+const allowedOrigins = process.env.CLIENT_URL
+  ? [...new Set([...process.env.CLIENT_URL.split(',').map(o => o.trim()), ...defaultOrigins])]
+  : defaultOrigins;
 
 app.use(cors({
   origin: function (origin, callback) {
