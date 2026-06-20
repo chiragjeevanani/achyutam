@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, ChevronLeft, ChevronRight, RotateCcw, Sparkles } from 'lucide-react';
 import './VastuBook.css';
-
-const API_BASE = 'http://localhost:5000';
+import { getImageUrl } from '../utils/image';
 
 export default function VastuBook({ pages = [], bookMeta = {} }) {
   const [activeLeaf, setActiveLeaf] = useState(0);
@@ -20,18 +19,6 @@ export default function VastuBook({ pages = [], bookMeta = {} }) {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const getImageUrl = (url) => {
-    if (!url) return '';
-    if (url.startsWith('http')) return url;
-    if (url.startsWith('/uploads')) {
-      return `${API_BASE}${url}`;
-    }
-    if (url.startsWith('uploads/')) {
-      return `${API_BASE}/${url}`;
-    }
-    return url;
-  };
 
   const meta = {
     coverTitle: bookMeta.coverTitle || 'Vastu Shastra\nTips Book',

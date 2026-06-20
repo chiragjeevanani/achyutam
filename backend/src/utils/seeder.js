@@ -660,7 +660,7 @@ const defaultHomeContent = {
     titleLine1: 'Achyutam Maestro',
     titleLine2: 'Transforming Spaces & Destiny',
     description: 'Unlock peace, wealth, and abundance through logical, scientific Vastu alignments and supportive numerological frequency corrections.',
-    imageUrl: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.29.57-AM-2.jpeg',
+    imageUrl: '/uploads/defaults/hero.png',
     ctaText: 'Book a Consultation',
     compassCtaText: 'Align Your Compass'
   },
@@ -751,7 +751,7 @@ const defaultAboutContent = {
     subtitle: 'Professional Vastu, Numerology & Astrology Consultant',
     desc1: 'I truly believe in the miraculous powers of the nature. The entire universe is there to take care of all our needs and help us to live a healthy and prosperous life. I am a firm believer in the fact that there is something more that meets the eye. Some more powers of the nature, that lie hidden and come forth when no scientific theories can prove their existence.',
     desc2: 'With over 20 years of diversified experience in Aviation, Hospitality, and Information Technology industries with global leaders like Kingfisher Airlines, Cyient Limited, and Alexandria Equities Management Company, I bridge ancient cosmic structures with logical scientific metrics.',
-    imageUrl: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.10.03-AM-1.jpeg'
+    imageUrl: '/uploads/defaults/profile.png'
   },
   doDont: {
     doTitle: 'What I Do',
@@ -776,7 +776,7 @@ const defaultAboutContent = {
     desc3: 'Uppasna is MBA by qualification and thoroughly enjoys her working for social and professional reasons, bridging corporate strategy with elemental cosmic geometry.',
     desc4: 'Her years of learning practice, mentoring, and guiding hundreds of clients through Vastu shifts, balanced numbers, and Astrology remedies make her calculations unparalleled. Her attention to detail has built a legacy of reliance and success.',
     ctaText: 'Book Call with Uppasna Ji',
-    imageUrl: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.10.04-AM.jpeg'
+    imageUrl: '/uploads/defaults/journey.png'
   }
 };
 

@@ -295,6 +295,8 @@ export const updateVastuHero = asyncHandler(async (req, res) => {
     content = new VastuContent(req.body);
   } else {
     Object.assign(content, req.body);
+    content.markModified('hero');
+    content.markModified('bookMeta');
   }
 
   const updatedContent = await content.save();

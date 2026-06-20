@@ -21,6 +21,10 @@ export const updateAboutContent = asyncHandler(async (req, res) => {
     content = new AboutContent(req.body);
   } else {
     Object.assign(content, req.body);
+    content.markModified('header');
+    content.markModified('profile');
+    content.markModified('doDont');
+    content.markModified('journey');
   }
 
   const updatedContent = await content.save();

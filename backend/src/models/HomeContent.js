@@ -7,7 +7,7 @@ const homeContentSchema = new mongoose.Schema(
       titleLine1: { type: String, default: 'Achyutam Maestro' },
       titleLine2: { type: String, default: 'Transforming Spaces & Destiny' },
       description: { type: String, default: 'Unlock peace, wealth, and abundance through logical, scientific Vastu alignments and supportive numerological frequency corrections.' },
-      imageUrl: { type: String, default: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.29.57-AM-2.jpeg' },
+      imageUrl: { type: String, default: '/uploads/defaults/hero.png' },
       ctaText: { type: String, default: 'Book a Consultation' },
       compassCtaText: { type: String, default: 'Align Your Compass' }
     },

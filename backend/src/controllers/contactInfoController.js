@@ -21,6 +21,10 @@ export const updateContactInfo = asyncHandler(async (req, res) => {
     content = new ContactInfo(req.body);
   } else {
     Object.assign(content, req.body);
+    content.markModified('header');
+    content.markModified('location');
+    content.markModified('whatsapp');
+    content.markModified('slots');
   }
 
   const updatedContent = await content.save();

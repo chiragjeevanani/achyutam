@@ -3,6 +3,7 @@ import api from '../../api/axios';
 import { 
   Compass, Home, TriangleAlert, Shield, Calendar, Edit, Trash2, Plus, X, CheckCircle, Sparkles, BookOpen, Upload, RefreshCw
 } from 'lucide-react';
+import { getImageUrl } from '../../../utils/image';
 
 export default function AdminVastuTips() {
   const [activeTab, setActiveTab] = useState('hero');
@@ -851,7 +852,7 @@ export default function AdminVastuTips() {
                   <div key={page._id} className="glass-panel" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <div style={{ position: 'relative', width: '100%', height: '180px', overflow: 'hidden', borderRadius: '6px', background: 'rgba(0,0,0,0.2)' }}>
                       <img 
-                        src={page.imageUrl.startsWith('http') ? page.imageUrl : (page.imageUrl.startsWith('/uploads') ? `http://localhost:5000${page.imageUrl}` : (page.imageUrl.startsWith('uploads/') ? `http://localhost:5000/${page.imageUrl}` : page.imageUrl))} 
+                        src={getImageUrl(page.imageUrl)} 
                         alt={page.caption || 'Book page'} 
                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                       />

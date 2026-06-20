@@ -21,6 +21,10 @@ export const updateYogadhanContent = asyncHandler(async (req, res) => {
     content = new YogadhanContent(req.body);
   } else {
     Object.assign(content, req.body);
+    content.markModified('hero');
+    content.markModified('split');
+    content.markModified('pillars');
+    content.markModified('cta');
   }
 
   const updatedContent = await content.save();

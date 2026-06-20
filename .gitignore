@@ -38,3 +38,4 @@ build/
 # Uploads and temporary assets
 uploads/
 backend/uploads/
+!backend/uploads/defaults/

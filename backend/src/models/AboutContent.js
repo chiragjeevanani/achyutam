@@ -13,7 +13,7 @@ const aboutContentSchema = new mongoose.Schema(
       subtitle: { type: String, default: 'Professional Vastu, Numerology & Astrology Consultant' },
       desc1: { type: String, default: 'I truly believe in the miraculous powers of the nature. The entire universe is there to take care of all our needs and help us to live a healthy and prosperous life. I am a firm believer in the fact that there is something more that meets the eye. Some more powers of the nature, that lie hidden and come forth when no scientific theories can prove their existence.' },
       desc2: { type: String, default: 'With over 20 years of diversified experience in Aviation, Hospitality, and Information Technology industries with global leaders like Kingfisher Airlines, Cyient Limited, and Alexandria Equities Management Company, I bridge ancient cosmic structures with logical scientific metrics.' },
-      imageUrl: { type: String, default: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.10.03-AM-1.jpeg' }
+      imageUrl: { type: String, default: '/uploads/defaults/profile.png' }
     },
     doDont: {
       doTitle: { type: String, default: 'What I Do' },
@@ -40,7 +40,7 @@ const aboutContentSchema = new mongoose.Schema(
       desc3: { type: String, default: 'Uppasna is MBA by qualification and thoroughly enjoys her working for social and professional reasons, bridging corporate strategy with elemental cosmic geometry.' },
       desc4: { type: String, default: 'Her years of learning practice, mentoring, and guiding hundreds of clients through Vastu shifts, balanced numbers, and Astrology remedies make her calculations unparalleled. Her attention to detail has built a legacy of reliance and success.' },
       ctaText: { type: String, default: 'Book Call with Uppasna Ji' },
-      imageUrl: { type: String, default: 'https://achyutammaestro.com/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-28-at-11.10.04-AM.jpeg' }
+      imageUrl: { type: String, default: '/uploads/defaults/journey.png' }
     }
   },
   {

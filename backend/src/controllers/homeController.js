@@ -22,6 +22,12 @@ export const updateHomeContent = asyncHandler(async (req, res) => {
   } else {
     // Update the values with incoming request body
     Object.assign(content, req.body);
+    content.markModified('hero');
+    content.markModified('compass');
+    content.markModified('methodology');
+    content.markModified('whyUs');
+    content.markModified('testimonialSpotlight');
+    content.markModified('ctaSection');
   }
 
   const updatedContent = await content.save();
