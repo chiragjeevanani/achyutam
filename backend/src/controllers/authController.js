@@ -21,13 +21,14 @@ export const loginAdmin = asyncHandler(async (req, res) => {
     res.cookie('adminToken', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     res.json({
       _id: admin._id,
       username: admin.username,
+      token,
     });
   } else {
     res.status(401);
@@ -46,7 +47,7 @@ export const logoutAdmin = asyncHandler(async (req, res) => {
     httpOnly: true,
     expires: new Date(0),
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   });
   res.json({ success: true, message: 'Logged out successfully' });
 });
