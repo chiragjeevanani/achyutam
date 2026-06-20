@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import Razorpay from 'razorpay';
 import Booking from '../models/Booking.js';
 import Payment from '../models/Payment.js';
-import { sendBookingConfirmation } from '../utils/emailService.js';
+import { sendBookingEmails } from '../utils/emailService.js';
 
 // Initialize Razorpay
 // Note: If keys are missing, we log a warning but don't crash, allowing simulation or configuration later.
@@ -128,8 +128,8 @@ export const verifyRazorpaySignature = asyncHandler(async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // Trigger confirmation email
-    await sendBookingConfirmation(booking);
+    // Trigger confirmation emails (customer + admin)
+    await sendBookingEmails(booking);
 
     res.json({ status: 'success', message: 'Simulated payment verified' });
     return;
@@ -158,8 +158,8 @@ export const verifyRazorpaySignature = asyncHandler(async (req, res) => {
       { upsert: true }
     );
 
-    // 3. Send email confirmation
-    await sendBookingConfirmation(booking);
+    // 3. Send email confirmations (customer + admin)
+    await sendBookingEmails(booking);
 
     res.json({ status: 'success', message: 'Payment verified successfully' });
   } else {

@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Booking from '../models/Booking.js';
-import { sendBookingConfirmation } from '../utils/emailService.js';
+import { sendBookingEmails } from '../utils/emailService.js';
 
 // @desc    Get all bookings (paginated, filterable)
 // @route   GET /api/v1/bookings
@@ -87,9 +87,10 @@ export const createBooking = asyncHandler(async (req, res) => {
 
   const createdBooking = await booking.save();
 
-  // If the booking is created as paid directly (e.g. simulation or already processed), send email
+  // If the booking is created as paid directly (e.g. simulation or already processed),
+  // notify both the customer and the admin.
   if (createdBooking.paymentStatus === 'paid') {
-    await sendBookingConfirmation(createdBooking);
+    await sendBookingEmails(createdBooking);
   }
 
   res.status(201).json(createdBooking);
