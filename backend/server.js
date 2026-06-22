@@ -57,9 +57,13 @@ app.use(cors({
   credentials: true,
 }));
 
-// Static folders
+// Static folders — serve uploaded images with long-lived cache headers
 const __dirname = path.resolve();
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+app.use('/uploads', (req, res, next) => {
+  // Images & uploads are content-addressed by name; cache aggressively
+  res.setHeader('Cache-Control', 'public, max-age=2592000, immutable'); // 30 days
+  next();
+}, express.static(path.join(__dirname, '/uploads')));
 
 // Basic route
 app.get('/', (req, res) => {

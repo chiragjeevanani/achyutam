@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Compass, Sparkles, Sun, Star, Award, ShieldAlert, Heart, Calendar } from 'lucide-react';
+import { usePageContent } from '../hooks/usePageContent';
 
 const iconMapper = {
   Compass: <Compass size={24} style={{ color: 'var(--color-indigo)' }} />,
@@ -59,7 +60,8 @@ const defaultYogadhanContent = {
 
 export default function Yogadhan() {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
-  const [yogadhanContent, setYogadhanContent] = useState(null);
+
+  const { content: activeContent, loading } = usePageContent('/yogadhan', defaultYogadhanContent);
 
   useEffect(() => {
     const handleThemeChange = (e) => {
@@ -69,19 +71,29 @@ export default function Yogadhan() {
     return () => window.removeEventListener('themeChanged', handleThemeChange);
   }, []);
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/yogadhan`)
-      .then(res => res.json())
-      .then(data => setYogadhanContent(data))
-      .catch(err => console.error('Failed to fetch yogadhan content:', err));
-  }, []);
-
-  const activeContent = yogadhanContent || defaultYogadhanContent;
-
   const pillars = activeContent.pillars.map(p => ({
     ...p,
     icon: iconMapper[p.iconName] || <Compass size={24} style={{ color: p.color }} />
   }));
+
+  if (loading) {
+    return (
+      <div style={{ padding: '45px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>
+        <style>{`
+          @keyframes shimmer { 0%{background-position:-800px 0} 100%{background-position:800px 0} }
+          .skel{border-radius:8px;background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 75%);background-size:800px 100%;animation:shimmer 1.4s infinite linear;}
+        `}</style>
+        <div className="skel" style={{ height: '28px', width: '200px', margin: '0 auto 20px' }} />
+        <div className="skel" style={{ height: '48px', width: '55%', margin: '0 auto 16px' }} />
+        <div className="skel" style={{ height: '80px', width: '70%', margin: '0 auto 40px' }} />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', marginTop: '40px' }}>
+          <div className="skel" style={{ height: '180px', borderRadius: '16px' }} />
+          <div className="skel" style={{ height: '180px', borderRadius: '16px' }} />
+          <div className="skel" style={{ height: '180px', borderRadius: '16px' }} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '45px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>

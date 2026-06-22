@@ -9,6 +9,7 @@ export const getYogadhanContent = asyncHandler(async (req, res) => {
   if (!content) {
     content = await YogadhanContent.create({});
   }
+  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
   res.json(content);
 });
 

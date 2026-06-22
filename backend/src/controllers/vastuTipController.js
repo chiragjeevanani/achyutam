@@ -18,6 +18,7 @@ export const getVastuTips = asyncHandler(async (req, res) => {
   const elements = await VastuElement.find({}).sort({ order: 1 });
   const bookPages = await VastuBookPage.find({}).sort({ order: 1 });
 
+  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
   res.json({
     directions,
     mistakes,
@@ -283,6 +284,7 @@ export const getVastuHero = asyncHandler(async (req, res) => {
   if (!content) {
     content = await VastuContent.create({});
   }
+  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
   res.json(content);
 });
 

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, ShieldAlert, Award, Compass, Sparkles, Star, Check } from 'lucide-react';
 import { getImageUrl } from '../utils/image';
+import { usePageContent } from '../hooks/usePageContent';
 
 const defaultAboutContent = {
   header: {
@@ -45,16 +46,30 @@ const defaultAboutContent = {
 };
 
 export default function About() {
-  const [aboutContent, setAboutContent] = useState(null);
+  const { content: activeContent, loading } = usePageContent('/about', defaultAboutContent);
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/about`)
-      .then(res => res.json())
-      .then(data => setAboutContent(data))
-      .catch(err => console.error('Failed to fetch about content:', err));
-  }, []);
-
-  const activeContent = aboutContent || defaultAboutContent;
+  if (loading) {
+    return (
+      <div style={{ padding: '45px 20px 60px', maxWidth: '1200px', margin: '0 auto' }}>
+        <style>{`
+          @keyframes shimmer { 0%{background-position:-800px 0} 100%{background-position:800px 0} }
+          .skel{border-radius:8px;background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 75%);background-size:800px 100%;animation:shimmer 1.4s infinite linear;}
+        `}</style>
+        <div className="skel" style={{ height: '30px', width: '220px', margin: '0 auto 20px' }} />
+        <div className="skel" style={{ height: '48px', width: '60%', margin: '0 auto 16px' }} />
+        <div className="skel" style={{ height: '80px', width: '70%', margin: '0 auto 40px' }} />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
+          <div className="skel" style={{ height: '420px', borderRadius: '16px' }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="skel" style={{ height: '24px', width: '60%' }} />
+            <div className="skel" style={{ height: '32px', width: '80%' }} />
+            <div className="skel" style={{ height: '100px' }} />
+            <div className="skel" style={{ height: '100px' }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '45px 20px 60px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -76,6 +91,9 @@ export default function About() {
             <img 
               src={getImageUrl(activeContent.profile.imageUrl)} 
               alt="Uppasna Keshwani Profile" 
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               style={{ width: '100%', borderRadius: '12px', height: '420px', objectFit: 'cover' }}
             />
           </div>
@@ -157,6 +175,8 @@ export default function About() {
             <img 
               src={getImageUrl(activeContent.journey.imageUrl)} 
               alt="Uppasna Keshwani - My Journey" 
+              loading="lazy"
+              decoding="async"
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>

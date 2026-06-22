@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Sun, Star, Award, Compass, ChevronRight, Check, AlertCircle, Quote } from 'lucide-react';
 import { getImageUrl } from '../utils/image';
+import { usePageContent } from '../hooks/usePageContent';
 
 const iconMapper = {
   Compass: <Compass size={22} />,
@@ -69,21 +70,12 @@ const defaultHomeContent = {
 export default function Home() {
   const [compassAngle, setCompassAngle] = useState(0);
   const [calibrated, setCalibrated] = useState(false);
-  const [homeContent, setHomeContent] = useState(null);
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/home`)
-      .then(res => (res.ok ? res.json() : null))
-      .then(data => {
-        // Only accept a well-formed payload; otherwise keep the defaults
-        if (data && data.methodology && Array.isArray(data.methodology.steps)) {
-          setHomeContent(data);
-        }
-      })
-      .catch(err => console.error('Failed to fetch home content:', err));
-  }, []);
-
-  const activeContent = homeContent || defaultHomeContent;
+  const { content: activeContent, loading } = usePageContent(
+    '/home',
+    defaultHomeContent,
+    (data) => !!(data && data.methodology && Array.isArray(data.methodology.steps))
+  );
 
 
   const vastuDirections = [
@@ -432,6 +424,40 @@ export default function Home() {
     ));
   };
 
+  // Skeleton shimmer while content loads — prevents default content flash
+  if (loading) {
+    return (
+      <div style={{ padding: '45px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>
+        <style>{`
+          @keyframes shimmer {
+            0% { background-position: -800px 0; }
+            100% { background-position: 800px 0; }
+          }
+          .skel {
+            border-radius: 8px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%);
+            background-size: 800px 100%;
+            animation: shimmer 1.4s infinite linear;
+          }
+        `}</style>
+        {/* Hero skeleton */}
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'center', minHeight: '80vh', padding: '0 0 40px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="skel" style={{ height: '28px', width: '200px' }} />
+            <div className="skel" style={{ height: '60px', width: '90%' }} />
+            <div className="skel" style={{ height: '60px', width: '75%' }} />
+            <div className="skel" style={{ height: '80px', width: '100%' }} />
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <div className="skel" style={{ height: '48px', width: '180px' }} />
+              <div className="skel" style={{ height: '48px', width: '160px' }} />
+            </div>
+          </div>
+          <div className="skel" style={{ height: '504px', borderRadius: '16px' }} />
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div style={{ padding: '45px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>
       
@@ -470,6 +496,9 @@ export default function Home() {
             <img 
               src={getImageUrl(activeContent.hero.imageUrl)} 
               alt="Achyutam Maestro Hero" 
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               style={{ width: '100%', borderRadius: '12px', objectFit: 'cover', height: '480px' }}
             />
           </div>

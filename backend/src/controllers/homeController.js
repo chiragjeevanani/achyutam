@@ -9,6 +9,8 @@ export const getHomeContent = asyncHandler(async (req, res) => {
   if (!content) {
     content = await HomeContent.create({});
   }
+  // Allow browsers/CDN to cache for 60s and serve stale for up to 10 min while revalidating
+  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
   res.json(content);
 });
 

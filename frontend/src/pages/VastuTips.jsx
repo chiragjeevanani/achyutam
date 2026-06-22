@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import VastuBook from '../components/VastuBook';
 import {
@@ -400,28 +400,47 @@ export default function VastuTips() {
   const [selectedDirection, setSelectedDirection] = useState('NE');
   const [activeSeason, setActiveSeason] = useState(0);
   const [expandedMistake, setExpandedMistake] = useState(null);
+
+  // Unified data state
   const [bookPages, setBookPages] = useState([]);
   const [heroContent, setHeroContent] = useState(null);
   const [dbElements, setDbElements] = useState([]);
   const [dbDirections, setDbDirections] = useState([]);
   const [dbSeasons, setDbSeasons] = useState([]);
 
+  // Single loading gate — true until BOTH requests resolve
+  const [loading, setLoading] = useState(true);
+  const abortRef = useRef(null);
+
   useEffect(() => {
-    // Fetch aggregate public data
-    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/vastu-tips`)
-      .then(res => res.json())
+    if (abortRef.current) abortRef.current.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+    const signal = controller.signal;
+    const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
+
+    const fetchAggregate = fetch(`${apiBase}/vastu-tips`, { signal, cache: 'default' })
+      .then(res => { if (!res.ok) throw new Error(); return res.json(); })
       .then(data => {
+        if (signal.aborted) return;
         if (data.bookPages && Array.isArray(data.bookPages)) setBookPages(data.bookPages);
         if (data.elements && Array.isArray(data.elements)) setDbElements(data.elements);
         if (data.directions && Array.isArray(data.directions)) setDbDirections(data.directions);
         if (data.seasons && Array.isArray(data.seasons)) setDbSeasons(data.seasons);
       })
-      .catch((err) => console.error('Failed to fetch aggregate vastu tips:', err));
+      .catch(err => { if (err.name !== 'AbortError') console.error('Failed to fetch vastu tips:', err); });
 
-    fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/vastu-tips/hero`)
-      .then(res => res.json())
-      .then(data => setHeroContent(data))
+    const fetchHero = fetch(`${apiBase}/vastu-tips/hero`, { signal, cache: 'default' })
+      .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+      .then(data => { if (!signal.aborted) setHeroContent(data); })
       .catch(() => {});
+
+    // Turn off skeleton only after both requests finish (success or fail)
+    Promise.allSettled([fetchAggregate, fetchHero]).then(() => {
+      if (!signal.aborted) setLoading(false);
+    });
+
+    return () => controller.abort();
   }, []);
 
   const defaultHero = {
@@ -473,6 +492,65 @@ export default function VastuTips() {
     benefit: el.benefit,
     colors: el.colors
   })) : elements;
+
+  // Skeleton screen — prevents default content from ever flashing
+  if (loading) {
+    return (
+      <div style={{ padding: '45px 20px 60px', maxWidth: '1240px', margin: '0 auto' }}>
+        <style>{`
+          @keyframes shimmer { 0%{background-position:-800px 0} 100%{background-position:800px 0} }
+          .skel{
+            border-radius: 8px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%);
+            background-size: 800px 100%;
+            animation: shimmer 1.4s infinite linear;
+          }
+        `}</style>
+
+        {/* Hero skeleton */}
+        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+          <div className="skel" style={{ height: '26px', width: '260px', margin: '0 auto 20px' }} />
+          <div className="skel" style={{ height: '56px', width: '55%', margin: '0 auto 16px' }} />
+          <div className="skel" style={{ height: '70px', width: '70%', margin: '0 auto 28px' }} />
+          {/* Nav tabs */}
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            {[140, 110, 120, 145, 120].map((w, i) => (
+              <div key={i} className="skel" style={{ height: '34px', width: `${w}px`, borderRadius: '20px' }} />
+            ))}
+          </div>
+        </div>
+
+        {/* Book pages skeleton */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', marginBottom: '80px' }}>
+          {[1, 2, 3].map(i => (
+            <div key={i} className="skel" style={{ height: '320px', borderRadius: '12px' }} />
+          ))}
+        </div>
+
+        {/* Compass section skeleton */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '50px', marginBottom: '80px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+            <div className="skel" style={{ width: '300px', height: '300px', borderRadius: '50%' }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="skel" style={{ height: '32px', width: '60%' }} />
+            <div className="skel" style={{ height: '120px' }} />
+            <div className="skel" style={{ height: '80px' }} />
+          </div>
+        </div>
+
+        {/* Elements section skeleton */}
+        <div style={{ marginBottom: '80px' }}>
+          <div className="skel" style={{ height: '40px', width: '40%', margin: '0 auto 40px' }} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '18px' }}>
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} className="skel" style={{ height: '200px', borderRadius: '12px' }} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '45px 20px 60px', maxWidth: '1240px', margin: '0 auto' }}>

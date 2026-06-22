@@ -325,6 +325,8 @@ export default function Services() {
             <img 
               src={service.img} 
               alt={service.title} 
+              loading="lazy"
+              decoding="async"
               style={{ 
                 width: '100%', 
                 height: '100%', 

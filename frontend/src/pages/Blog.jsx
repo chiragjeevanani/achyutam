@@ -187,6 +187,8 @@ export default function Blog() {
                 <img 
                   src={selectedPost.img} 
                   alt={selectedPost.title} 
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }}
                 />
               </div>
@@ -228,7 +230,7 @@ export default function Blog() {
               >
                 {/* Image Wrap */}
                 <div className="sleek-card-img-wrap" style={{ height: '220px' }}>
-                  <img src={post.img} alt={post.title} />
+                  <img src={post.img} alt={post.title} loading="lazy" decoding="async" />
                   <div className="sleek-card-overlay"></div>
                   
                   {/* Category floating badge */}
