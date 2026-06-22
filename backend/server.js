@@ -71,6 +71,22 @@ app.use('/uploads', (req, res, next) => {
   next();
 }, express.static(uploadDir));
 
+// Middleware to disable caching for admin requests (identified by auth header or admin query param)
+app.use((req, res, next) => {
+  const isAdmin = req.headers.authorization || req.query.admin === 'true';
+  if (isAdmin) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    const originalSetHeader = res.setHeader;
+    res.setHeader = function (name, value) {
+      if (name.toLowerCase() === 'cache-control') {
+        return originalSetHeader.call(this, name, 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      }
+      return originalSetHeader.call(this, name, value);
+    };
+  }
+  next();
+});
+
 // Basic route
 app.get('/', (req, res) => {
   res.json({ message: 'Achyutam Maestro API is running...' });
