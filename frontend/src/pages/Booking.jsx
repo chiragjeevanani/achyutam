@@ -181,7 +181,12 @@ export default function Booking() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === 'phone') {
+      const numericValue = value.replace(/\D/g, '').slice(0, 10);
+      setFormData({ ...formData, [name]: numericValue });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   // Helper to dynamically load Razorpay script
@@ -843,10 +848,10 @@ export default function Booking() {
                 <ChevronLeft size={16} /> Back
               </button>
                <button
-                disabled={!formData.name || !formData.email || !formData.phone}
+                disabled={!(formData.name?.trim() && formData.email?.includes('@') && formData.phone?.length === 10)}
                 onClick={triggerRazorpayCheckout}
                 className={selectedService?.price === 0 ? "cosmic-button" : "gold-button"}
-                style={{ opacity: formData.name && formData.email && formData.phone ? 1 : 0.5 }}
+                style={{ opacity: (formData.name?.trim() && formData.email?.includes('@') && formData.phone?.length === 10) ? 1 : 0.5 }}
               >
                 {selectedService?.price === 0 ? "Confirm Free Booking" : "Secure Razorpay Checkout"} <ArrowRight size={16} />
               </button>
