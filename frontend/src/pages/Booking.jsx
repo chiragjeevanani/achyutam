@@ -896,8 +896,16 @@ export default function Booking() {
             }}>
               
               {/* Receipt Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(217, 125, 100, 0.15)', paddingBottom: '15px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                borderBottom: '1px solid rgba(217, 125, 100, 0.15)', 
+                paddingBottom: '15px',
+                flexWrap: 'wrap',
+                gap: '15px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '1 1 auto', minWidth: '220px' }}>
                   <img 
                     src={theme === 'dark' ? '/achyutamlogodark.png' : '/achyutamlogo.png'} 
                     alt="Logo" 
@@ -908,9 +916,9 @@ export default function Booking() {
                     <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', letterSpacing: '0.05em' }}>VASTU, ASTROLOGY & NUMEROLOGY</span>
                   </div>
                 </div>
-                <div style={{ textAlign: 'right' }}>
+                <div style={{ textAlign: 'right', flex: '1 1 auto', minWidth: '140px', wordBreak: 'break-all', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
                   <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>TRANSACTION ID</span>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 'bold', fontFamily: 'monospace', color: 'var(--color-gold)' }}>{transactionId}</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 'bold', fontFamily: 'monospace', color: 'var(--color-gold)', wordBreak: 'break-all', textAlign: 'right' }}>{transactionId}</span>
                 </div>
               </div>
 
