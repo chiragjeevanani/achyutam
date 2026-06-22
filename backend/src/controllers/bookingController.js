@@ -29,9 +29,19 @@ export const getBookings = asyncHandler(async (req, res) => {
     ? { 'service.title': req.query.serviceTitle }
     : {};
 
+  const sortBy = req.query.sortBy || 'appointmentDate';
+  const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+
+  let sortOption = {};
+  if (sortBy === 'createdAt') {
+    sortOption = { createdAt: sortOrder };
+  } else {
+    sortOption = { appointmentDate: sortOrder, createdAt: -1 };
+  }
+
   const count = await Booking.countDocuments({ ...keyword, ...paymentStatus, ...serviceTitle });
   const bookings = await Booking.find({ ...keyword, ...paymentStatus, ...serviceTitle })
-    .sort({ appointmentDate: -1, createdAt: -1 })
+    .sort(sortOption)
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 

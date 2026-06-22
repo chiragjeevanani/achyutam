@@ -11,6 +11,7 @@ export default function AdminBookings() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [serviceFilter, setServiceFilter] = useState('');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -30,6 +31,8 @@ export default function AdminBookings() {
       const params = {
         pageNumber: page,
         keyword: search,
+        sortBy: 'appointmentDate',
+        sortOrder: sortOrder,
       };
       if (statusFilter) {
         params.paymentStatus = statusFilter;
@@ -53,7 +56,7 @@ export default function AdminBookings() {
 
   useEffect(() => {
     fetchBookings();
-  }, [page, statusFilter, serviceFilter]);
+  }, [page, statusFilter, serviceFilter, sortOrder]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -189,6 +192,31 @@ export default function AdminBookings() {
                   {s.title}
                 </option>
               ))}
+            </select>
+          </div>
+
+          {/* Sort Filter */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Sort by Date:</span>
+            <select
+              value={sortOrder}
+              onChange={(e) => {
+                setSortOrder(e.target.value);
+                setPage(1);
+              }}
+              style={{
+                padding: '10px 16px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid var(--border-glass)',
+                borderRadius: '8px',
+                color: '#fff',
+                outline: 'none',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              <option value="desc">Newest First</option>
+              <option value="asc">Oldest First</option>
             </select>
           </div>
         </div>

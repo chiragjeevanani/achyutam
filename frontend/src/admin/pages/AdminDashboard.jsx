@@ -22,8 +22,10 @@ export default function AdminDashboard() {
     try {
       setRefreshing(true);
       
-      // Fetch bookings (first page)
-      const { data: bookingsData } = await api.get('/bookings');
+      // Fetch bookings (first page, sorted by latest booking first)
+      const { data: bookingsData } = await api.get('/bookings', {
+        params: { sortBy: 'createdAt', sortOrder: 'desc' }
+      });
       // Fetch contacts
       const { data: contactsData } = await api.get('/contacts');
       // Fetch payments
