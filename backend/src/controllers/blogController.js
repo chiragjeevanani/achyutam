@@ -8,6 +8,7 @@ export const getBlogs = asyncHandler(async (req, res) => {
   const isAdmin = req.query.admin === 'true';
   const query = isAdmin ? {} : { isPublished: true };
   const blogs = await Blog.find(query).sort({ createdAt: -1 });
+  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
   res.json(blogs);
 });
 
@@ -17,6 +18,7 @@ export const getBlogs = asyncHandler(async (req, res) => {
 export const getBlogById = asyncHandler(async (req, res) => {
   const blog = await Blog.findById(req.params.id);
   if (blog) {
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
     res.json(blog);
   } else {
     res.status(404);

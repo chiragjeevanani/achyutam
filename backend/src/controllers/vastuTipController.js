@@ -11,12 +11,14 @@ import VastuContent from '../models/VastuContent.js';
 // @route   GET /api/v1/vastu-tips
 // @access  Public
 export const getVastuTips = asyncHandler(async (req, res) => {
-  const directions = await VastuDirection.find({});
-  const mistakes = await VastuMistake.find({});
-  const remedies = await VastuRemedy.find({});
-  const seasons = await VastuSeason.find({});
-  const elements = await VastuElement.find({}).sort({ order: 1 });
-  const bookPages = await VastuBookPage.find({}).sort({ order: 1 });
+  const [directions, mistakes, remedies, seasons, elements, bookPages] = await Promise.all([
+    VastuDirection.find({}),
+    VastuMistake.find({}),
+    VastuRemedy.find({}),
+    VastuSeason.find({}),
+    VastuElement.find({}).sort({ order: 1 }),
+    VastuBookPage.find({}).sort({ order: 1 }),
+  ]);
 
   res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
   res.json({

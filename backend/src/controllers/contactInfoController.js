@@ -9,6 +9,7 @@ export const getContactInfo = asyncHandler(async (req, res) => {
   if (!content) {
     content = await ContactInfo.create({});
   }
+  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
   res.json(content);
 });
 

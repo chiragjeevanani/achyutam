@@ -8,6 +8,7 @@ export const getServices = asyncHandler(async (req, res) => {
   const isAdmin = req.query.admin === 'true'; // simple query check for admin previewing inactive items
   const query = isAdmin ? {} : { isActive: true };
   const services = await Service.find(query).sort({ order: 1 });
+  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
   res.json(services);
 });
 
@@ -17,6 +18,7 @@ export const getServices = asyncHandler(async (req, res) => {
 export const getServiceById = asyncHandler(async (req, res) => {
   const service = await Service.findById(req.params.id);
   if (service) {
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
     res.json(service);
   } else {
     res.status(404);

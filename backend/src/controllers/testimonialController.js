@@ -8,6 +8,7 @@ export const getTestimonials = asyncHandler(async (req, res) => {
   const isAdmin = req.query.admin === 'true';
   const query = isAdmin ? {} : { isVisible: true };
   const testimonials = await Testimonial.find(query).sort({ order: 1, createdAt: -1 });
+  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=600');
   res.json(testimonials);
 });
 
