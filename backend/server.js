@@ -59,11 +59,17 @@ app.use(cors({
 
 // Static folders — serve uploaded images with long-lived cache headers
 const __dirname = path.resolve();
+
+// Serve default assets from repository path
+app.use('/uploads/defaults', express.static(path.join(__dirname, '/uploads/defaults')));
+
+// Serve dynamically uploaded assets from persistent uploadDir
+const uploadDir = process.env.UPLOAD_DIR || path.resolve(__dirname, '../../achyutam_uploads');
 app.use('/uploads', (req, res, next) => {
   // Images & uploads are content-addressed by name; cache aggressively
   res.setHeader('Cache-Control', 'public, max-age=2592000, immutable'); // 30 days
   next();
-}, express.static(path.join(__dirname, '/uploads')));
+}, express.static(uploadDir));
 
 // Basic route
 app.get('/', (req, res) => {
