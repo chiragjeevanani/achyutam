@@ -78,9 +78,11 @@ export default function AdminServices() {
     setList(s.list?.length ? s.list : ['']);
     setIsActive(s.isActive);
     setOrder(s.order || 0);
-    setActiveDays(s.availability?.activeDays?.length ? s.availability.activeDays : ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
+    setActiveDays(s.availability?.activeDays?.length ? s.availability.activeDays : ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
     setSlots(s.availability?.slots?.length ? s.availability.slots : [
-      { label: 'Morning slots', times: [] }
+      { label: 'Morning slots', times: ['10:00 AM', '11:15 AM', '11:30 AM'] },
+      { label: 'Afternoon slots', times: ['02:00 PM', '03:15 PM', '04:30 PM'] },
+      { label: 'Evening slots', times: ['05:45 PM', '06:00 PM', '07:15 PM'] }
     ]);
     setModalOpen(true);
   };

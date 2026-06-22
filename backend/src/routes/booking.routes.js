@@ -4,10 +4,14 @@ import {
   getBookingById,
   createBooking,
   deleteBooking,
+  getBookedSlots,
 } from '../controllers/bookingController.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
+
+router.route('/booked-slots')
+  .get(getBookedSlots);
 
 router.route('/')
   .get(protect, getBookings)

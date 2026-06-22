@@ -73,6 +73,28 @@ export const createBooking = asyncHandler(async (req, res) => {
     throw new Error('Please fill in all required fields (service, appointmentDate, timeSlot, customer details)');
   }
 
+  // Validate that slot is not already booked
+  const queryDate = new Date(appointmentDate);
+  const startOfDay = new Date(queryDate);
+  startOfDay.setUTCHours(0, 0, 0, 0);
+  const endOfDay = new Date(queryDate);
+  endOfDay.setUTCHours(23, 59, 59, 999);
+
+  const existingBooking = await Booking.findOne({
+    'service.id': service.id,
+    appointmentDate: {
+      $gte: startOfDay,
+      $lte: endOfDay
+    },
+    timeSlot,
+    paymentStatus: 'paid'
+  });
+
+  if (existingBooking) {
+    res.status(400);
+    throw new Error('This time slot is already booked for this service.');
+  }
+
   const booking = new Booking({
     service,
     appointmentDate,
@@ -94,6 +116,36 @@ export const createBooking = asyncHandler(async (req, res) => {
   }
 
   res.status(201).json(createdBooking);
+});
+
+// @desc    Get booked slots for a service on a specific date (public)
+// @route   GET /api/v1/bookings/booked-slots
+// @access  Public
+export const getBookedSlots = asyncHandler(async (req, res) => {
+  const { serviceId, date } = req.query;
+
+  if (!serviceId || !date) {
+    res.status(400);
+    throw new Error('serviceId and date query parameters are required');
+  }
+
+  const queryDate = new Date(date);
+  const startOfDay = new Date(queryDate);
+  startOfDay.setUTCHours(0, 0, 0, 0);
+  const endOfDay = new Date(queryDate);
+  endOfDay.setUTCHours(23, 59, 59, 999);
+
+  const bookings = await Booking.find({
+    'service.id': serviceId,
+    appointmentDate: {
+      $gte: startOfDay,
+      $lte: endOfDay
+    },
+    paymentStatus: 'paid'
+  });
+
+  const bookedSlots = bookings.map(b => b.timeSlot);
+  res.json(bookedSlots);
 });
 
 // @desc    Delete booking

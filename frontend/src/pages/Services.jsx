@@ -18,7 +18,15 @@ export const defaultServices = [
       'School & College Vastu: Concentration & academic growth',
       'Hotel & Hospital Vastu: Fast healing & guest comfort'
     ],
-    category: 'Vastu Shastra'
+    category: 'Vastu Shastra',
+    availability: {
+      activeDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      slots: [
+        { label: 'Morning slots', times: ['10:00 AM', '11:15 AM', '11:30 AM'] },
+        { label: 'Afternoon slots', times: ['02:00 PM', '03:15 PM', '04:30 PM'] },
+        { label: 'Evening slots', times: ['05:45 PM', '06:00 PM', '07:15 PM'] }
+      ]
+    }
   },
   {
     title: 'Numerology Consultation',
@@ -34,7 +42,15 @@ export const defaultServices = [
       'Personal or corporate branding alignment',
       'Lucky dates, periods & cycle guides'
     ],
-    category: 'Numerology'
+    category: 'Numerology',
+    availability: {
+      activeDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      slots: [
+        { label: 'Morning slots', times: ['10:00 AM', '11:15 AM', '11:30 AM'] },
+        { label: 'Afternoon slots', times: ['02:00 PM', '03:15 PM', '04:30 PM'] },
+        { label: 'Evening slots', times: ['05:45 PM', '06:00 PM', '07:15 PM'] }
+      ]
+    }
   },
   {
     title: 'Astrology Consultation',
@@ -49,7 +65,15 @@ export const defaultServices = [
       'Practical gemstone & elemental remedies',
       'Negative star alignment corrections'
     ],
-    category: 'Astrology'
+    category: 'Astrology',
+    availability: {
+      activeDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      slots: [
+        { label: 'Morning slots', times: ['10:00 AM', '11:15 AM', '11:30 AM'] },
+        { label: 'Afternoon slots', times: ['02:00 PM', '03:15 PM', '04:30 PM'] },
+        { label: 'Evening slots', times: ['05:45 PM', '06:00 PM', '07:15 PM'] }
+      ]
+    }
   },
   {
     title: 'Tarot Reading',
@@ -64,7 +88,15 @@ export const defaultServices = [
       'Decision-making clarity guidance',
       'Mindfulness & spiritual grounding'
     ],
-    category: 'Tarot Reading'
+    category: 'Tarot Reading',
+    availability: {
+      activeDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      slots: [
+        { label: 'Morning slots', times: ['10:00 AM', '11:15 AM', '11:30 AM'] },
+        { label: 'Afternoon slots', times: ['02:00 PM', '03:15 PM', '04:30 PM'] },
+        { label: 'Evening slots', times: ['05:45 PM', '06:00 PM', '07:15 PM'] }
+      ]
+    }
   },
   {
     title: 'Relationship Counselling',
@@ -79,7 +111,15 @@ export const defaultServices = [
       'Overcoming generational misunderstandings',
       'Deepening mutual trust & connection'
     ],
-    category: 'Counselling'
+    category: 'Counselling',
+    availability: {
+      activeDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      slots: [
+        { label: 'Morning slots', times: ['10:00 AM', '11:15 AM', '11:30 AM'] },
+        { label: 'Afternoon slots', times: ['02:00 PM', '03:15 PM', '04:30 PM'] },
+        { label: 'Evening slots', times: ['05:45 PM', '06:00 PM', '07:15 PM'] }
+      ]
+    }
   },
   {
     title: 'Aura Scanner',
@@ -94,7 +134,15 @@ export const defaultServices = [
       'Home energy field alignment analysis',
       'Factory machinery & workspace vibe scan'
     ],
-    category: 'Aura Scanner'
+    category: 'Aura Scanner',
+    availability: {
+      activeDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      slots: [
+        { label: 'Morning slots', times: ['10:00 AM', '11:15 AM', '11:30 AM'] },
+        { label: 'Afternoon slots', times: ['02:00 PM', '03:15 PM', '04:30 PM'] },
+        { label: 'Evening slots', times: ['05:45 PM', '06:00 PM', '07:15 PM'] }
+      ]
+    }
   },
   {
     title: 'Yogadhan System',

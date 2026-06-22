@@ -45,6 +45,30 @@ export default function Booking() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   
+  // Booked slots for selected date & service
+  const [bookedSlots, setBookedSlots] = useState([]);
+
+  useEffect(() => {
+    const fetchBookedSlots = async () => {
+      if (!selectedService || !selectedDate) {
+        setBookedSlots([]);
+        return;
+      }
+      try {
+        const { data } = await api.get('/bookings/booked-slots', {
+          params: {
+            serviceId: selectedService._id || selectedService.id,
+            date: selectedDate.toISOString()
+          }
+        });
+        setBookedSlots(data || []);
+      } catch (err) {
+        console.error('Error fetching booked slots:', err);
+      }
+    };
+    fetchBookedSlots();
+  }, [selectedService, selectedDate]);
+  
   // Form fields
   const [formData, setFormData] = useState({
     name: '',
@@ -136,19 +160,22 @@ export default function Booking() {
 
   const getSlotsData = () => {
     if (selectedService && selectedService.availability && selectedService.availability.slots && selectedService.availability.slots.length > 0) {
-      return selectedService.availability.slots.map(group => ({
-        label: group.label,
-        slots: group.times.map(t => ({
-          time: t,
-          disabled: false
-        }))
-      }));
+      const hasTimes = selectedService.availability.slots.some(group => group.times && group.times.length > 0);
+      if (hasTimes) {
+        return selectedService.availability.slots.map(group => ({
+          label: group.label,
+          slots: (group.times || []).map(t => ({
+            time: t,
+            disabled: bookedSlots.includes(t)
+          }))
+        }));
+      }
     }
     
     return [
-      { label: 'Morning slots', slots: [{ time: '10:00 AM', disabled: false }, { time: '11:15 AM', disabled: false }, { time: '11:30 AM', disabled: false }] },
-      { label: 'Afternoon slots', slots: [{ time: '02:00 PM', disabled: false }, { time: '03:15 PM', disabled: false }, { time: '04:30 PM', disabled: false }] },
-      { label: 'Evening slots', slots: [{ time: '05:45 PM', disabled: false }, { time: '06:00 PM', disabled: false }, { time: '07:15 PM', disabled: false }] }
+      { label: 'Morning slots', slots: [{ time: '10:00 AM', disabled: bookedSlots.includes('10:00 AM') }, { time: '11:15 AM', disabled: bookedSlots.includes('11:15 AM') }, { time: '11:30 AM', disabled: bookedSlots.includes('11:30 AM') }] },
+      { label: 'Afternoon slots', slots: [{ time: '02:00 PM', disabled: bookedSlots.includes('02:00 PM') }, { time: '03:15 PM', disabled: bookedSlots.includes('03:15 PM') }, { time: '04:30 PM', disabled: bookedSlots.includes('04:30 PM') }] },
+      { label: 'Evening slots', slots: [{ time: '05:45 PM', disabled: bookedSlots.includes('05:45 PM') }, { time: '06:00 PM', disabled: bookedSlots.includes('06:00 PM') }, { time: '07:15 PM', disabled: bookedSlots.includes('07:15 PM') }] }
     ];
   };
 
@@ -391,7 +418,11 @@ export default function Booking() {
                 return (
                   <div
                     key={service.id}
-                    onClick={() => setSelectedService(service)}
+                    onClick={() => {
+                      setSelectedService(service);
+                      setSelectedDate(null);
+                      setSelectedTimeSlot(null);
+                    }}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -538,7 +569,7 @@ export default function Booking() {
 
                     const isPast = date < today;
                     let isDisabled = isPast;
-                    if (selectedService && selectedService.availability && selectedService.availability.activeDays) {
+                    if (selectedService && selectedService.availability && selectedService.availability.activeDays && selectedService.availability.activeDays.length > 0) {
                       const activeDays = selectedService.availability.activeDays;
                       const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
                       if (!activeDays.includes(dayName)) {
@@ -547,6 +578,13 @@ export default function Booking() {
                     } else if (selectedService?.id === 'yogadhan' || selectedService?.title?.toLowerCase().includes('yogadhan')) {
                       const isThursday = date.getDay() === 4;
                       if (!isThursday) isDisabled = true;
+                    } else {
+                      // Fallback: Monday to Saturday active
+                      const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+                      const defaultActiveDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                      if (!defaultActiveDays.includes(dayName)) {
+                        isDisabled = true;
+                      }
                     }
                     const isSelected = selectedDate?.toDateString() === date.toDateString();
                     
@@ -554,7 +592,10 @@ export default function Booking() {
                       <button
                         key={idx}
                         disabled={isDisabled}
-                        onClick={() => setSelectedDate(date)}
+                        onClick={() => {
+                          setSelectedDate(date);
+                          setSelectedTimeSlot(null);
+                        }}
                         style={{
                           background: isSelected 
                             ? 'var(--color-gold)' 
