@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
+import compression from 'compression';
 import connectDB from './src/config/db.js';
 import Admin from './src/models/Admin.js';
 import { notFound, errorHandler } from './src/middleware/errorHandler.js';
@@ -29,6 +30,9 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+// Gzip/brotli compression for all responses
+app.use(compression());
 
 // Body parser & CORS
 app.use(express.json());

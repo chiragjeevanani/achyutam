@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Sparkles, Sun, Star, Award, Compass, ChevronRight, Check, AlertCircle, Quote } from 'lucide-react';
 import { getImageUrl } from '../utils/image';
 import { usePageContent } from '../hooks/usePageContent';
+import OptimizedImage from '../components/OptimizedImage';
 
 const iconMapper = {
   Compass: <Compass size={22} />,
@@ -461,13 +462,11 @@ export default function Home() {
 
         <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }} className="reveal-blur delay-200">
           <div className="glass-panel magnetic-hover" style={{ width: '100%', maxWidth: '440px', overflow: 'hidden', padding: '12px', border: '1.5px solid var(--color-purple)', boxShadow: '0 8px 32px rgba(59, 130, 246, 0.12)' }}>
-            <img 
-              src={getImageUrl(activeContent.hero.imageUrl)} 
-              alt="Achyutam Maestro Hero" 
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              style={{ width: '100%', borderRadius: '12px', objectFit: 'cover', height: '480px' }}
+            <OptimizedImage
+              src={getImageUrl(activeContent.hero.imageUrl)}
+              alt="Achyutam Maestro Hero"
+              priority
+              style={{ width: '100%', borderRadius: '12px', height: '480px' }}
             />
           </div>
         </div>

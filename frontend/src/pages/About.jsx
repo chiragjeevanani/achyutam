@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Eye, ShieldAlert, Award, Compass, Sparkles, Star, Check } from 'lucide-react';
 import { getImageUrl } from '../utils/image';
 import { usePageContent } from '../hooks/usePageContent';
+import OptimizedImage from '../components/OptimizedImage';
 
 const defaultAboutContent = {
   header: {
@@ -67,13 +68,11 @@ export default function About() {
         
         <div className="reveal-blur">
           <div className="glass-panel magnetic-hover" style={{ padding: '10px', border: '1px solid var(--border-active)' }}>
-            <img 
-              src={getImageUrl(activeContent.profile.imageUrl)} 
-              alt="Uppasna Keshwani Profile" 
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              style={{ width: '100%', borderRadius: '12px', height: '420px', objectFit: 'cover' }}
+            <OptimizedImage
+              src={getImageUrl(activeContent.profile.imageUrl)}
+              alt="Uppasna Keshwani Profile"
+              priority
+              style={{ width: '100%', borderRadius: '12px', height: '420px' }}
             />
           </div>
         </div>
@@ -151,12 +150,10 @@ export default function About() {
             width: '100%',
             aspectRatio: '4/3'
           }}>
-            <img 
-              src={getImageUrl(activeContent.journey.imageUrl)} 
-              alt="Uppasna Keshwani - My Journey" 
-              loading="lazy"
-              decoding="async"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            <OptimizedImage
+              src={getImageUrl(activeContent.journey.imageUrl)}
+              alt="Uppasna Keshwani - My Journey"
+              style={{ width: '100%', height: '100%', borderRadius: '0' }}
             />
           </div>
 
