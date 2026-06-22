@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Sparkles, Sun, Star, Compass, Heart, Eye, Calendar, Clock, User, CheckCircle2, ChevronRight, ChevronLeft, CreditCard, Receipt, Printer, ArrowRight, Radio } from 'lucide-react';
 import api from '../admin/api/axios';
+import { defaultServices } from './Services';
 
 const getServiceIcon = (category) => {
   switch (category?.toLowerCase()) {
@@ -61,7 +62,17 @@ export default function Booking() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [transactionId, setTransactionId] = useState('');
 
-  const [servicesList, setServicesList] = useState([]);
+  const mapDefaultServices = (list) => {
+    return list.map((s, idx) => ({
+      ...s,
+      _id: s._id || `default-service-${idx}`,
+      id: s._id || `default-service-${idx}`,
+      icon: getServiceIcon(s.category),
+      duration: typeof s.duration === 'number' ? `${s.duration} Mins` : s.duration
+    }));
+  };
+
+  const [servicesList, setServicesList] = useState(() => mapDefaultServices(defaultServices));
   const [searchParams] = useSearchParams();
 
   useEffect(() => {

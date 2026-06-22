@@ -15,7 +15,7 @@ import { useState, useEffect, useRef } from 'react';
  *                                Should return true if the data is usable.
  */
 export function usePageContent(endpoint, defaults, validate) {
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(defaults);
   const [loading, setLoading] = useState(true);
   const abortRef = useRef(null);
 

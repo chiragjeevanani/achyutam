@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Sun, Star, Compass, Heart, Eye, ArrowRight, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const defaultServices = [
+export const defaultServices = [
   {
     title: 'Vastu Discussion',
     sub: 'Directions, Placements & Energy Corrections',
@@ -95,6 +95,45 @@ const defaultServices = [
       'Factory machinery & workspace vibe scan'
     ],
     category: 'Aura Scanner'
+  },
+  {
+    title: 'Yogadhan System',
+    sub: 'Divine Alignment & Spatial Calibrations',
+    desc: 'Yogadhan is an integrated, scientific method developed by Uppasna Keshwani. It unites Vastu-Shastra, Numerology, and Horoscope Astrology into a single cohesive framework.',
+    price: 0,
+    duration: 30,
+    note: 'Free Thursday Energy Calibrations',
+    imgUrl: '/vastu_terracotta.png',
+    list: [
+      'Astrological Kundli alignment with home coordinates',
+      'Numerological name vibration corrections',
+      'Telluric earth energy grid calibrations'
+    ],
+    category: 'Yogadhan',
+    isActive: true,
+    order: 6,
+    availability: {
+      activeDays: ['Thursday'],
+      slots: [
+        {
+          label: 'Morning slots',
+          times: [
+            '10:00 AM - 10:30 AM',
+            '10:30 AM - 11:00 AM',
+            '11:00 AM - 11:30 AM',
+            '11:30 AM - 12:00 PM'
+          ]
+        },
+        {
+          label: 'Afternoon slots',
+          times: [
+            '12:00 PM - 12:30 PM',
+            '12:30 PM - 01:00 PM',
+            '01:00 PM - 01:30 PM'
+          ]
+        }
+      ]
+    }
   }
 ];
 

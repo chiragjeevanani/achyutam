@@ -18,7 +18,7 @@ const defaultHomeContent = {
     titleLine1: 'Achyutam Maestro',
     titleLine2: 'Transforming Spaces & Destiny',
     description: 'Unlock peace, wealth, and abundance through logical, scientific Vastu alignments and supportive numerological frequency corrections.',
-    imageUrl: '/uploads/defaults/hero.png',
+    imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108246883.jpeg',
     ctaText: 'Book a Consultation',
     compassCtaText: 'Align Your Compass'
   },
@@ -424,39 +424,7 @@ export default function Home() {
     ));
   };
 
-  // Skeleton shimmer while content loads — prevents default content flash
-  if (loading) {
-    return (
-      <div style={{ padding: '45px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-        <style>{`
-          @keyframes shimmer {
-            0% { background-position: -800px 0; }
-            100% { background-position: 800px 0; }
-          }
-          .skel {
-            border-radius: 8px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%);
-            background-size: 800px 100%;
-            animation: shimmer 1.4s infinite linear;
-          }
-        `}</style>
-        {/* Hero skeleton */}
-        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'center', minHeight: '80vh', padding: '0 0 40px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div className="skel" style={{ height: '28px', width: '200px' }} />
-            <div className="skel" style={{ height: '60px', width: '90%' }} />
-            <div className="skel" style={{ height: '60px', width: '75%' }} />
-            <div className="skel" style={{ height: '80px', width: '100%' }} />
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <div className="skel" style={{ height: '48px', width: '180px' }} />
-              <div className="skel" style={{ height: '48px', width: '160px' }} />
-            </div>
-          </div>
-          <div className="skel" style={{ height: '504px', borderRadius: '16px' }} />
-        </section>
-      </div>
-    );
-  }
+  // Render actual content directly (stale-while-revalidate style) without blocking skeleton
 
   return (
     <div style={{ padding: '45px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>

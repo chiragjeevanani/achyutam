@@ -402,14 +402,49 @@ export default function VastuTips() {
   const [expandedMistake, setExpandedMistake] = useState(null);
 
   // Unified data state
-  const [bookPages, setBookPages] = useState([]);
-  const [heroContent, setHeroContent] = useState(null);
+  const defaultVastuBookPages = [
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108350062.png', caption: 'Vastu Shastra Tips — Page 1', order: 1 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108358513.png', caption: 'Vastu Shastra Tips — Page 2', order: 2 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108392536.jpeg', caption: 'Vastu Shastra Tips — Page 3', order: 3 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108400505.jpeg', caption: 'Vastu Shastra Tips — Page 4', order: 4 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108410752.png', caption: 'Vastu Shastra Tips — Page 5', order: 5 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108418720.png', caption: 'Vastu Shastra Tips — Page 6', order: 6 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108428403.png', caption: 'Vastu Shastra Tips — Page 7', order: 7 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108435805.png', caption: 'Vastu Shastra Tips — Page 8', order: 8 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108445624.png', caption: 'Vastu Shastra Tips — Page 9', order: 9 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108453826.png', caption: 'Vastu Shastra Tips — Page 10', order: 10 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108463276.png', caption: 'Vastu Shastra Tips — Page 11', order: 11 },
+    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108472242.png', caption: 'Vastu Shastra Tips — Page 12', order: 12 }
+  ];
+
+  const defaultHero = {
+    hero: {
+      badge: 'HARMONIZE YOUR ENVIRONMENT',
+      title: 'Maha Vastu Shastra Tips',
+      description: 'Align your home and workplace with the five natural elements — Panchtattva — for lasting health, wealth, and peace. Explore room-by-room guidance, an interactive compass, common Vastu doshas, and simple non-demolition remedies.'
+    },
+    bookMeta: {
+      coverTitle: "Vastu Shastra\nTips Book",
+      coverSubtitle: "Sacred Wisdom",
+      coverLogo: "http://api.achyutammaestro.com/uploads/image-1782108333108.png",
+      introTitle: "Introduction",
+      introText: "\"Harmonize your environment to balance the five natural elements, opening the doors to happiness and health.\"",
+      outroTitle: "Achyutam Maestro",
+      outroText: "Bringing ancient cosmic wisdom to contemporary homes and offices.",
+      endTitle: "ACHYUTAM MAESTRO",
+      endSubtitle: "PEACE • WEALTH • HARMONY",
+      endLogo: "http://api.achyutammaestro.com/uploads/image-1782108337826.png"
+    }
+  };
+
+  const [bookPages, setBookPages] = useState(defaultVastuBookPages);
+  const [heroContent, setHeroContent] = useState(defaultHero);
   const [dbElements, setDbElements] = useState([]);
   const [dbDirections, setDbDirections] = useState([]);
   const [dbSeasons, setDbSeasons] = useState([]);
 
   // Single loading gate — true until BOTH requests resolve
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const abortRef = useRef(null);
 
   useEffect(() => {
@@ -443,13 +478,7 @@ export default function VastuTips() {
     return () => controller.abort();
   }, []);
 
-  const defaultHero = {
-    hero: {
-      badge: 'HARMONIZE YOUR ENVIRONMENT',
-      title: 'Ancient Vastu Shastra Tips',
-      description: 'Align your home and workplace with the five natural elements — Panchtattva — for lasting health, wealth, and peace. Explore room-by-room guidance, an interactive compass, common Vastu doshas, and simple non-demolition remedies.'
-    }
-  };
+  // defaultHero is defined above
 
   const activeHero = (heroContent && heroContent.hero) ? heroContent.hero : defaultHero.hero;
 
@@ -493,64 +522,7 @@ export default function VastuTips() {
     colors: el.colors
   })) : elements;
 
-  // Skeleton screen — prevents default content from ever flashing
-  if (loading) {
-    return (
-      <div style={{ padding: '45px 20px 60px', maxWidth: '1240px', margin: '0 auto' }}>
-        <style>{`
-          @keyframes shimmer { 0%{background-position:-800px 0} 100%{background-position:800px 0} }
-          .skel{
-            border-radius: 8px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%);
-            background-size: 800px 100%;
-            animation: shimmer 1.4s infinite linear;
-          }
-        `}</style>
-
-        {/* Hero skeleton */}
-        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-          <div className="skel" style={{ height: '26px', width: '260px', margin: '0 auto 20px' }} />
-          <div className="skel" style={{ height: '56px', width: '55%', margin: '0 auto 16px' }} />
-          <div className="skel" style={{ height: '70px', width: '70%', margin: '0 auto 28px' }} />
-          {/* Nav tabs */}
-          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            {[140, 110, 120, 145, 120].map((w, i) => (
-              <div key={i} className="skel" style={{ height: '34px', width: `${w}px`, borderRadius: '20px' }} />
-            ))}
-          </div>
-        </div>
-
-        {/* Book pages skeleton */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', marginBottom: '80px' }}>
-          {[1, 2, 3].map(i => (
-            <div key={i} className="skel" style={{ height: '320px', borderRadius: '12px' }} />
-          ))}
-        </div>
-
-        {/* Compass section skeleton */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '50px', marginBottom: '80px', alignItems: 'center' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-            <div className="skel" style={{ width: '300px', height: '300px', borderRadius: '50%' }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div className="skel" style={{ height: '32px', width: '60%' }} />
-            <div className="skel" style={{ height: '120px' }} />
-            <div className="skel" style={{ height: '80px' }} />
-          </div>
-        </div>
-
-        {/* Elements section skeleton */}
-        <div style={{ marginBottom: '80px' }}>
-          <div className="skel" style={{ height: '40px', width: '40%', margin: '0 auto 40px' }} />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '18px' }}>
-            {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="skel" style={{ height: '200px', borderRadius: '12px' }} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Render actual content directly (stale-while-revalidate style) without blocking skeleton
 
   return (
     <div style={{ padding: '45px 20px 60px', maxWidth: '1240px', margin: '0 auto' }}>

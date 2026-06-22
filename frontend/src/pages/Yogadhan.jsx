@@ -76,24 +76,7 @@ export default function Yogadhan() {
     icon: iconMapper[p.iconName] || <Compass size={24} style={{ color: p.color }} />
   }));
 
-  if (loading) {
-    return (
-      <div style={{ padding: '45px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-        <style>{`
-          @keyframes shimmer { 0%{background-position:-800px 0} 100%{background-position:800px 0} }
-          .skel{border-radius:8px;background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 75%);background-size:800px 100%;animation:shimmer 1.4s infinite linear;}
-        `}</style>
-        <div className="skel" style={{ height: '28px', width: '200px', margin: '0 auto 20px' }} />
-        <div className="skel" style={{ height: '48px', width: '55%', margin: '0 auto 16px' }} />
-        <div className="skel" style={{ height: '80px', width: '70%', margin: '0 auto 40px' }} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', marginTop: '40px' }}>
-          <div className="skel" style={{ height: '180px', borderRadius: '16px' }} />
-          <div className="skel" style={{ height: '180px', borderRadius: '16px' }} />
-          <div className="skel" style={{ height: '180px', borderRadius: '16px' }} />
-        </div>
-      </div>
-    );
-  }
+  // Render actual content directly (stale-while-revalidate style) without blocking skeleton
 
   return (
     <div style={{ padding: '45px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>

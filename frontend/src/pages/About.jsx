@@ -16,7 +16,7 @@ const defaultAboutContent = {
     subtitle: 'Professional Vastu, Numerology & Astrology Consultant',
     desc1: 'I truly believe in the miraculous powers of the nature. The entire universe is there to take care of all our needs and help us to live a healthy and prosperous life. I am a firm believer in the fact that there is something more that meets the eye. Some more powers of the nature, that lie hidden and come forth when no scientific theories can prove their existence.',
     desc2: 'With over 20 years of diversified experience in Aviation, Hospitality, and Information Technology industries with global leaders like Kingfisher Airlines, Cyient Limited, and Alexandria Equities Management Company, I bridge ancient cosmic structures with logical scientific metrics.',
-    imageUrl: '/uploads/defaults/profile.png'
+    imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108274830.jpeg'
   },
   doDont: {
     doTitle: 'What I Do',
@@ -41,35 +41,14 @@ const defaultAboutContent = {
     desc3: 'Uppasna is MBA by qualification and thoroughly enjoys her working for social and professional reasons, bridging corporate strategy with elemental cosmic geometry.',
     desc4: 'Her years of learning practice, mentoring, and guiding hundreds of clients through Vastu shifts, balanced numbers, and Astrology remedies make her calculations unparalleled. Her attention to detail has built a legacy of reliance and success.',
     ctaText: 'Book Call with Uppasna Ji',
-    imageUrl: '/uploads/defaults/journey.png'
+    imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108281035.jpeg'
   }
 };
 
 export default function About() {
   const { content: activeContent, loading } = usePageContent('/about', defaultAboutContent);
 
-  if (loading) {
-    return (
-      <div style={{ padding: '45px 20px 60px', maxWidth: '1200px', margin: '0 auto' }}>
-        <style>{`
-          @keyframes shimmer { 0%{background-position:-800px 0} 100%{background-position:800px 0} }
-          .skel{border-radius:8px;background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 75%);background-size:800px 100%;animation:shimmer 1.4s infinite linear;}
-        `}</style>
-        <div className="skel" style={{ height: '30px', width: '220px', margin: '0 auto 20px' }} />
-        <div className="skel" style={{ height: '48px', width: '60%', margin: '0 auto 16px' }} />
-        <div className="skel" style={{ height: '80px', width: '70%', margin: '0 auto 40px' }} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
-          <div className="skel" style={{ height: '420px', borderRadius: '16px' }} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div className="skel" style={{ height: '24px', width: '60%' }} />
-            <div className="skel" style={{ height: '32px', width: '80%' }} />
-            <div className="skel" style={{ height: '100px' }} />
-            <div className="skel" style={{ height: '100px' }} />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Render actual content directly (stale-while-revalidate style) without blocking skeleton
 
   return (
     <div style={{ padding: '45px 20px 60px', maxWidth: '1200px', margin: '0 auto' }}>
