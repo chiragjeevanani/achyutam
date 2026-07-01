@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Sun, Star, Compass, Heart, Eye, ArrowLeft, Calendar, User, Clock, MessageSquare, ArrowRight } from 'lucide-react';
+import { Hash, Sparkles, Sun, Star, Compass, Heart, Eye, ArrowLeft, Calendar, User, Clock, MessageSquare, ArrowRight } from 'lucide-react';
 
 const defaultBlogPosts = [
   {
@@ -105,8 +105,10 @@ export default function Blog() {
       return <Eye size={20} style={{ color: 'var(--color-gold)' }} />;
     } else if (cat.includes('counsel') || cat.includes('relationship')) {
       return <Heart size={20} style={{ color: 'var(--color-gold)' }} />;
+    } else if (cat.includes('numerology')) {
+      return <Hash size={20} style={{ color: 'var(--color-gold)' }} />;
     } else {
-      return <Sparkles size={20} style={{ color: 'var(--color-gold)' }} />;
+      return <Star size={20} style={{ color: 'var(--color-gold)' }} />;
     }
   };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-  LayoutDashboard, Calendar, Mail, Landmark, Sparkles, BookOpen, MessageSquare, Compass, 
+  LayoutDashboard, Calendar, Mail, Landmark, Briefcase, BookOpen, MessageSquare, Compass, 
   LogOut, Moon, Sun, Home, GraduationCap, Info, Phone, ChevronLeft, ChevronRight, X, User
 } from 'lucide-react';
 
@@ -30,7 +30,7 @@ export default function AdminSidebar({
   const cmsItems = [
     { name: 'Home Page', path: '/admin/cms/home', icon: <Home size={18} /> },
     { name: 'About Us', path: '/admin/cms/about', icon: <Info size={18} /> },
-    { name: 'Services', path: '/admin/cms/services', icon: <Sparkles size={18} /> },
+    { name: 'Services', path: '/admin/cms/services', icon: <Briefcase size={18} /> },
     { name: 'Yogadhan', path: '/admin/cms/yogadhan', icon: <Compass size={18} /> },
     { name: 'Vastu Tips', path: '/admin/cms/vastu-tips', icon: <Compass size={18} /> },
     { name: 'Blogs', path: '/admin/cms/blogs', icon: <BookOpen size={18} /> },

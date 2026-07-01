@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import ContactInfo from '../models/ContactInfo.js';
 
 // Helper to check if SMTP settings are configured
 const isSmtpConfigured = () => {
@@ -123,6 +124,16 @@ const buildBookingDetails = (booking, { includeCustomer = false } = {}) => {
  * @param {Object} booking
  */
 export const sendBookingConfirmation = async (booking) => {
+  let phone = '+91 95590 96656';
+  try {
+    const contact = await ContactInfo.findOne();
+    if (contact && contact.whatsapp && contact.whatsapp.number) {
+      phone = contact.whatsapp.number;
+    }
+  } catch (err) {
+    console.error('Error fetching contact info for email:', err);
+  }
+
   const mailOptions = {
     from: fromAddress(),
     to: booking.customer.email,
@@ -136,11 +147,11 @@ export const sendBookingConfirmation = async (booking) => {
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
 
         <h3 style="color: #333;">Booking Slip</h3>
-        ${buildBookingDetails(booking)}
+        ${buildBookingDetails(booking, { includeCustomer: true })}
 
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
 
-        <p>If you have any questions, please feel free to reply to this email or contact us at +91 9999999999.</p>
+        <p>If you have any questions, please feel free to reply to this email or contact us at ${phone}.</p>
         <p>Warm regards,<br><strong>Uppasna Ji</strong><br>Achyutam Maestro Team</p>
       </div>
     `,
@@ -239,4 +250,58 @@ export const sendContactAcknowledgment = async (contact) => {
   };
 
   return dispatchMail(mailOptions, 'Contact acknowledgment');
+};
+
+/**
+ * Send Contact Inquiry Resolution Email
+ * @param {Object} contact
+ */
+export const sendContactResolution = async (contact) => {
+  let phone = '+91 95590 96656';
+  try {
+    const contactInfo = await ContactInfo.findOne();
+    if (contactInfo && contactInfo.whatsapp && contactInfo.whatsapp.number) {
+      phone = contactInfo.whatsapp.number;
+    }
+  } catch (err) {
+    console.error('Error fetching contact info for email:', err);
+  }
+
+  const mailOptions = {
+    from: fromAddress(),
+    to: contact.email,
+    subject: `Inquiry Resolved: Reference #${contact._id} - Achyutam Maestro`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
+        <h2 style="color: #c5a880; text-align: center;">Inquiry Resolved</h2>
+        <p>Dear ${contact.name},</p>
+        <p>We are writing to inform you that your recent inquiry regarding <strong>${contact.service || 'our services'}</strong> has been marked as <strong>Resolved</strong> by our team.</p>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+        <h3 style="color: #333;">Inquiry Details</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 8px 0; color: #666; width: 150px;"><strong>Inquiry ID:</strong></td>
+            <td style="padding: 8px 0; color: #333;">${contact._id}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #666;"><strong>Service Category:</strong></td>
+            <td style="padding: 8px 0; color: #333;">${contact.service || 'General'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #666; vertical-align: top;"><strong>Your Message:</strong></td>
+            <td style="padding: 8px 0; color: #555; font-style: italic;">"${contact.message}"</td>
+          </tr>
+        </table>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+        <p>If you have any further questions or if you feel this was marked resolved in error, please feel free to reply directly to this email or contact us at ${phone}.</p>
+        <p>Warm regards,<br><strong>Uppasna Ji</strong><br>Achyutam Maestro Team</p>
+      </div>
+    `,
+  };
+
+  return dispatchMail(mailOptions, 'Contact resolution');
 };

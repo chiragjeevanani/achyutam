@@ -53,7 +53,7 @@ export default function AdminVastuTips() {
   const [eleZone, setEleZone] = useState('');
   const [eleColorHex, setEleColorHex] = useState('');
   const [eleBgCode, setEleBgCode] = useState('');
-  const [eleIconName, setEleIconName] = useState('Sparkles');
+  const [eleIconName, setEleIconName] = useState('Star');
   const [eleBenefit, setEleBenefit] = useState('');
   const [eleColors, setEleColors] = useState('');
   const [eleOrder, setEleOrder] = useState(1);
@@ -399,7 +399,7 @@ export default function AdminVastuTips() {
     setEleZone(el.zone);
     setEleColorHex(el.colorHex || el.color);
     setEleBgCode(el.bgCode || el.bg);
-    setEleIconName(el.iconName || 'Sparkles');
+    setEleIconName(el.iconName || 'Star');
     setEleBenefit(el.benefit);
     setEleColors(el.colors);
     setEleOrder(el.order || 1);
@@ -480,7 +480,7 @@ export default function AdminVastuTips() {
           {/* TAB 0: HERO SECTION */}
           {activeTab === 'hero' && heroContent && (
             <form onSubmit={handleSaveHero} className="glass-panel" style={{ padding: '30px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <h3 style={{ fontSize: '1.25rem', color: '#fff', margin: '0 0 10px', fontFamily: 'var(--font-serif)' }}>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--text-heading)', margin: '0 0 10px', fontFamily: 'var(--font-serif)' }}>
                 Vastu Tips Hero Section Settings
               </h3>
               
@@ -563,7 +563,7 @@ export default function AdminVastuTips() {
               {data.directions.map((dir) => (
                 <div key={dir._id} className="glass-panel" style={{ padding: '20px', borderTop: `2px solid ${dir.elementColor || 'var(--color-gold)'}` }}>
                   <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ fontSize: '1.2rem', color: '#fff' }}>{dir.code} - {dir.name}</strong>
+                    <strong style={{ fontSize: '1.2rem', color: 'var(--text-heading)' }}>{dir.code} - {dir.name}</strong>
                     <button
                       onClick={() => openEditDirection(dir)}
                       style={{ background: 'none', border: 'none', color: 'var(--color-gold)', cursor: 'pointer', padding: '4px' }}
@@ -572,9 +572,9 @@ export default function AdminVastuTips() {
                     </button>
                   </div>
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <div>Deity: <strong style={{ color: '#aaa' }}>{dir.deity}</strong></div>
-                    <div>Element: <strong style={{ color: '#aaa' }}>{dir.element}</strong></div>
-                    <div>Focus: <strong style={{ color: '#aaa' }}>{dir.focus}</strong></div>
+                    <div>Deity: <strong style={{ color: 'var(--text-primary)' }}>{dir.deity}</strong></div>
+                    <div>Element: <strong style={{ color: 'var(--text-primary)' }}>{dir.element}</strong></div>
+                    <div>Focus: <strong style={{ color: 'var(--text-primary)' }}>{dir.focus}</strong></div>
                   </div>
                   
                   <div style={{ display: 'flex', gap: '10px', fontSize: '0.75rem', marginTop: '12px', color: 'var(--text-muted)', borderTop: '1px solid var(--border-glass)', paddingTop: '10px' }}>
@@ -597,7 +597,7 @@ export default function AdminVastuTips() {
                 <div key={s._id} className="glass-panel" style={{ padding: '20px', borderTop: '2px solid var(--color-indigo)' }}>
                   <div style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'flex-start' }}>
                     <div>
-                      <h4 style={{ margin: 0, fontSize: '1.05rem', color: '#fff' }}>{s.season}</h4>
+                      <h4 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-heading)' }}>{s.season}</h4>
                       <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{s.months}</span>
                     </div>
                     <button
@@ -608,7 +608,7 @@ export default function AdminVastuTips() {
                     </button>
                   </div>
                   <div style={{ marginTop: '10px', fontSize: '0.8rem', borderTop: '1px solid var(--border-glass)', paddingTop: '10px' }}>
-                    <strong style={{ color: '#aaa' }}>Tips List ({s.tips?.length || 0}):</strong>
+                    <strong style={{ color: 'var(--text-primary)' }}>Tips List ({s.tips?.length || 0}):</strong>
                     <ul style={{ margin: '4px 0 0', paddingLeft: '16px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       {s.tips?.slice(0, 2).map((tip, idx) => (
                         <li key={idx}>{tip}</li>
@@ -654,7 +654,7 @@ export default function AdminVastuTips() {
               
               {heroContent && heroContent.bookMeta && (
                 <div className="glass-panel" style={{ padding: '24px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '20px' }}>
-                  <h3 style={{ fontSize: '1.2rem', color: '#fff', margin: 0, fontFamily: 'var(--font-serif)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h3 style={{ fontSize: '1.2rem', color: 'var(--text-heading)', margin: 0, fontFamily: 'var(--font-serif)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <BookOpen size={18} style={{ color: 'var(--color-gold)' }} />
                     Vastu Book Layout & Covers Config
                   </h3>

@@ -209,7 +209,7 @@ export default function AdminServices() {
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
           gap: '24px',
         }}>
-          {services.map((s) => (
+          {[...services].sort((a, b) => (a.order || 0) - (b.order || 0)).map((s) => (
             <div key={s._id} className="glass-panel" style={{
               padding: '24px',
               display: 'flex',
@@ -242,7 +242,7 @@ export default function AdminServices() {
                   </div>
                 </div>
 
-                <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', margin: '12px 0 4px', color: '#fff' }}>
+                <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', margin: '12px 0 4px', color: 'var(--text-heading)' }}>
                   {s.title}
                 </h3>
                 {s.sub && (
@@ -358,7 +358,7 @@ export default function AdminServices() {
                   placeholder="e.g. Vastu Discussion"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none' }}
+                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', outline: 'none' }}
                 />
               </div>
 
@@ -367,7 +367,7 @@ export default function AdminServices() {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  style={{ width: '100%', padding: '10px', background: 'rgba(0, 0, 0, 0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}
+                  style={{ width: '100%', padding: '10px', background: 'rgba(0, 0, 0, 0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', cursor: 'pointer' }}
                 >
                   <option value="Vastu Shastra">Vastu Shastra</option>
                   <option value="Numerology">Numerology</option>
@@ -386,7 +386,7 @@ export default function AdminServices() {
                 placeholder="e.g. Directions, Placements & Energy Corrections"
                 value={sub}
                 onChange={(e) => setSub(e.target.value)}
-                style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none' }}
+                style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', outline: 'none' }}
               />
             </div>
 
@@ -399,7 +399,7 @@ export default function AdminServices() {
                 placeholder="Explain the process, consulting flow, and key benefits..."
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
-                style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none', resize: 'vertical' }}
+                style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', outline: 'none', resize: 'vertical' }}
               />
             </div>
 
@@ -413,7 +413,7 @@ export default function AdminServices() {
                   placeholder="e.g. 5100"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none' }}
+                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', outline: 'none' }}
                 />
               </div>
 
@@ -425,7 +425,7 @@ export default function AdminServices() {
                   placeholder="e.g. 60"
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
-                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none' }}
+                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', outline: 'none' }}
                 />
               </div>
 
@@ -436,7 +436,7 @@ export default function AdminServices() {
                   placeholder="e.g. 0"
                   value={order}
                   onChange={(e) => setOrder(e.target.value)}
-                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none' }}
+                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', outline: 'none' }}
                 />
               </div>
             </div>
@@ -450,7 +450,7 @@ export default function AdminServices() {
                   placeholder="e.g. Report will send in 48 hours"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none' }}
+                  style={{ width: '100%', padding: '10px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', outline: 'none' }}
                 />
               </div>
 
@@ -459,7 +459,7 @@ export default function AdminServices() {
                 <select
                   value={imgUrl}
                   onChange={(e) => setImgUrl(e.target.value)}
-                  style={{ width: '100%', padding: '10px', background: 'rgba(0, 0, 0, 0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', cursor: 'pointer' }}
+                  style={{ width: '100%', padding: '10px', background: 'rgba(0, 0, 0, 0.3)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', cursor: 'pointer' }}
                 >
                   <option value="/vastu_terracotta.png">Vastu Terracotta (Earth)</option>
                   <option value="/astrology_terracotta.png">Astrology (Planets)</option>
@@ -473,7 +473,7 @@ export default function AdminServices() {
             {/* Bullet list points */}
             <div>
               <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', fontWeight: '700', color: 'var(--color-gold)', marginBottom: '8px' }}>
-                Service Bullet Bullet Points
+                Service Bullet Points
                 <button
                   type="button"
                   onClick={addBulletPoint}
@@ -491,7 +491,7 @@ export default function AdminServices() {
                       placeholder={`Bullet point ${idx + 1}`}
                       value={item}
                       onChange={(e) => handleListChange(idx, e.target.value)}
-                      style={{ flex: 1, padding: '10px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', outline: 'none', fontSize: '0.85rem' }}
+                      style={{ flex: 1, padding: '10px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: 'var(--text-primary)', outline: 'none', fontSize: '0.85rem' }}
                     />
                     <button
                       type="button"
@@ -513,7 +513,7 @@ export default function AdminServices() {
                 {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => {
                   const isChecked = activeDays.includes(day);
                   return (
-                    <label key={day} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: '#fff', cursor: 'pointer' }}>
+                    <label key={day} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-primary)', cursor: 'pointer' }}>
                       <input
                         type="checkbox"
                         checked={isChecked}

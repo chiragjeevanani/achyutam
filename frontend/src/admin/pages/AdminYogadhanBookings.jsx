@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { 
-  Search, Trash2, Calendar, User, Eye, X, Phone, Mail, Clock, ShieldAlert 
+import {
+  Search, Trash2, Calendar, User, Eye, X, Phone, Mail, Clock, ShieldAlert
 } from 'lucide-react';
 
 export default function AdminYogadhanBookings() {
@@ -60,7 +60,7 @@ export default function AdminYogadhanBookings() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      
+
       {/* Header */}
       <div>
         <h1 style={{ fontSize: '2rem', fontFamily: 'var(--font-serif)', color: 'var(--text-heading)', margin: 0 }}>
@@ -96,7 +96,7 @@ export default function AdminYogadhanBookings() {
                 background: 'rgba(255, 255, 255, 0.02)',
                 border: '1px solid var(--border-glass)',
                 borderRadius: '8px',
-                color: '#fff',
+                color: 'var(--text-primary)',
                 fontSize: '0.85rem',
                 outline: 'none',
                 boxSizing: 'border-box',
@@ -105,7 +105,7 @@ export default function AdminYogadhanBookings() {
           </div>
           <button type="submit" style={{
             background: 'var(--color-gold)',
-            color: '#fff',
+            color: 'var(--text-primary)',
             border: 'none',
             borderRadius: '8px',
             padding: '10px 16px',
@@ -133,7 +133,7 @@ export default function AdminYogadhanBookings() {
                 background: 'rgba(255, 255, 255, 0.03)',
                 border: '1px solid var(--border-glass)',
                 borderRadius: '8px',
-                color: '#fff',
+                color: 'var(--text-primary)',
                 outline: 'none',
                 fontSize: '0.85rem',
                 cursor: 'pointer',
@@ -314,7 +314,7 @@ export default function AdminYogadhanBookings() {
               {/* Service info */}
               <div style={{ padding: '14px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid var(--border-glass)' }}>
                 <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--color-gold)', fontWeight: 'bold' }}>Requested Consulting</span>
-                <h4 style={{ fontSize: '1.1rem', margin: '4px 0 2px', color: '#fff' }}>{selectedBooking.service.title}</h4>
+                <h4 style={{ fontSize: '1.1rem', margin: '4px 0 2px', color: 'var(--text-primary)' }}>{selectedBooking.service.title}</h4>
                 <div style={{ display: 'flex', gap: '15px', color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px' }}>
                   <span>Category: {selectedBooking.service.category}</span>
                   <span>Duration: {selectedBooking.service.duration} mins</span>
@@ -349,15 +349,15 @@ export default function AdminYogadhanBookings() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', fontSize: '0.85rem', background: 'rgba(197, 168, 128, 0.03)', border: '1px solid rgba(197, 168, 128, 0.1)', padding: '10px', borderRadius: '6px' }}>
                     <div>
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.72rem' }}>Birth Date:</span>
-                      <strong style={{ color: '#fff' }}>{selectedBooking.additionalInfo.birthDate || 'N/A'}</strong>
+                      <strong style={{ color: 'var(--text-primary)' }}>{selectedBooking.additionalInfo.birthDate || 'N/A'}</strong>
                     </div>
                     <div>
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.72rem' }}>Birth Time:</span>
-                      <strong style={{ color: '#fff' }}>{selectedBooking.additionalInfo.birthTime || 'N/A'}</strong>
+                      <strong style={{ color: 'var(--text-primary)' }}>{selectedBooking.additionalInfo.birthTime || 'N/A'}</strong>
                     </div>
                     <div>
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.72rem' }}>Birth Place:</span>
-                      <strong style={{ color: '#fff' }}>{selectedBooking.additionalInfo.birthPlace || 'N/A'}</strong>
+                      <strong style={{ color: 'var(--text-primary)' }}>{selectedBooking.additionalInfo.birthPlace || 'N/A'}</strong>
                     </div>
                   </div>
                 </div>
@@ -385,9 +385,15 @@ export default function AdminYogadhanBookings() {
 
               {/* Transaction Logs */}
               <div style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '15px', display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                <div>Order ID: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.razorpayOrderId || 'N/A'}</code></div>
-                <div>Payment ID: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.razorpayPaymentId || 'N/A'}</code></div>
-                <div>Txn Ref: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.transactionId || 'N/A'}</code></div>
+                {Number(selectedBooking.service?.price || 0) === 0 ? (
+                  <div>Booking Type: <code style={{ color: 'var(--text-primary)' }}>Free Session (No Payment Required)</code></div>
+                ) : (
+                  <>
+                    <div>Order ID: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.razorpayOrderId || 'N/A'}</code></div>
+                    <div>Payment ID: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.razorpayPaymentId || 'N/A'}</code></div>
+                    <div>Txn Ref: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.transactionId || 'N/A'}</code></div>
+                  </>
+                )}
               </div>
             </div>
           </div>

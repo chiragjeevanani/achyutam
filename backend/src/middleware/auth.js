@@ -14,14 +14,14 @@ export const protect = asyncHandler(async (req, res, next) => {
     return acc;
   }, {}) : {};
 
-  if (cookies.adminToken) {
-    token = cookies.adminToken;
-  } else if (
+  if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     // Get token from header
     token = req.headers.authorization.split(' ')[1];
+  } else if (cookies.adminToken) {
+    token = cookies.adminToken;
   }
 
   if (token) {

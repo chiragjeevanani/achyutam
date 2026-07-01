@@ -273,14 +273,21 @@ export default function AdminContacts() {
                     <button
                       onClick={() => updateStatus(selectedInquiry._id, 'read')}
                       style={{
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        color: '#fff',
+                        background: 'transparent',
+                        color: 'var(--text-primary)',
                         border: '1px solid var(--border-glass)',
                         borderRadius: '6px',
                         padding: '8px 14px',
                         fontSize: '0.8rem',
                         fontWeight: '600',
                         cursor: 'pointer',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 0.08)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = 'transparent';
                       }}
                     >
                       Re-open Inquiry

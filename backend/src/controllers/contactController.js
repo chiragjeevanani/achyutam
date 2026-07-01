@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Contact from '../models/Contact.js';
-import { sendContactAcknowledgment } from '../utils/emailService.js';
+import { sendContactAcknowledgment, sendContactResolution } from '../utils/emailService.js';
 
 // @desc    Get all contact submissions
 // @route   GET /api/v1/contacts
@@ -81,8 +81,17 @@ export const updateContactStatus = asyncHandler(async (req, res) => {
   const contact = await Contact.findById(req.params.id);
 
   if (contact) {
+    const oldStatus = contact.status;
     contact.status = status;
     const updatedContact = await contact.save();
+
+    // Trigger resolution email if status transitioned to resolved
+    if (status === 'resolved' && oldStatus !== 'resolved') {
+      sendContactResolution(updatedContact).catch((err) => {
+        console.error(`Failed to send contact resolution email: ${err.message}`);
+      });
+    }
+
     res.json(updatedContact);
   } else {
     res.status(404);

@@ -6,7 +6,7 @@ import { Menu } from 'lucide-react';
 
 export default function AdminLayout() {
   const { admin, loading } = useAuth();
-  const [theme, setTheme] = React.useState(() => localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = React.useState(() => localStorage.getItem('adminTheme') || 'dark');
   const [isCollapsed, setIsCollapsed] = React.useState(() => {
     return localStorage.getItem('adminSidebarCollapsed') === 'true';
   });
@@ -29,8 +29,8 @@ export default function AdminLayout() {
       document.documentElement.classList.remove('light-theme');
       document.body.classList.remove('light-theme');
     }
-    localStorage.setItem('theme', theme);
-    window.dispatchEvent(new CustomEvent('themeChanged', { detail: theme }));
+    localStorage.setItem('adminTheme', theme);
+    window.dispatchEvent(new CustomEvent('adminThemeChanged', { detail: theme }));
   }, [theme]);
 
   const toggleTheme = () => {
@@ -44,11 +44,6 @@ export default function AdminLayout() {
       return next;
     });
   };
-
-  // Redirect to login if not authenticated
-  if (!admin) {
-    return <Navigate to="/admin/login" replace />;
-  }
 
   if (loading) {
     return (
@@ -74,6 +69,11 @@ export default function AdminLayout() {
         <span style={{ letterSpacing: '0.2em', fontSize: '0.9rem' }}>LOADING ADMINISTRATION</span>
       </div>
     );
+  }
+
+  // Redirect to login if not authenticated
+  if (!admin) {
+    return <Navigate to="/admin/login" replace />;
   }
 
   return (

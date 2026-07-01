@@ -117,6 +117,8 @@ export default function App() {
         clearTimeout(timer1);
         clearTimeout(timer2);
       };
+    } else if (location.search !== displayLocation.search) {
+      setDisplayLocation(location);
     }
   }, [location, displayLocation]);
 

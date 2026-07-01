@@ -390,7 +390,7 @@ const getLucideIcon = (name, size = 20) => {
     case 'Bed': return <Bed size={size} />;
     case 'Monitor': return <Monitor size={size} />;
     case 'Sun': return <Sun size={size} />;
-    default: return <Sparkles size={size} />;
+    default: return <Star size={size} />;
   }
 };
 

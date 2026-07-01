@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { 
-  Search, Trash2, Calendar, User, Eye, X, Phone, Mail, Clock, ShieldAlert 
+import {
+  Search, Trash2, Calendar, User, Eye, X, Phone, Mail, Clock, ShieldAlert
 } from 'lucide-react';
 
 export default function AdminBookings() {
@@ -80,7 +80,7 @@ export default function AdminBookings() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      
+
       {/* Header */}
       <div>
         <h1 style={{ fontSize: '2rem', fontFamily: 'var(--font-serif)', color: 'var(--text-heading)', margin: 0 }}>
@@ -423,15 +423,15 @@ export default function AdminBookings() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', fontSize: '0.85rem', background: 'rgba(197, 168, 128, 0.03)', border: '1px solid rgba(197, 168, 128, 0.1)', padding: '10px', borderRadius: '6px' }}>
                     <div>
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.72rem' }}>Birth Date:</span>
-                      <strong style={{ color: '#fff' }}>{selectedBooking.additionalInfo.birthDate || 'N/A'}</strong>
+                      <strong style={{ color: 'var(--text-primary)' }}>{selectedBooking.additionalInfo.birthDate || 'N/A'}</strong>
                     </div>
                     <div>
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.72rem' }}>Birth Time:</span>
-                      <strong style={{ color: '#fff' }}>{selectedBooking.additionalInfo.birthTime || 'N/A'}</strong>
+                      <strong style={{ color: 'var(--text-primary)' }}>{selectedBooking.additionalInfo.birthTime || 'N/A'}</strong>
                     </div>
                     <div>
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.72rem' }}>Birth Place:</span>
-                      <strong style={{ color: '#fff' }}>{selectedBooking.additionalInfo.birthPlace || 'N/A'}</strong>
+                      <strong style={{ color: 'var(--text-primary)' }}>{selectedBooking.additionalInfo.birthPlace || 'N/A'}</strong>
                     </div>
                   </div>
                 </div>
@@ -459,9 +459,15 @@ export default function AdminBookings() {
 
               {/* Transaction Logs */}
               <div style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '15px', display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                <div>Order ID: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.razorpayOrderId || 'N/A'}</code></div>
-                <div>Payment ID: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.razorpayPaymentId || 'N/A'}</code></div>
-                <div>Txn Ref: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.transactionId || 'N/A'}</code></div>
+                {Number(selectedBooking.service?.price || 0) === 0 ? (
+                  <div>Booking Type: <code style={{ color: 'var(--text-primary)' }}>Free Session (No Payment Required)</code></div>
+                ) : (
+                  <>
+                    <div>Order ID: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.razorpayOrderId || 'N/A'}</code></div>
+                    <div>Payment ID: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.razorpayPaymentId || 'N/A'}</code></div>
+                    <div>Txn Ref: <code style={{ color: 'var(--text-primary)' }}>{selectedBooking.transactionId || 'N/A'}</code></div>
+                  </>
+                )}
               </div>
             </div>
           </div>

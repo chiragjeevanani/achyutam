@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Sun, Star, Compass, Heart, Eye, ArrowRight, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Hash, Sparkles, Sun, Star, Compass, Heart, Eye, ArrowRight, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const defaultServices = [
   {
@@ -219,7 +219,7 @@ export default function Services() {
         borderVal: 'rgba(251, 191, 36, 0.3)',
         bgVal: 'rgba(251, 191, 36, 0.08)',
         activeGlow: 'rgba(251, 191, 36, 0.12)',
-        icon: <Sparkles size={22} />
+        icon: <Hash size={22} />
       };
     } else if (category.includes('astrology')) {
       return {
@@ -260,7 +260,8 @@ export default function Services() {
     }
   };
 
-  const rawServices = dbServices.length > 0 ? dbServices.filter(s => s.isActive) : defaultServices;
+  const rawServices = (dbServices.length > 0 ? dbServices.filter(s => s.isActive) : defaultServices)
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
   
   const fullServices = rawServices.map(s => {
     const styles = getServiceStyles(s);

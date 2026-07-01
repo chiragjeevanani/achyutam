@@ -31,6 +31,7 @@ export default function Contact() {
   const [contactInfo, setContactInfo] = useState(null);
   const [errors, setErrors] = useState({});
   const [errorMsg, setErrorMsg] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/contact-info`)
@@ -73,12 +74,14 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submitting) return;
     setErrorMsg('');
 
     if (!validateForm()) {
       return;
     }
 
+    setSubmitting(true);
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL || '/api/v1'}/contacts`, {
         method: 'POST',
@@ -103,6 +106,8 @@ export default function Contact() {
     } catch (err) {
       console.error(err);
       setErrorMsg('Network error. Failed to submit.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -384,8 +389,17 @@ export default function Contact() {
                 )}
               </div>
 
-              <button type="submit" className="cosmic-button reveal" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}>
-                <Calendar size={18} /> Request Appointment
+              <button 
+                type="submit" 
+                disabled={submitting}
+                className="cosmic-button reveal" 
+                style={{ width: '100%', justifyContent: 'center', marginTop: '10px', opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }}
+              >
+                {submitting ? 'Submitting...' : (
+                  <>
+                    <Calendar size={18} /> Request Appointment
+                  </>
+                )}
               </button>
 
             </form>

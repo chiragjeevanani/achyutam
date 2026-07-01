@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Sparkles, Sun, Star, Compass, Heart, Eye, Calendar, Clock, User, CheckCircle2, ChevronRight, ChevronLeft, CreditCard, Receipt, Printer, ArrowRight, Radio } from 'lucide-react';
+import { Hash, Sparkles, Sun, Star, Compass, Heart, Eye, Calendar, Clock, User, CheckCircle2, ChevronRight, ChevronLeft, CreditCard, Receipt, Printer, ArrowRight, Radio } from 'lucide-react';
 import api from '../admin/api/axios';
 import { defaultServices } from './Services';
 
@@ -9,7 +9,7 @@ const getServiceIcon = (category) => {
     case 'vastu':
       return <Sun size={20} style={{ color: 'var(--color-gold)' }} />;
     case 'numerology':
-      return <Sparkles size={20} style={{ color: 'var(--color-gold)' }} />;
+      return <Hash size={20} style={{ color: 'var(--color-gold)' }} />;
     case 'astrology':
       return <Compass size={20} style={{ color: 'var(--color-gold)' }} />;
     case 'tarot':
@@ -37,7 +37,14 @@ export default function Booking() {
     return () => window.removeEventListener('themeChanged', handleThemeChange);
   }, []);
 
-  const [step, setStep] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const step = parseInt(searchParams.get('step'), 10) || 1;
+
+  const setStep = (newStep) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('step', String(newStep));
+    setSearchParams(params);
+  };
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   
   // State for selections
@@ -69,6 +76,10 @@ export default function Booking() {
     fetchBookedSlots();
   }, [selectedService, selectedDate]);
   
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [step]);
+
   // Form fields
   const [formData, setFormData] = useState({
     name: '',
@@ -78,6 +89,14 @@ export default function Booking() {
     birthDate: '',
     birthTime: '',
     birthPlace: '',
+    vastuAddress: ''
+  });
+
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    birthDate: '',
     vastuAddress: ''
   });
 
@@ -97,7 +116,6 @@ export default function Booking() {
   };
 
   const [servicesList, setServicesList] = useState(() => mapDefaultServices(defaultServices));
-  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -120,7 +138,9 @@ export default function Booking() {
           if (matched) {
             setSelectedService(matched);
             setSelectedCategory(matched.category);
-            setStep(2);
+            if (!searchParams.get('step')) {
+              setStep(2);
+            }
           }
         }
       } catch (err) {
@@ -159,34 +179,118 @@ export default function Booking() {
   };
 
   const getSlotsData = () => {
+    let slotsConfig = [
+      { label: 'Morning slots', slots: [{ time: '10:00 AM' }, { time: '11:15 AM' }, { time: '11:30 AM' }] },
+      { label: 'Afternoon slots', slots: [{ time: '02:00 PM' }, { time: '03:15 PM' }, { time: '04:30 PM' }] },
+      { label: 'Evening slots', slots: [{ time: '05:45 PM' }, { time: '06:00 PM' }, { time: '07:15 PM' }] }
+    ];
+
     if (selectedService && selectedService.availability && selectedService.availability.slots && selectedService.availability.slots.length > 0) {
       const hasTimes = selectedService.availability.slots.some(group => group.times && group.times.length > 0);
       if (hasTimes) {
-        return selectedService.availability.slots.map(group => ({
+        slotsConfig = selectedService.availability.slots.map(group => ({
           label: group.label,
-          slots: (group.times || []).map(t => ({
-            time: t,
-            disabled: bookedSlots.includes(t)
-          }))
+          slots: (group.times || []).map(t => ({ time: t }))
         }));
       }
     }
-    
-    return [
-      { label: 'Morning slots', slots: [{ time: '10:00 AM', disabled: bookedSlots.includes('10:00 AM') }, { time: '11:15 AM', disabled: bookedSlots.includes('11:15 AM') }, { time: '11:30 AM', disabled: bookedSlots.includes('11:30 AM') }] },
-      { label: 'Afternoon slots', slots: [{ time: '02:00 PM', disabled: bookedSlots.includes('02:00 PM') }, { time: '03:15 PM', disabled: bookedSlots.includes('03:15 PM') }, { time: '04:30 PM', disabled: bookedSlots.includes('04:30 PM') }] },
-      { label: 'Evening slots', slots: [{ time: '05:45 PM', disabled: bookedSlots.includes('05:45 PM') }, { time: '06:00 PM', disabled: bookedSlots.includes('06:00 PM') }, { time: '07:15 PM', disabled: bookedSlots.includes('07:15 PM') }] }
-    ];
+
+    const now = new Date();
+    const isToday = selectedDate && selectedDate.toDateString() === now.toDateString();
+
+    return slotsConfig.map(group => ({
+      label: group.label,
+      slots: group.slots.map(s => {
+        let isPastTime = false;
+        if (isToday) {
+          try {
+            const [timeStr, modifier] = s.time.split(' ');
+            let [hours, minutes] = timeStr.split(':');
+            hours = parseInt(hours, 10);
+            if (modifier === 'PM' && hours < 12) hours += 12;
+            if (modifier === 'AM' && hours === 12) hours = 0;
+            
+            const slotTime = new Date(now);
+            slotTime.setHours(hours, parseInt(minutes, 10), 0, 0);
+            if (slotTime < now) {
+              isPastTime = true;
+            }
+          } catch (e) {
+            console.error('Error parsing time slot', e);
+          }
+        }
+
+        return {
+          time: s.time,
+          disabled: bookedSlots.includes(s.time) || isPastTime
+        };
+      })
+    }));
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let filteredValue = value;
     if (name === 'phone') {
-      const numericValue = value.replace(/\D/g, '').slice(0, 10);
-      setFormData({ ...formData, [name]: numericValue });
-    } else {
-      setFormData({ ...formData, [name]: value });
+      filteredValue = value.replace(/\D/g, '').slice(0, 10);
+    } else if (name === 'name') {
+      filteredValue = value.replace(/[^A-Za-z\s]/g, '');
     }
+    setFormData({ ...formData, [name]: filteredValue });
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { name: '', email: '', phone: '', birthDate: '', vastuAddress: '' };
+
+    // Name validation
+    if (!formData.name || !formData.name.trim()) {
+      newErrors.name = 'Full Name is required.';
+      isValid = false;
+    } else if (!/^[A-Za-z\s]+$/.test(formData.name)) {
+      newErrors.name = 'Full Name should only contain letters and spaces.';
+      isValid = false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email) {
+      newErrors.email = 'Email Address is required.';
+      isValid = false;
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address.';
+      isValid = false;
+    }
+
+    // Phone validation
+    const phoneRegex = /^\d{10}$/;
+    if (!formData.phone) {
+      newErrors.phone = 'Phone Number is required.';
+      isValid = false;
+    } else if (!phoneRegex.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid 10-digit mobile number.';
+      isValid = false;
+    }
+
+    // Birth Date validation (only for Astrology, Numerology, Tarot)
+    const requiresBirthDetails = selectedService?.category === 'Astrology' || selectedService?.category === 'Numerology' || selectedService?.category === 'Tarot';
+    if (requiresBirthDetails && !formData.birthDate) {
+      newErrors.birthDate = 'Birth Date is required for astrological mapping.';
+      isValid = false;
+    }
+
+    // Vastu Address validation (only for Vastu or Aura Scanner)
+    const requiresVastuAddress = selectedService?.category === 'Vastu' || selectedService?.category === 'Aura Scanner';
+    if (requiresVastuAddress && !formData.vastuAddress?.trim()) {
+      newErrors.vastuAddress = 'Site Address is required for Vastu analysis.';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   // Helper to dynamically load Razorpay script
@@ -202,8 +306,7 @@ export default function Booking() {
 
   // Real Razorpay secure payment checkout flow / Free booking flow
   const triggerRazorpayCheckout = async () => {
-    if (!formData.name || !formData.email || !formData.phone) {
-      alert("Please fill in Name, Email, and Phone to proceed.");
+    if (!validateForm()) {
       return;
     }
     
@@ -253,6 +356,34 @@ export default function Booking() {
       const { data: order } = await api.post('/payments/create-order', {
         bookingId: booking._id
       });
+
+      // Simulation mode bypass for local testing without Razorpay Keys
+      if (order.simulated || (order.id && order.id.startsWith('order_mock_'))) {
+        setTimeout(async () => {
+          try {
+            const verifyPayload = {
+              razorpayOrderId: order.id,
+              razorpayPaymentId: `pay_mock_${Math.random().toString(36).substring(2, 10)}`,
+              razorpaySignature: 'mock_signature',
+              bookingId: booking._id
+            };
+            const { data: verification } = await api.post('/payments/verify', verifyPayload);
+            if (verification.status === 'success') {
+              setTransactionId(verifyPayload.razorpayPaymentId);
+              setPaymentSuccess(true);
+              setStep(4);
+            } else {
+              alert('Mock payment verification failed.');
+            }
+          } catch (err) {
+            console.error('Mock verification error:', err);
+            alert('Mock verification failed. Check backend console.');
+          } finally {
+            setIsProcessingPayment(false);
+          }
+        }, 1500);
+        return;
+      }
 
       // 3. Load Razorpay Web Checkout SDK
       const scriptLoaded = await loadRazorpayScript();
@@ -627,6 +758,20 @@ export default function Booking() {
                     );
                   })}
                 </div>
+                {(selectedService?.id === 'yogadhan' || selectedService?.title?.toLowerCase().includes('yogadhan')) && (
+                  <div style={{ 
+                    marginTop: '15px', 
+                    fontSize: '0.82rem', 
+                    color: 'var(--color-gold)', 
+                    fontStyle: 'italic',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: 'var(--color-gold)' }} />
+                    Note: Yogadhan energy calibrations are conducted exclusively on Thursdays.
+                  </div>
+                )}
               </div>
 
               {/* Time slots */}
@@ -740,8 +885,9 @@ export default function Booking() {
                     onChange={handleInputChange}
                     required
                     placeholder="Enter your full name"
-                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: `1px solid ${errors.name ? '#ff4d4d' : 'var(--border-glass)'}`, background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
                   />
+                  {errors.name && <span style={{ color: '#ff4d4d', fontSize: '0.72rem', marginTop: '4px', display: 'block' }}>{errors.name}</span>}
                 </div>
                 <div>
                   <label style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', display: 'block', marginBottom: '6px' }}>Email Address *</label>
@@ -752,8 +898,9 @@ export default function Booking() {
                     onChange={handleInputChange}
                     required
                     placeholder="name@domain.com"
-                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: `1px solid ${errors.email ? '#ff4d4d' : 'var(--border-glass)'}`, background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
                   />
+                  {errors.email && <span style={{ color: '#ff4d4d', fontSize: '0.72rem', marginTop: '4px', display: 'block' }}>{errors.email}</span>}
                 </div>
                 <div>
                   <label style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', display: 'block', marginBottom: '6px' }}>Phone Number *</label>
@@ -764,8 +911,9 @@ export default function Booking() {
                     onChange={handleInputChange}
                     required
                     placeholder="Enter 10 digit phone number"
-                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: `1px solid ${errors.phone ? '#ff4d4d' : 'var(--border-glass)'}`, background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
                   />
+                  {errors.phone && <span style={{ color: '#ff4d4d', fontSize: '0.72rem', marginTop: '4px', display: 'block' }}>{errors.phone}</span>}
                 </div>
               </div>
 
@@ -776,14 +924,15 @@ export default function Booking() {
                     <h5 style={{ color: 'var(--color-indigo)', margin: '0 0 5px' }}>Birth Alignment Data (Highly Recommended)</h5>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                       <div>
-                        <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Birth Date</label>
+                        <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Birth Date *</label>
                         <input
                           type="date"
                           name="birthDate"
                           value={formData.birthDate}
                           onChange={handleInputChange}
-                          style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)', fontSize: '0.8rem' }}
+                          style={{ width: '100%', padding: '10px', borderRadius: '8px', border: `1px solid ${errors.birthDate ? '#ff4d4d' : 'var(--border-glass)'}`, background: 'var(--bg-dark)', color: 'var(--text-primary)', fontSize: '0.8rem', colorScheme: theme }}
                         />
+                        {errors.birthDate && <span style={{ color: '#ff4d4d', fontSize: '0.72rem', marginTop: '4px', display: 'block' }}>{errors.birthDate}</span>}
                       </div>
                       <div>
                         <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Birth Time</label>
@@ -792,7 +941,7 @@ export default function Booking() {
                           name="birthTime"
                           value={formData.birthTime}
                           onChange={handleInputChange}
-                          style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)', fontSize: '0.8rem' }}
+                          style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)', fontSize: '0.8rem', colorScheme: theme }}
                         />
                       </div>
                     </div>
@@ -812,15 +961,16 @@ export default function Booking() {
 
                 {(selectedService?.category === 'Vastu' || selectedService?.category === 'Aura Scanner') && (
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', display: 'block', marginBottom: '6px' }}>Site Address for Scan / Vastu</label>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--color-indigo)', display: 'block', marginBottom: '6px' }}>Site Address for Scan / Vastu *</label>
                     <textarea
                       name="vastuAddress"
                       value={formData.vastuAddress}
                       onChange={handleInputChange}
                       placeholder="Enter the full address of residential, office or factory plot"
                       rows={3}
-                      style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-glass)', background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
+                      style={{ width: '100%', padding: '12px', borderRadius: '8px', border: `1px solid ${errors.vastuAddress ? '#ff4d4d' : 'var(--border-glass)'}`, background: 'var(--bg-dark)', color: 'var(--text-primary)' }}
                     />
+                    {errors.vastuAddress && <span style={{ color: '#ff4d4d', fontSize: '0.72rem', marginTop: '4px', display: 'block' }}>{errors.vastuAddress}</span>}
                   </div>
                 )}
 
@@ -848,10 +998,8 @@ export default function Booking() {
                 <ChevronLeft size={16} /> Back
               </button>
                <button
-                disabled={!(formData.name?.trim() && formData.email?.includes('@') && formData.phone?.length === 10)}
                 onClick={triggerRazorpayCheckout}
                 className={selectedService?.price === 0 ? "cosmic-button" : "gold-button"}
-                style={{ opacity: (formData.name?.trim() && formData.email?.includes('@') && formData.phone?.length === 10) ? 1 : 0.5 }}
               >
                 {selectedService?.price === 0 ? "Confirm Free Booking" : "Secure Razorpay Checkout"} <ArrowRight size={16} />
               </button>
@@ -1097,18 +1245,21 @@ export default function Booking() {
             visibility: visible;
           }
           #receipt-card {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            border: none;
-            box-shadow: none;
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            height: auto !important;
+            border: none !important;
+            box-shadow: none !important;
             background: white !important;
-            color: black !important;
-            padding: 0;
+            color: #000 !important;
+            padding: 20px !important;
+            margin: 0 !important;
+            z-index: 9999999 !important;
           }
-          #receipt-card span, #receipt-card h3, #receipt-card h4, #receipt-card div {
-            color: black !important;
+          #receipt-card span, #receipt-card h3, #receipt-card h4, #receipt-card div, #receipt-card strong {
+            color: #000 !important;
           }
         }
       `}</style>

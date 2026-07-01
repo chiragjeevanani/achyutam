@@ -1272,6 +1272,13 @@ form select option {
   background-color: var(--bg-dark) !important;
 }
 
+/* Fix input text visibility in light mode due to inline color styles */
+.light-theme input,
+.light-theme textarea,
+.light-theme select {
+  color: var(--text-primary) !important;
+}
+
 
 
 

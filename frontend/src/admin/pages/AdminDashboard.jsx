@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { 
-  Calendar, Mail, Landmark, Sparkles, TrendingUp, RefreshCw, Clock, ArrowRight, User 
+  Calendar, Mail, Landmark, Briefcase, TrendingUp, RefreshCw, Clock, ArrowRight, User 
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
         gap: '20px',
       }}>
         {/* Revenue Card */}
-        <div className="glass-panel" style={{ padding: '24px', borderLeft: '3px solid var(--color-gold)' }}>
+        <Link to="/admin/payments" className="glass-panel" style={{ display: 'block', textDecoration: 'none', color: 'inherit', padding: '24px', borderLeft: '3px solid var(--color-gold)', cursor: 'pointer' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <span style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
@@ -139,10 +139,10 @@ export default function AdminDashboard() {
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '12px' }}>
             Gross processed transactions
           </div>
-        </div>
+        </Link>
 
         {/* Bookings Card */}
-        <div className="glass-panel" style={{ padding: '24px', borderLeft: '3px solid var(--color-indigo)' }}>
+        <Link to="/admin/bookings" className="glass-panel" style={{ display: 'block', textDecoration: 'none', color: 'inherit', padding: '24px', borderLeft: '3px solid var(--color-indigo)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <span style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
@@ -159,10 +159,10 @@ export default function AdminDashboard() {
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '12px' }}>
             Bookings registered in database
           </div>
-        </div>
+        </Link>
 
         {/* Contact inquiries */}
-        <div className="glass-panel" style={{ padding: '24px', borderLeft: '3px solid var(--color-purple)' }}>
+        <Link to="/admin/contacts" className="glass-panel" style={{ display: 'block', textDecoration: 'none', color: 'inherit', padding: '24px', borderLeft: '3px solid var(--color-purple)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <span style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
@@ -179,10 +179,10 @@ export default function AdminDashboard() {
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '12px' }}>
             Unread form submissions
           </div>
-        </div>
+        </Link>
 
         {/* Services */}
-        <div className="glass-panel" style={{ padding: '24px', borderLeft: '3px solid var(--color-yellow)' }}>
+        <Link to="/admin/cms/services" className="glass-panel" style={{ display: 'block', textDecoration: 'none', color: 'inherit', padding: '24px', borderLeft: '3px solid var(--color-yellow)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <span style={{ fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
@@ -193,13 +193,13 @@ export default function AdminDashboard() {
               </h2>
             </div>
             <div style={{ padding: '10px', borderRadius: '8px', background: 'rgba(251, 191, 36, 0.1)', color: 'var(--color-yellow)' }}>
-              <Sparkles size={20} />
+              <Briefcase size={20} />
             </div>
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '12px' }}>
             Services displayed on homepage
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Main Grid for recent lists */}
