@@ -4,7 +4,14 @@
  */
 export const getImageUrl = (url) => {
   if (!url) return '';
-  if (url.startsWith('http')) return url;
+  if (url.startsWith('http')) {
+    // Force upgrade http:// to https:// to prevent mixed-content warnings from legacy DB entries,
+    // but keep http:// for localhost so local development works.
+    if (url.includes('localhost')) {
+      return url;
+    }
+    return url.replace(/^http:\/\//i, 'https://');
+  }
   
   // Find server base URL from VITE_API_URL (e.g. "http://localhost:5000/api/v1")
   const apiUrl = import.meta.env.VITE_API_URL || '';

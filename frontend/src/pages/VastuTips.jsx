@@ -403,18 +403,18 @@ export default function VastuTips() {
 
   // Unified data state
   const defaultVastuBookPages = [
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108350062.png', caption: 'Vastu Shastra Tips — Page 1', order: 1 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108358513.png', caption: 'Vastu Shastra Tips — Page 2', order: 2 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108392536.jpeg', caption: 'Vastu Shastra Tips — Page 3', order: 3 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108400505.jpeg', caption: 'Vastu Shastra Tips — Page 4', order: 4 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108410752.png', caption: 'Vastu Shastra Tips — Page 5', order: 5 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108418720.png', caption: 'Vastu Shastra Tips — Page 6', order: 6 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108428403.png', caption: 'Vastu Shastra Tips — Page 7', order: 7 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108435805.png', caption: 'Vastu Shastra Tips — Page 8', order: 8 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108445624.png', caption: 'Vastu Shastra Tips — Page 9', order: 9 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108453826.png', caption: 'Vastu Shastra Tips — Page 10', order: 10 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108463276.png', caption: 'Vastu Shastra Tips — Page 11', order: 11 },
-    { imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108472242.png', caption: 'Vastu Shastra Tips — Page 12', order: 12 }
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108350062.png', caption: 'Vastu Shastra Tips — Page 1', order: 1 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108358513.png', caption: 'Vastu Shastra Tips — Page 2', order: 2 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108392536.jpeg', caption: 'Vastu Shastra Tips — Page 3', order: 3 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108400505.jpeg', caption: 'Vastu Shastra Tips — Page 4', order: 4 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108410752.png', caption: 'Vastu Shastra Tips — Page 5', order: 5 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108418720.png', caption: 'Vastu Shastra Tips — Page 6', order: 6 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108428403.png', caption: 'Vastu Shastra Tips — Page 7', order: 7 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108435805.png', caption: 'Vastu Shastra Tips — Page 8', order: 8 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108445624.png', caption: 'Vastu Shastra Tips — Page 9', order: 9 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108453826.png', caption: 'Vastu Shastra Tips — Page 10', order: 10 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108463276.png', caption: 'Vastu Shastra Tips — Page 11', order: 11 },
+    { imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108472242.png', caption: 'Vastu Shastra Tips — Page 12', order: 12 }
   ];
 
   const defaultHero = {
@@ -426,14 +426,14 @@ export default function VastuTips() {
     bookMeta: {
       coverTitle: "Vastu Shastra\nTips Book",
       coverSubtitle: "Sacred Wisdom",
-      coverLogo: "http://api.achyutammaestro.com/uploads/image-1782108333108.png",
+      coverLogo: "https://api.achyutammaestro.com/uploads/image-1782108333108.png",
       introTitle: "Introduction",
       introText: "\"Harmonize your environment to balance the five natural elements, opening the doors to happiness and health.\"",
       outroTitle: "Achyutam Maestro",
       outroText: "Bringing ancient cosmic wisdom to contemporary homes and offices.",
       endTitle: "ACHYUTAM MAESTRO",
       endSubtitle: "PEACE • WEALTH • HARMONY",
-      endLogo: "http://api.achyutammaestro.com/uploads/image-1782108337826.png"
+      endLogo: "https://api.achyutammaestro.com/uploads/image-1782108337826.png"
     }
   };
 

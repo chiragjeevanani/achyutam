@@ -31,6 +31,9 @@ connectDB();
 
 const app = express();
 
+// Trust reverse proxies (e.g. Nginx, Vercel, Render) so req.protocol is accurate ('https')
+app.set('trust proxy', 1);
+
 // Gzip/brotli compression for all responses
 app.use(compression());
 

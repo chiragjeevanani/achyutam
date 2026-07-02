@@ -19,7 +19,7 @@ const defaultHomeContent = {
     titleLine1: 'Achyutam Maestro',
     titleLine2: 'Transforming Spaces & Destiny',
     description: 'Unlock peace, wealth, and abundance through logical, scientific Vastu alignments and supportive numerological frequency corrections.',
-    imageUrl: 'http://api.achyutammaestro.com/uploads/image-1782108246883.jpeg',
+    imageUrl: 'https://api.achyutammaestro.com/uploads/image-1782108246883.jpeg',
     ctaText: 'Book a Consultation',
     compassCtaText: 'Align Your Compass'
   },
